@@ -1,0 +1,21 @@
+source /afs/cern.ch/cms/cmsset_default.sh
+
+cd /afs/cern.ch/work/s/ssekmen/CMGTools/CMSSW_5_2_5/src/
+export SCRAM_ARCH=slc5_amd64_gcc462
+cmsenv
+cd -
+
+python 
+
+
+#!/bin/bash
+#
+# request Bash shell as shell for job
+#$ -S /bin/bash
+# print date and time
+#cd /storage/5/work/sekmen/work/RA2b/ra2b2011analyzer/jobs/
+#$ -o /storage/5/work/sekmen/work/RA2b/ra2b2011analyzer/jobs/ -j y
+date
+hostname
+
+python %(nmscr)s

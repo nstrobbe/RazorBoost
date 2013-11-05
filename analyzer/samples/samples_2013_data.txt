@@ -1,0 +1,5 @@
+tnm_group%/Jet/Run2012A-22Jan2013-v1/AOD/CMGPF_V5_16_0/NTUPLE_Aug1/ data
+tnm_group%/HT/Run2012A-22Jan2013-v1/AOD/CMGPF_V5_16_0/NTUPLE_Aug1/ data
+tnm_group%/JetHT/Run2012B-22Jan2013-v1/AOD/CMGPF_V5_16_0/NTUPLE_Aug1/ data
+tnm_group%/JetHT/Run2012C-22Jan2013-v1/AOD/CMGPF_V5_16_0/NTUPLE_Aug1/ data
+tnm_group%/JetHT/Run2012D-22Jan2013-v1/AOD/CMGPF_V5_16_0/NTUPLE_Aug1/ data

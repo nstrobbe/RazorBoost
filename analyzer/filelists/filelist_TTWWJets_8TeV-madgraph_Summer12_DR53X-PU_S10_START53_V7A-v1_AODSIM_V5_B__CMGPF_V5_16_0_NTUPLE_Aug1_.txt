@@ -1,0 +1,7 @@
+root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//TTWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B//CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_1.root
+root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//TTWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B//CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_2.root
+root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//TTWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B//CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_3.root
+root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//TTWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B//CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_4.root
+root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//TTWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B//CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_5.root
+root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//TTWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B//CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_6.root
+root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//TTWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B//CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_7.root
