@@ -1,0 +1,11 @@
+# Ignore all *~ files
+*~
+# Ignore all object files
+.o
+###################################################
+## Things to ignore in the analyzer directory
+###################################################
+# Ignore the program files
+/analyzer/rzrBoostMC
+# Ignore the files in scripts
+/analyzer/rzrBoostMC/scripts
