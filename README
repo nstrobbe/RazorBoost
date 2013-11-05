@@ -1,0 +1,14 @@
+==============================================================
+== This is the Git repository for all things related to     ==
+== the RazorBoost analysis.                                 ==
+==                                                          ==
+== Main developers : N. Strobbe, S. Sekmen                  ==
+== Start date      : 2013/11/05                             ==
+==============================================================
+
+The repository is structured in the following way: 
+
+/analyzer      : directory containing the analyzers 
+/plotscripts   : directory containing all our plotting scripts
+
+Please look at the README in each subfolder for more information
