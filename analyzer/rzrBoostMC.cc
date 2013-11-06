@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 {
 
   // Get the trigger histogram:
-  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/rzrBoostMCanalyzer/hlteff/extr_eff0_sm2.root");
+  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
   TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
   
   // Get file list and histogram filename from command line
@@ -193,7 +193,11 @@ int main(int argc, char** argv)
   TH1D * h_R2_0Lbg1uW0Ll = new TH1D("h_R2_0Lbg1uW0Ll", "h_R2_0Lbg1uW0Ll", 25, 0, 1);
   TH2D * h_MR_R2_0Lbg1uW0Ll = new TH2D("h_MR_R2_0Lbg1uW0Ll", "h_MR_R2_0Lbg1uW0Ll", 20, 0, MRmx, 25, 0, 1);
 
- // QCD control region: 0 Lb; >= 1 W; 0 Ll
+  TH1D * h_minDeltaPhi_0Lbg1uW0Ll = new TH1D("h_minDeltaPhi_0Lbg1uW0Ll", "h_minDeltaPhi_0Lbg1uW0Ll", 50, 0, 5);
+  TH2D * h_MR_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhi_0Lbg1uW0Ll", "h_MR_minDeltaPhi_0Lbg1uW0Ll", 20, 0, MRmx, 50, 0, 5);
+  TH2D * h_R2_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_R2_minDeltaPhi_0Lbg1uW0Ll", "h_R2_minDeltaPhi_0Lbg1uW0Ll", 25, 0, 1, 50, 0, 5);
+  
+  // QCD control region: 0 Lb; >= 1 W; 0 Ll
   TH1D * h_MR_0Lbg1W0Ll = new TH1D("h_MR_0Lbg1W0Ll", "h_MR_0Lbg1W0Ll", 20, 0, MRmx);
   TH1D * h_R2_0Lbg1W0Ll = new TH1D("h_R2_0Lbg1W0Ll", "h_R2_0Lbg1W0Ll", 25, 0, 1);
   TH2D * h_MR_R2_0Lbg1W0Ll = new TH2D("h_MR_R2_0Lbg1W0Ll", "h_MR_R2_0Lbg1W0Ll", 20, 0, MRmx, 25, 0, 1);
@@ -213,6 +217,19 @@ int main(int argc, char** argv)
   TH1D * h_MR_g1Mbg1W1Ll = new TH1D("h_MR_g1Mbg1W1Ll", "h_MR_g1Mbg1W1Ll", 20, 0, MRmx);
   TH1D * h_R2_g1Mbg1W1Ll = new TH1D("h_R2_g1Mbg1W1Ll", "h_R2_g1Mbg1W1Ll", 25, 0, 1);
   TH2D * h_MR_R2_g1Mbg1W1Ll = new TH2D("h_MR_R2_g1Mbg1W1Ll", "h_MR_R2_g1Mbg1W1Ll", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D * h_mT_g1Mbg1W1Ll = new TH1D("h_mT_g1Mbg1W1Ll", "h_mT_g1Mbg1W1Ll", 50, 0, 500);
+  TH2D * h_MR_mT_g1Mbg1W1Ll = new TH2D("h_MR_mT_g1Mbg1W1Ll", "h_MR_mT_g1Mbg1W1Ll", 20, 0, MRmx, 50, 0, 500);
+  TH2D * h_R2_mT_g1Mbg1W1Ll = new TH2D("h_R2_mT_g1Mbg1W1Ll", "h_R2_mT_g1Mbg1W1Ll", 25, 0, 1, 50, 0, 500);
+
+  // g1Mbg1W1LlmT ; TTj control region: >= 1 Mb; >= 1 W; 1 Ll; 30<mT<100
+  TH1D * h_MR_g1Mbg1W1LlmT = new TH1D("h_MR_g1Mbg1W1LlmT", "h_MR_g1Mbg1W1LlmT", 20, 0, MRmx);
+  TH1D * h_R2_g1Mbg1W1LlmT = new TH1D("h_R2_g1Mbg1W1LlmT", "h_R2_g1Mbg1W1LlmT", 25, 0, 1);
+  TH2D * h_MR_R2_g1Mbg1W1LlmT = new TH2D("h_MR_R2_g1Mbg1W1LlmT", "h_MR_R2_g1Mbg1W1LlmT", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D * h_mT_g1Mbg1W1LlmT = new TH1D("h_mT_g1Mbg1W1LlmT", "h_mT_g1Mbg1W1LlmT", 50, 0, 500);
+  TH2D * h_MR_mT_g1Mbg1W1LlmT = new TH2D("h_MR_mT_g1Mbg1W1LlmT", "h_MR_mT_g1Mbg1W1LlmT", 20, 0, MRmx, 50, 0, 500);
+  TH2D * h_R2_mT_g1Mbg1W1LlmT = new TH2D("h_R2_mT_g1Mbg1W1LlmT", "h_R2_mT_g1Mbg1W1LlmT", 25, 0, 1, 50, 0, 500);
 
 
   // dimuon trajectory
@@ -264,6 +281,7 @@ int main(int argc, char** argv)
   ofile.count("1Ll", 0.0);
   ofile.count("g1Mb1Ll", 0.0);
   ofile.count("g1Mbg1W1Ll", 0.0);
+  ofile.count("g1Mbg1W1LlmT", 0.0);
 
   ofile.count("2mu", 0.0);
   ofile.count("2mu0el", 0.0);
@@ -296,6 +314,7 @@ int main(int argc, char** argv)
   TTallhad->Fill("1Ll", 0.0);
   TTallhad->Fill("g1Mb1Ll", 0.0);
   TTallhad->Fill("g1Mbg1W1Ll", 0.0);
+  TTallhad->Fill("g1Mbg1W1LlmT", 0.0);
   TTallhad->Fill("2mu", 0.0);
   TTallhad->Fill("2mu0el", 0.0);
   TTallhad->Fill("0Lb2mu0el", 0.0);
@@ -320,6 +339,7 @@ int main(int argc, char** argv)
   TTsemilep->Fill("1Ll", 0.0);
   TTsemilep->Fill("g1Mb1Ll", 0.0);
   TTsemilep->Fill("g1Mbg1W1Ll", 0.0);
+  TTsemilep->Fill("g1Mbg1W1LlmT", 0.0);
   TTsemilep->Fill("2mu", 0.0);
   TTsemilep->Fill("2mu0el", 0.0);
   TTsemilep->Fill("0Lb2mu0el", 0.0);
@@ -344,6 +364,7 @@ int main(int argc, char** argv)
   TTdilep->Fill("1Ll", 0.0);
   TTdilep->Fill("g1Mb1Ll", 0.0);
   TTdilep->Fill("g1Mbg1W1Ll", 0.0);
+  TTdilep->Fill("g1Mbg1W1LlmT", 0.0);
   TTdilep->Fill("2mu", 0.0);
   TTdilep->Fill("2mu0el", 0.0);
   TTdilep->Fill("0Lb2mu0el", 0.0);
@@ -784,7 +805,6 @@ int main(int argc, char** argv)
       // Muons - veto:
       // From https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMuonId#Tight_Muon
       std::vector<cmgmuon_s> vmuon;
-      std::vector<TVector3> lvmuon;
       for (unsigned int i=0; i<cmgmuon.size(); i++) {
 	if (!(cmgmuon[i].pt > 5) ) continue;
 	if (!(fabs(cmgmuon[i].eta) < 2.4) ) continue;
@@ -858,7 +878,9 @@ int main(int argc, char** argv)
 
       TVector3 metl;
       metl.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
-
+      TLorentzVector met;
+      met.SetPtEtaPhiE(cmgbasemet2[0].pt, 0, cmgbasemet2[0].phi, cmgbasemet2[0].energy);
+      //cout << "MET info: " << cmgbasemet2[0].pt << " " << cmgbasemet2[0].phi << " " << cmgbasemet2[0].energy << endl;
       std::vector<TLorentzVector> hemis = CombineJets(sjetl);
 
       double MR = -9999;
@@ -997,6 +1019,16 @@ int main(int argc, char** argv)
       else if(isTTdilep)
 	TTdilep->Fill("SIG", w);
 
+
+      // Compute the minDeltaPhi variable, taking the first three jets into account
+      double minDeltaPhi = 99.;
+      for (int jet=0; jet<3; ++jet){
+	double mdphi = fdeltaPhi(sjet[jet].phi,metl.Phi());
+	if (mdphi < minDeltaPhi)
+	  minDeltaPhi = mdphi;
+      }
+
+
       // count number of leptons
       int nlooseelectrons = velectron.size();
       int nloosemuons = vmuon.size(); 
@@ -1089,10 +1121,13 @@ int main(int argc, char** argv)
 	      
 	      // 0Lbg1uW0Ll -- QCD control region
 	      if( aW.size() > 0){
+		ofile.count("0Lbg1uW0Ll",w);
 		h_MR_0Lbg1uW0Ll->Fill(MR, w);
 		h_R2_0Lbg1uW0Ll->Fill(R2, w);
 		h_MR_R2_0Lbg1uW0Ll->Fill(MR, R2, w);
-		ofile.count("0Lbg1uW0Ll",w);
+		h_minDeltaPhi_0Lbg1uW0Ll->Fill(minDeltaPhi, w);
+		h_MR_minDeltaPhi_0Lbg1uW0Ll->Fill(MR, minDeltaPhi, w);
+		h_R2_minDeltaPhi_0Lbg1uW0Ll->Fill(R2, minDeltaPhi, w);
 		if(isTTallhad)
 		  TTallhad->Fill("0Lbg1uW0Ll", w);
 		else if(isTTsemilep)
@@ -1104,10 +1139,10 @@ int main(int argc, char** argv)
 
 	      // 0Lbg1W0Ll
 	      if( sW.size() > 0){
+		ofile.count("0Lbg1W0Ll",w);
 		h_MR_0Lbg1W0Ll->Fill(MR, w);
 		h_R2_0Lbg1W0Ll->Fill(R2, w);
 		h_MR_R2_0Lbg1W0Ll->Fill(MR, R2, w);
-		ofile.count("0Lbg1W0Ll",w);
 		if(isTTallhad)
 		  TTallhad->Fill("0Lbg1W0Ll", w);
 		else if(isTTsemilep)
@@ -1124,6 +1159,14 @@ int main(int argc, char** argv)
       
       // 1 Loose, not tight lepton 
       if(nlooseleptons == 1 && ntightleptons == 0){
+	// Calculate mT 
+	TLorentzVector lepton;
+	if (nlooseelectrons == 1)
+	  lepton.SetPtEtaPhiE(velectron[0].pt, velectron[0].eta, velectron[0].phi, velectron[0].energy);
+	else if (nloosemuons == 1)
+	  lepton.SetPtEtaPhiE(vmuon[0].pt, vmuon[0].eta, vmuon[0].phi, vmuon[0].energy);
+	double mT = CalcMT(lepton,met);
+
 	ofile.count("1Ll",w);
 	h_MR_1Ll->Fill(MR, w);
 	h_R2_1Ll->Fill(R2, w);
@@ -1152,12 +1195,33 @@ int main(int argc, char** argv)
 	    h_MR_g1Mbg1W1Ll->Fill(MR, w);
 	    h_R2_g1Mbg1W1Ll->Fill(R2, w);
 	    h_MR_R2_g1Mbg1W1Ll->Fill(MR, R2, w);
+	    h_mT_g1Mbg1W1Ll->Fill(mT, w);
+	    h_MR_mT_g1Mbg1W1Ll->Fill(MR, mT, w);
+	    h_R2_mT_g1Mbg1W1Ll->Fill(R2, mT, w);
 	    if(isTTallhad)
 	      TTallhad->Fill("g1Mbg1W1Ll", w);
 	    else if(isTTsemilep)
 	      TTsemilep->Fill("g1Mbg1W1Ll", w);
 	    else if(isTTdilep)
 	      TTdilep->Fill("g1Mbg1W1Ll", w);
+
+	    // mT window
+	    if (mT > 30 && mT < 100){
+	      ofile.count("g1Mbg1W1LlmT",w);
+	      h_MR_g1Mbg1W1LlmT->Fill(MR, w);
+	      h_R2_g1Mbg1W1LlmT->Fill(R2, w);
+	      h_MR_R2_g1Mbg1W1LlmT->Fill(MR, R2, w);
+	      h_mT_g1Mbg1W1LlmT->Fill(mT, w);
+	      h_MR_mT_g1Mbg1W1LlmT->Fill(MR, mT, w);
+	      h_R2_mT_g1Mbg1W1LlmT->Fill(R2, mT, w);
+	      if(isTTallhad)
+		TTallhad->Fill("g1Mbg1W1LlmT", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("g1Mbg1W1LlmT", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("g1Mbg1W1LlmT", w);
+
+	    }
 	  } // end sW.size()
 	} // end nmediumbs > 0
       } // end nlooseleptons == 1

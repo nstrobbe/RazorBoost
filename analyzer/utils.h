@@ -16,7 +16,7 @@ double fdeltaR(double eta1, double phi1, double eta2, double phi2)
   return deltaR;
 }
 
-// deltaR:
+// deltaPhi:
 double fdeltaPhi(double phi1, double phi2)
 {
   double deltaphi = fabs(phi1 - phi2);
@@ -97,4 +97,9 @@ double CalcMTR(TLorentzVector ja, TLorentzVector jb, TVector3 met){
   temp /= 2.;
   temp = sqrt(temp);
   return temp;
+}
+
+// MT
+double CalcMT(TLorentzVector lepton, TLorentzVector pfmet){
+  return sqrt( 2 * lepton.Pt() * pfmet.Pt() * ( 1 - cos( pfmet.Phi() - lepton.Phi() ) ) );
 }
