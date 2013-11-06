@@ -5,7 +5,7 @@ from string import *
 
 anl = 'rzrBoostMC'
 
-dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/rzrBoostMCanalyzer/'
+dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
 dflist = dwork+'filelists/'
 dflisttmp = dwork+'fileliststmp/'
 druns = dwork+'runs/'
@@ -23,7 +23,7 @@ exe = dwork+anl
 
 # Do some cleaning:
 #os.system('rm -f '+drestmp+anl+'_*')
-os.system('rm -f '+dflisttmp+anl+'_*')
+#os.system('rm -f '+dflisttmp+anl+'_*')
 
 # Get the samples list file:
 if len(sys.argv) < 2:
