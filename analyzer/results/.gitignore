@@ -1,0 +1,5 @@
+# Do not commit anything from this folder
+# It is to be used for storing object files only
+*
+# But do keep this file
+!.gitignore
