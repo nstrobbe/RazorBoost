@@ -7,5 +7,6 @@
 ###################################################
 # Ignore the program files
 /analyzer/rzrBoostMC
+/analyzer/.main
 # Ignore the files in scripts
 /analyzer/rzrBoostMC/scripts
