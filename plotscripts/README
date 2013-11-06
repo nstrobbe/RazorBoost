@@ -1,0 +1,37 @@
+======================================================================
+==     Directory containing all the plot scripts                    ==
+==     Please add a description for each script                     ==
+======================================================================
+
+*************************
+** getBGcomposition.py ** 
+*************************
+
+Run as: 
+	python getBGcomposition.py samplesfile
+With:
+	samplefile: file containing all the samples you want to run over
+
+Things to modify in the script:
+	* integrated luminosity, is set to 19789 pb-1 
+	* location of the root files with the count histograms
+
+Output of the script:
+	* file cutflow.tex containing the cutflow in latex format
+	* on screen: cut flow in event counts, percentages and the TTbar composition
+
+
+***********************
+** getDataMCplots.py **
+***********************
+
+Run as: 
+	python getDataMCplots.py outputdir
+With:
+	outputdir: directory where you want the plots to be stored
+
+Things to modify in the script:
+	* integrated luminosity if you want to change this from how you ran the analyzer
+	* datasets you want to include. 
+	* location of the root files containing the histograms
+	* Cut strings if you change those
