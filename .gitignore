@@ -8,5 +8,6 @@
 # Ignore the program files
 /analyzer/rzrBoostMC
 /analyzer/.main
+/analyzer/rzrEventDump
 # Ignore the files in scripts
 /analyzer/rzrBoostMC/scripts
