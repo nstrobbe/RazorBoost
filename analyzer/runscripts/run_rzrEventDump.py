@@ -31,7 +31,9 @@ if len(sys.argv) < 2:
     sys.exit()
 
 samplesfile = sys.argv[1]
-
+SMS = ""
+if len(sys.argv) > 2:
+    SMS = sys.argv[2]
 datasets = open(samplesfile).readlines()
 
 
@@ -39,12 +41,12 @@ names = {}
 names['exe'] = exe
 names['drestmp'] = drestmp
 names['anl'] = anl
-
+names['SMS'] = SMS
 
 # Total number of runs
 nrunstot = 0
 # Number of input files per run
-nf = 5
+nf = 7
 # Integrated luminosity in pb-1s
 intlumi = 19789
 # Loop over the datasets

@@ -41,6 +41,24 @@ int main(int argc, char** argv)
   // Select variables to be read
   selectVariables(stream);
 
+  // If running on SMS, will have to do some extra stuff
+  string SMS = "";
+  if (argc > 6){
+    SMS = argv[6];
+  }
+  
+  TFile* fstopxsect = new TFile("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/smsinput/stop.root");
+  TH1D* hstopxsect = (TH1D*)fstopxsect->Get("stop");
+
+  string fcountname = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/smsinput/T2tt_counts.root";
+  if (SMS == "T1ttcc")
+    fcountname = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/smsinput/T1ttcc_counts.root";
+
+  TFile* fsmscount = new TFile(fcountname.c_str());
+  TH1D* h_mstop_mLSP_nevents = (TH1D*)fsmscount->Get("h_mstop_mLSP_nevents");
+
+
+
   /*
 	 Notes:
 	
@@ -86,6 +104,10 @@ int main(int argc, char** argv)
     weightnorm = (xsect*lumi)/totweight;
   }
 
+  // For SMSs we need to get the cross section and total number of events in the event loop (it depends on the mass point considered)
+  if(SMS != "")
+    weightnorm = lumi;
+
   cout << "lumi: " << lumi << endl;
   cout << "xsect: " << xsect << endl;
   cout << "totweight: " << totweight << endl;
@@ -113,7 +135,66 @@ int main(int argc, char** argv)
       if (geneventinfoproduct_weight != 0) {
         w = geneventinfoproduct_weight*weightnorm;
       }
+
+      // Set SMS weights
+      double mt1 = lheeventproducthelper_mt1;
+      double mz1 = lheeventproducthelper_mz1;
       
+      // Do not run on all T2tt points
+      if (SMS == "T2tt") {
+	int mt1_int = static_cast<int>(mt1);
+	int mz1_int = static_cast<int>(mz1);
+	if (mz1_int == 0) continue;
+	if (mt1_int < 500) continue;
+	if (mt1_int % 50 != 0) continue;
+	if (mz1_int % 50 != 0  && mz1_int != 1) continue;
+      }
+      if (mt1>0) {
+	if(SMS == "T2tt"){
+	  for (int b=1; b<hstopxsect->GetNbinsX()+1; b++) {
+	    if (mt1 == hstopxsect->GetBinCenter(b)) {
+	      xsect = hstopxsect->GetBinContent(b);
+	      break;
+	    }
+	  }
+	} else if (SMS == "T1ttcc"){
+	  xsect = 0.0243547; // all points have mgluino = 1 TeV
+	}
+	// get the event count from the histogram
+        double it = 1;
+        double iz = 1;
+	if (SMS == "T2tt"){
+	  for (int b=1; b<h_mstop_mLSP_nevents->GetNbinsX()+1; ++b){
+	    double xbinedge = h_mstop_mLSP_nevents->GetXaxis()->GetBinLowEdge(b);
+	    if (mt1 == xbinedge) {
+	      it = b;
+	      break;
+	    }
+	  }
+	} 
+	if (SMS == "T1ttcc") {
+	  // Something got screwed up in the histogram, need to work around it
+	  for (int b=1; b<h_mstop_mLSP_nevents->GetNbinsX()+1; ++b){
+	    double xbinedge = h_mstop_mLSP_nevents->GetXaxis()->GetBinLowEdge(b);
+	    double xbinedgehigh = h_mstop_mLSP_nevents->GetXaxis()->GetBinUpEdge(b);
+	    if (mt1 >= xbinedge && mt1 < xbinedgehigh) {
+	      it = b;
+	      break;
+	    }
+	  }
+	}
+	for (int b=1; b<h_mstop_mLSP_nevents->GetNbinsY()+1; ++b){
+	  double ybinedge = h_mstop_mLSP_nevents->GetYaxis()->GetBinLowEdge(b);
+	  if (mz1 == ybinedge || (mz1 == 1 && ybinedge == 0) ) {
+	    iz = b;
+	    break;
+	  }
+	}
+        totweight = h_mstop_mLSP_nevents->GetBinContent(it, iz);
+        w = (w*xsect)/totweight;
+      }
+      
+
       // Write every ith event:
       if (entry % 10000 == 0) cout << entry << endl;
       
@@ -567,17 +648,9 @@ int main(int argc, char** argv)
       // pt of first jet greater than 200 GeV
       if (!(sjet[0].pt > 200)) continue;
 
-      // Only select events in MR-R2 SIG region 
-      if (!(MR > 800 && R2 > 0.08)) continue;
+      // Only select events in MR-R2 FULL region 
+      if (!(MR > 600 && R2 > 0.04)) continue;
 
-
-      // Compute the minDeltaPhi variable, taking the first three jets into account
-      double minDeltaPhi = 99.;
-      for (int jet=0; jet<3; ++jet){
-	double mdphi = fdeltaPhi(sjet[jet].phi,metl.Phi());
-	if (mdphi < minDeltaPhi)
-	  minDeltaPhi = mdphi;
-      }
 
 
       // count number of leptons
