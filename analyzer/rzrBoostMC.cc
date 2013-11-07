@@ -197,6 +197,11 @@ int main(int argc, char** argv)
   TH2D * h_MR_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhi_0Lbg1uW0Ll", "h_MR_minDeltaPhi_0Lbg1uW0Ll", 20, 0, MRmx, 50, 0, 5);
   TH2D * h_R2_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_R2_minDeltaPhi_0Lbg1uW0Ll", "h_R2_minDeltaPhi_0Lbg1uW0Ll", 25, 0, 1, 50, 0, 5);
   
+  // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhi < 0.3
+  TH1D * h_MR_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhi0p3", "h_MR_0Lbg1uW0Ll_mdPhi0p3", 20, 0, MRmx);
+  TH1D * h_R2_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhi0p3", "h_R2_0Lbg1uW0Ll_mdPhi0p3", 25, 0, 1);
+  TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhi0p3 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhi0p3", "h_MR_R2_0Lbg1uW0Ll_mdPhi0p3", 20, 0, MRmx, 25, 0, 1);
+
   // QCD control region: 0 Lb; >= 1 W; 0 Ll
   TH1D * h_MR_0Lbg1W0Ll = new TH1D("h_MR_0Lbg1W0Ll", "h_MR_0Lbg1W0Ll", 20, 0, MRmx);
   TH1D * h_R2_0Lbg1W0Ll = new TH1D("h_R2_0Lbg1W0Ll", "h_R2_0Lbg1W0Ll", 25, 0, 1);
@@ -276,6 +281,7 @@ int main(int argc, char** argv)
   ofile.count("g1Mbg1W0Ll", 0.0);
   ofile.count("0Lb0Ll", 0.0);
   ofile.count("0Lbg1uW0Ll", 0.0);
+  ofile.count("0Lbg1uW0Ll_mdPhi0p3", 0.0);
   ofile.count("0Lbg1W0Ll", 0.0);
 
   ofile.count("1Ll", 0.0);
@@ -310,6 +316,7 @@ int main(int argc, char** argv)
   TTallhad->Fill("g1Mbg1W0Ll", 0.0);
   TTallhad->Fill("0Lb0Ll", 0.0);
   TTallhad->Fill("0Lbg1uW0Ll", 0.0);
+  TTallhad->Fill("0Lbg1uW0Ll_mdPhi0p3", 0.0);
   TTallhad->Fill("0Lbg1W0Ll", 0.0);
   TTallhad->Fill("1Ll", 0.0);
   TTallhad->Fill("g1Mb1Ll", 0.0);
@@ -335,6 +342,7 @@ int main(int argc, char** argv)
   TTsemilep->Fill("g1Mbg1W0Ll", 0.0);
   TTsemilep->Fill("0Lb0Ll", 0.0);
   TTsemilep->Fill("0Lbg1uW0Ll", 0.0);
+  TTsemilep->Fill("0Lbg1uW0Ll_mdPhi0p3", 0.0);
   TTsemilep->Fill("0Lbg1W0Ll", 0.0);
   TTsemilep->Fill("1Ll", 0.0);
   TTsemilep->Fill("g1Mb1Ll", 0.0);
@@ -360,6 +368,7 @@ int main(int argc, char** argv)
   TTdilep->Fill("g1Mbg1W0Ll", 0.0);
   TTdilep->Fill("0Lb0Ll", 0.0);
   TTdilep->Fill("0Lbg1uW0Ll", 0.0);
+  TTdilep->Fill("0Lbg1uW0Ll_mdPhi0p3", 0.0);
   TTdilep->Fill("0Lbg1W0Ll", 0.0);
   TTdilep->Fill("1Ll", 0.0);
   TTdilep->Fill("g1Mb1Ll", 0.0);
@@ -1135,6 +1144,19 @@ int main(int argc, char** argv)
 		else if(isTTdilep)
 		  TTdilep->Fill("0Lbg1uW0Ll", w);
 
+		// cut on mindDeltaPhi
+		if (minDeltaPhi < 0.3){
+		  ofile.count("0Lbg1uW0Ll_mdPhi0p3",w);
+		  h_MR_0Lbg1uW0Ll_mdPhi0p3->Fill(MR, w);
+		  h_R2_0Lbg1uW0Ll_mdPhi0p3->Fill(R2, w);
+		  h_MR_R2_0Lbg1uW0Ll_mdPhi0p3->Fill(MR, R2, w);
+		  if(isTTallhad)
+		    TTallhad->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
+		  else if(isTTsemilep)
+		    TTsemilep->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
+		  else if(isTTdilep)
+		    TTdilep->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
+		} // end of minDeltaPhi < 0.3
 	      } // end of aW.size() > 0
 
 	      // 0Lbg1W0Ll
