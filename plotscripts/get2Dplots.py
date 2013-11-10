@@ -122,7 +122,13 @@ if __name__ == "__main__":
     make2Dplot("R2","minDeltaPhi",cut,f_data,outfile,"data")        
     make2Dratioplot("R2","minDeltaPhi",cut,f_data,f_bg,outfile)        
 
-
-
-        
+    # Make 2D plots of mT
+    cut = "g1Mbg1W1Ll"
+    make2Dplot("MR","mT",cut,f_bg,outfile,"bg")        
+    make2Dplot("MR","mT",cut,f_data,outfile,"data")        
+    make2Dratioplot("MR","mT",cut,f_data,f_bg,outfile)        
+    make2Dplot("R2","mT",cut,f_bg,outfile,"bg")        
+    make2Dplot("R2","mT",cut,f_data,outfile,"data")        
+    make2Dratioplot("R2","mT",cut,f_data,f_bg,outfile)        
+       
     outfile.Close()
