@@ -6,7 +6,6 @@ from ROOT import TFile
 def make2Dplot(varx,vary,cut,infile,outfile,process):
     hname = "h_%s_%s_%s" % (varx,vary,cut)
     h = infile.Get(hname)
-    print h
     h.GetYaxis().SetTitle(vary)
     h.GetXaxis().SetTitle(varx)
     h.GetZaxis().SetTitle("Events")
@@ -18,11 +17,40 @@ def make2Dplot(varx,vary,cut,infile,outfile,process):
     draw2Dplot(h,outfile,cut,cname)
 
 def make2Dratioplot(varx,vary,cut,infile1,infile2,outfile):
-    pass
+    #""" Will divide histogram from infile1 by histogram from infile2 """
+    hname = "h_%s_%s_%s" % (varx,vary,cut)
+    h1 = infile1.Get(hname)
+    h1.GetZaxis().SetTitle("Data/MC")
+    h2 = infile2.Get(hname)
+    h2.GetZaxis().SetTitle("Data/MC")
+    # ratio = h1.Clone("new")
+    nx = h1.GetNbinsX()
+    xmin = h1.GetXaxis().GetXmin()
+    xmax = h1.GetXaxis().GetXmax()
+    ny = h1.GetNbinsY()
+    ymin = h1.GetYaxis().GetXmin()
+    ymax = h1.GetYaxis().GetXmax()
+    
+    # Do our own clone, as otherwise Z axis is messed up when drawing with 'colz'
+    # Again some random ROOT evil...
+    ratio = rt.TH2D("ratio","",nx,xmin,xmax,ny,ymin,ymax)
+    for bin in range(h1.GetNbinsX()*h1.GetNbinsY()):
+        ratio.SetBinContent(bin,h1.GetBinContent(bin))
+    ratio.Divide(h2)
+    ratio.GetYaxis().SetTitle(vary)
+    ratio.GetXaxis().SetTitle(varx)
+    ratio.GetZaxis().SetTitle("Data/MC")
+    ratio.GetZaxis().SetTitleOffset(1.5)
+    ratio.SetMaximum(3)
+    ratio.SetTitle("Data/MC ratio plot in 2D ")
+    
+    cname = "%s_%s_%s_%s"%(varx,vary,cut,"DataMC")
+    draw2Dplot(ratio,outfile,cut,cname)
 
 def draw2Dplot(h,outfile,cut,cname):
     # Make the  canvas
     canvas = rt.TCanvas(cname,"")
+    canvas.cd()
     canvas.SetRightMargin(0.17)
     h.Draw("colz")
     t = '#scale[1.1]{Selection ' + cut + '}'
@@ -34,7 +62,7 @@ def draw2Dplot(h,outfile,cut,cname):
     canvas.SaveAs(outputdir+"/"+cname+".pdf")
     outfile.cd()
     canvas.Write()
-
+    canvas.Close() # close histogram, better for speed when making lots of plots
 
 if __name__ == "__main__":
     
@@ -73,8 +101,8 @@ if __name__ == "__main__":
 
     cuts = ["Cleaning","HCAL_noise","vertexg0","njetge3","HLT","jet1ptg200",
             "SIG","neleeq0","nmueq0","trackIso",
-            "g1Mb0Ll","g1Mbg1W0Ll","0Lb0Ll","0Lbg1uW0Ll","0Lbg1W0Ll",
-            "1Ll","g1Mb1Ll","g1Mbg1W1Ll", 
+            "g1Mb0Ll","g1Mbg1W0Ll","0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1W0Ll",
+            "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT","g1Mbg1W1LlmT100", 
             "2mu","2mu0el","0Lb2mu0el","g1Mb2mu0el" 
             ]
     cuts = ["SIG" ]
@@ -83,5 +111,18 @@ if __name__ == "__main__":
         print "Making plot for", cut
         make2Dplot("MR","R2",cut,f_bg,outfile,"bg")        
         make2Dplot("MR","R2",cut,f_data,outfile,"data")
+        make2Dratioplot("MR","R2",cut,f_data,f_bg,outfile)
 
+    # Make 2D plots of mindeltaphi
+    cut = "0Lbg1uW0Ll"
+    make2Dplot("MR","minDeltaPhi",cut,f_bg,outfile,"bg")        
+    make2Dplot("MR","minDeltaPhi",cut,f_data,outfile,"data")        
+    make2Dratioplot("MR","minDeltaPhi",cut,f_data,f_bg,outfile)        
+    make2Dplot("R2","minDeltaPhi",cut,f_bg,outfile,"bg")        
+    make2Dplot("R2","minDeltaPhi",cut,f_data,outfile,"data")        
+    make2Dratioplot("R2","minDeltaPhi",cut,f_data,f_bg,outfile)        
+
+
+
+        
     outfile.Close()
