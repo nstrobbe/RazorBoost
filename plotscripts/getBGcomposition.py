@@ -190,7 +190,7 @@ def getrowpercentage(cut,info,intlumi):
             ttX = ttX + effxs
     
     totalbg = ttj+wj+qcd+diboson+top+zjets+zll+triboson+ttX
-    row = " & {:.1%} & {:.1%} & {:.1%} & {:.1%} & {:.1%} & {:.1%} & {:.1%} & {:.1%} & {:.1%} \\\\ \n".format(qcd/totalbg,ttj/totalbg,wj/totalbg,diboson/totalbg,top/totalbg,zjets/totalbg,zll/totalbg,triboson/totalbg,ttX/totalbg)
+    row = " & {0:.1%} & {1:.1%} & {2:.1%} & {3:.1%} & {4:.1%} & {5:.1%} & {6:.1%} & {7:.1%} & {8:.1%} \\\\ \n".format(qcd/totalbg,ttj/totalbg,wj/totalbg,diboson/totalbg,top/totalbg,zjets/totalbg,zll/totalbg,triboson/totalbg,ttX/totalbg)
     print row
     return row.replace("%","\%")
 
