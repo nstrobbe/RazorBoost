@@ -47,12 +47,67 @@ def make2Dratioplot(varx,vary,cut,infile1,infile2,outfile):
     cname = "%s_%s_%s_%s"%(varx,vary,cut,"DataMC")
     draw2Dplot(ratio,outfile,cut,cname)
 
+    # cname = "%s_%s_%s_%s"%(varx,vary,cut,"FF")
+    # FF = rt.TH2D("h_FF","",nx,xmin,xmax,ny,ymin,ymax)
+    # Make the french flag plot here...
+    # FF.GetZaxis().SetTitle("n sigma")
+    #draw2DFrenchFlag(h,outfile,cut,cname)
+
 def draw2Dplot(h,outfile,cut,cname):
     # Make the  canvas
     canvas = rt.TCanvas(cname,"")
     canvas.cd()
     canvas.SetRightMargin(0.17)
     h.Draw("colz")
+    t = '#scale[1.1]{Selection ' + cut + '}'
+    tex = rt.TLatex(0.52,0.82,t)
+    tex.SetNDC();
+    tex.Draw("same");
+
+    canvas.cd()
+    canvas.SaveAs(outputdir+"/"+cname+".pdf")
+    outfile.cd()
+    canvas.Write()
+    canvas.Close() # close histogram, better for speed when making lots of plots
+
+def draw2DFrenchFlag(h,outfile,cut,cname):
+
+    # French flag Palette
+    Red = array('d',  [0.00, 0.70, 0.90, 1.00, 1.00, 1.00, 1.00])
+    Green = array('d',[0.00, 0.70, 0.90, 1.00, 0.90, 0.70, 0.00])
+    Blue = array('d', [1.00, 1.00, 1.00, 1.00, 0.90, 0.70, 0.00])
+    Length = array('d',[0.00, 0.20, 0.35, 0.50, 0.65, 0.8, 1.00])
+    TColor.CreateGradientColorTable(7,Length,Red,Green,Blue,9999)
+
+    canvas = rt.TCanvas(cname,"")
+    canvas.cd()
+    canvas.SetRightMargin(0.17)
+
+    h.SetMaximum(5.1)
+    h.SetMinimum(-5.1)
+    # so the binning is 0 2 4
+    h.SetContour(9999)
+
+    h.GetXaxis().CenterTitle()
+    h.GetXaxis().SetTitleOffset(1.25)
+    h.GetXaxis().SetTitleSize(0.055)
+    h.GetXaxis().SetTitleFont(42)
+    h.GetXaxis().SetLabelOffset(0.012)
+    h.GetXaxis().SetLabelSize(0.050)
+    h.GetXaxis().SetLabelFont(42)
+    h.GetXaxis().SetNdivisions(8, 5, 0)
+
+    h.GetYaxis().CenterTitle()
+    h.GetYaxis().SetTitleOffset(1.3)
+    h.GetYaxis().SetTitleSize(0.055)
+    h.GetYaxis().SetTitleFont(42)
+    h.GetYaxis().SetLabelOffset(0.012)
+    h.GetYaxis().SetLabelSize(0.050)
+    h.GetYaxis().SetLabelFont(42)
+    h.GetYaxis().SetNdivisions(8, 5, 0)
+    
+    h.Draw('col4z')
+
     t = '#scale[1.1]{Selection ' + cut + '}'
     tex = rt.TLatex(0.52,0.82,t)
     tex.SetNDC();
