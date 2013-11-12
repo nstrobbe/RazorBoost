@@ -3,20 +3,32 @@ from string import *
 import ROOT as rt
 from ROOT import TFile
 
-def make2Dplot(varx,vary,cut,infile,outfile,process):
+def make2Dplot(varx,vary,cut,infile,outputdir,outfile,process):
     hname = "h_%s_%s_%s" % (varx,vary,cut)
     h = infile.Get(hname)
     h.GetYaxis().SetTitle(vary)
     h.GetXaxis().SetTitle(varx)
     h.GetZaxis().SetTitle("Events")
     h.GetZaxis().SetTitleOffset(1.5)
-    h.SetMaximum(10000)
+    hmax = h.GetMaximum()
+    maxi=400
+    if hmax > maxi:
+        if hmax < 1000:
+            maxi = 1000
+        elif hmax < 2000:
+            maxi = 2000
+        elif hmax < 5000:
+            maxi = 5000
+        else:
+            maxi = 10000
+    h.SetMaximum(maxi)
+
     h.SetTitle("2D plot of %s vs %s for %s"%(vary,varx,process))
     
     cname = "%s_%s_%s_%s"%(varx,vary,cut,process)
-    draw2Dplot(h,outfile,cut,cname)
+    draw2Dplot(h,outputdir,outfile,cut,cname)
 
-def make2Dratioplot(varx,vary,cut,infile1,infile2,outfile):
+def make2Dratioplot(varx,vary,cut,infile1,infile2,outputdir,outfile):
     #""" Will divide histogram from infile1 by histogram from infile2 """
     hname = "h_%s_%s_%s" % (varx,vary,cut)
     h1 = infile1.Get(hname)
@@ -53,14 +65,14 @@ def make2Dratioplot(varx,vary,cut,infile1,infile2,outfile):
     # FF.GetZaxis().SetTitle("n sigma")
     #draw2DFrenchFlag(h,outfile,cut,cname)
 
-def draw2Dplot(h,outfile,cut,cname):
+def draw2Dplot(h,outputdir,outfile,cut,cname):
     # Make the  canvas
     canvas = rt.TCanvas(cname,"")
     canvas.cd()
     canvas.SetRightMargin(0.17)
     h.Draw("colz")
     t = '#scale[1.1]{Selection ' + cut + '}'
-    tex = rt.TLatex(0.52,0.82,t)
+    tex = rt.TLatex(0.45,0.82,t)
     tex.SetNDC();
     tex.Draw("same");
 
@@ -70,7 +82,7 @@ def draw2Dplot(h,outfile,cut,cname):
     canvas.Write()
     canvas.Close() # close histogram, better for speed when making lots of plots
 
-def draw2DFrenchFlag(h,outfile,cut,cname):
+def draw2DFrenchFlag(h,outputdir,outfile,cut,cname):
 
     # French flag Palette
     Red = array('d',  [0.00, 0.70, 0.90, 1.00, 1.00, 1.00, 1.00])
@@ -140,7 +152,6 @@ if __name__ == "__main__":
     # Integrated luminosity in fb-1s
     intlumi = 19.789 # ABCD
     analyzer = "rzrBoostMC"
-    analyzer = "rzrBTevsel_plots"
 
     print "Will make plots for integrated luminosity of %.3f fb-1" % (intlumi)
 
@@ -160,7 +171,6 @@ if __name__ == "__main__":
             "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT","g1Mbg1W1LlmT100", 
             "2mu","2mu0el","0Lb2mu0el","g1Mb2mu0el" 
             ]
-    cuts = ["SIG" ]
 
     for cut in cuts:
         print "Making plot for", cut
@@ -170,20 +180,20 @@ if __name__ == "__main__":
 
     # Make 2D plots of mindeltaphi
     cut = "0Lbg1uW0Ll"
-    make2Dplot("MR","minDeltaPhi",cut,f_bg,outfile,"bg")        
-    make2Dplot("MR","minDeltaPhi",cut,f_data,outfile,"data")        
-    make2Dratioplot("MR","minDeltaPhi",cut,f_data,f_bg,outfile)        
-    make2Dplot("R2","minDeltaPhi",cut,f_bg,outfile,"bg")        
-    make2Dplot("R2","minDeltaPhi",cut,f_data,outfile,"data")        
-    make2Dratioplot("R2","minDeltaPhi",cut,f_data,f_bg,outfile)        
+    make2Dplot("MR","minDeltaPhi",cut,f_bg,outputdir,outfile,"bg")        
+    make2Dplot("MR","minDeltaPhi",cut,f_data,outputdir,outfile,"data")        
+    make2Dratioplot("MR","minDeltaPhi",cut,f_data,f_bg,outputdir,outfile)        
+    make2Dplot("R2","minDeltaPhi",cut,f_bg,outputdir,outfile,"bg")        
+    make2Dplot("R2","minDeltaPhi",cut,f_data,outputdir,outfile,"data")        
+    make2Dratioplot("R2","minDeltaPhi",cut,f_data,f_bg,outputdir,outfile)        
 
     # Make 2D plots of mT
     cut = "g1Mbg1W1Ll"
-    make2Dplot("MR","mT",cut,f_bg,outfile,"bg")        
-    make2Dplot("MR","mT",cut,f_data,outfile,"data")        
-    make2Dratioplot("MR","mT",cut,f_data,f_bg,outfile)        
-    make2Dplot("R2","mT",cut,f_bg,outfile,"bg")        
-    make2Dplot("R2","mT",cut,f_data,outfile,"data")        
-    make2Dratioplot("R2","mT",cut,f_data,f_bg,outfile)        
+    make2Dplot("MR","mT",cut,f_bg,outputdir,outfile,"bg")        
+    make2Dplot("MR","mT",cut,f_data,outputdir,outfile,"data")        
+    make2Dratioplot("MR","mT",cut,f_data,f_bg,outputdir,outfile)        
+    make2Dplot("R2","mT",cut,f_bg,outputdir,outfile,"bg")        
+    make2Dplot("R2","mT",cut,f_data,outputdir,outfile,"data")        
+    make2Dratioplot("R2","mT",cut,f_data,f_bg,outputdir,outfile)        
        
     outfile.Close()
