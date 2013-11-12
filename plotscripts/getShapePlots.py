@@ -152,6 +152,12 @@ if __name__ == '__main__':
     
     vars = ["MR","R2"]
 
+    # histogram dictionary takes the following form
+    # dict["name"] = [histogram, 
+    #                 color,
+    #                 plot title,
+    #                 Used as reference plot in ratio]
+
     # build hdict for TTJ control regions:
     for var in vars:
         hdict = {}
