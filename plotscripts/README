@@ -8,7 +8,7 @@
 *************************
 
 Run as: 
-	python getBGcomposition.py samplesfile
+	python getBGcomposition.py <samplesfile>
 With:
 	samplefile: file containing all the samples you want to run over
 
@@ -26,7 +26,7 @@ Output of the script:
 ***********************
 
 Run as: 
-	python getDataMCplots.py outputdir
+	python getDataMCplots.py <outputdir>
 With:
 	outputdir: directory where you want the plots to be stored
 
@@ -35,3 +35,54 @@ Things to modify in the script:
 	* datasets you want to include. 
 	* location of the root files containing the histograms
 	* Cut strings if you change those
+
+***********************
+** get2Dplots.py **
+***********************
+
+Run current version as: 
+        python get2Dplots.py <outputdir> <bg histo dir> (<data histo dir>)
+With: 
+        outputdir: directory where you want the plots to be stored
+	bg histo dir: directory containing the rzrBoostMC_bg.root file
+	data histo dir: directory containing the rzrBoostMC_data.root file, 
+	     	   	can be omitted if it is the same as <bg histo dir>
+
+Things to modify in the script:
+       * integrated luminosity if you want to change this from how you ran the analyzer
+       * name of the analyzer you ran, default is "rzrBoostMC"
+       * name of the outputfile, default is "2Dplots.root"
+       * Cut strings if you changed those
+       * Specific (extra) plots to make
+
+***********************
+** getShapePlots.py **
+***********************
+
+Run current version as: 
+        python getShapePlots.py <outputdir> <infile1> <infile2> <infile3>
+With: 
+        outputdir: directory where you want the plots to be stored
+	infile1,2,3: three inputfiles currently corresponding to total BG, QCD, TTJets
+
+Things to modify in the script:
+       * integrated luminosity if you want to change this from how you ran the analyzer
+       * name of the outputfile, default is "shapeplots.root"
+       * Specific plots to make
+
+Additional information: 
+       * Information about the histogram is passed along to the plot function through a dictionary
+         It takes the following form:
+	    dict["name"] = [histogram, 
+            		    color,
+         		    plot title,
+                 	    Used as reference plot in ratio?]
+
+
+
+
+
+
+
+
+
