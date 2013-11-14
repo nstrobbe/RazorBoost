@@ -1,1 +1,1 @@
-tnm_group%/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 225.197 6923750
+tnm_group%/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 245.8 6923750
