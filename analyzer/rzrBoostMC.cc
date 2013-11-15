@@ -76,6 +76,12 @@ int main(int argc, char** argv)
   double totweight = cmdline.totweight;
   double lumi = cmdline.lumi;
 
+  string sample = "";
+  
+  bool doISRreweighting = false;
+  if (sample == "T2tt" || sample == "T1ttcc")
+    doISRreweighting = true;
+
   // Calculate the normalization factor for the event weights
   // The original MC weight will be divided by this quantity
   double weightnorm = 1.;
@@ -95,6 +101,12 @@ int main(int argc, char** argv)
   double MRmx = 4000;
 
   TH1D* h_totweight = new TH1D("h_totweight", "h_totweight", 1, 1, 2);
+
+  // histograms for total ISR weight: Sum(all events) w_ISR
+  // needed to do the reweighting properly without changing the overall cross section. 
+  TH1D* h_totalISRweight_nominal = new TH1D("h_totalISRweight_nominal", "h_totalISRweight_nominal", 1, 1, 2); // nominal ISR weight
+  TH1D* h_totalISRweight_up = new TH1D("h_totalISRweight_up", "h_totalISRweight_up", 1, 1, 2); //  ISR up weight
+  TH1D* h_totalISRweight_down = new TH1D("h_totalISRweight_down", "h_totalISRweight_down", 1, 1, 2); // ISR down weight
 
   // W tagging plots
 
@@ -670,6 +682,52 @@ int main(int argc, char** argv)
 	TTsemilep->Fill("Cleaning",w);
       else if(isTTdilep)
 	TTdilep->Fill("Cleaning",w);
+
+
+      // *****************************************************
+      // ***  ISR Reweighting recipe for Madgraph samples  ***
+      // *****************************************************
+      // per event weights to apply
+      double w_ISR_nominal = 1.;
+      double w_ISR_up = 1.; // always stays 1, i.e. no reweighting
+      double w_ISR_down = 1.;
+      if (doISRreweighting)
+	{
+	  // recipe can be found at https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMST2ccMadgraph8TeV
+	  // find system recoiling against ISR: 
+	  TLorentzVector recoilsystem(0,0,0,0); 
+	  int ID_to_find = -1;
+	  if (sample == "T2tt")
+	    ID_to_find = 1000006;
+	  if (sample == "T1ttcc")
+	    ID_to_find = 1000021;
+	  for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+	    if (genparticlehelper[i].status != 3) continue;
+	    if (fabs(genparticlehelper[i].pdgId) == ID_to_find){
+	      TLorentzVector TLV_temp; 
+	      TLV_temp.SetPtEtaPhiM(genparticlehelper[i].pt,genparticlehelper[i].eta,genparticlehelper[i].phi,genparticlehelper[i].mass);
+	      recoilsystem += TLV_temp;
+	    }
+	  }
+	  // get the pt of the recoil system, apply weights accordingly
+	  double pt_ISR = recoilsystem.Pt();
+	  if (pt_ISR <= 120){
+	    w_ISR_nominal = 1.;
+	    w_ISR_down = 1.;
+	  } else if (pt_ISR <= 150){
+	    w_ISR_nominal = 0.95;
+	    w_ISR_down = 0.9;
+	  } else if (pt_ISR <= 250){
+	    w_ISR_nominal = 0.9;
+	    w_ISR_down = 0.8;
+	  } else {
+	    w_ISR_nominal = 0.8;
+	    w_ISR_down = 0.6;
+	  }
+	}
+      h_totalISRweight_nominal->Fill(1,w_ISR_nominal);
+      h_totalISRweight_up->Fill(1,w_ISR_up);
+      h_totalISRweight_down->Fill(1,w_ISR_down);
      
       // ----------------------
       // -- object selection --
