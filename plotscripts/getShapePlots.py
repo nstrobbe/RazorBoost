@@ -19,7 +19,7 @@ def CloneHist1D(hold,name=""):
     
     return newh
 
-def makeplots(hdict,outputdir,outfile,cname,ratiotitle):
+def makeplots(hdict,outputdir,outfile,cname,ratiotitle,scale=True):
     # placeholder for draw objects
     rootEvil = []
 
@@ -44,9 +44,10 @@ def makeplots(hdict,outputdir,outfile,cname,ratiotitle):
     first = 0
     for name,stuff in hdict.iteritems():
         h = stuff[0] # Get the histogram
-        sf = h.Integral(0,h.GetNbinsX()+1)
         h.Sumw2() # need to put this otherwise errors in ratio plot are wrong
-        h.Scale(1./sf)
+        if scale:
+            sf = h.Integral(0,h.GetNbinsX()+1)
+            h.Scale(1./sf)
                 
         if stuff[3]:
             print "Found ref histo"
