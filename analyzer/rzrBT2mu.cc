@@ -21,7 +21,8 @@ int main(int argc, char** argv)
 {
 
   // Get the trigger histogram:
-  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
+  //TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
+  TFile* fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
   TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
   
   // Get file list and histogram filename from command line
@@ -120,6 +121,8 @@ int main(int argc, char** argv)
   TH1D* h_nWAK5_Cleaning = new TH1D("h_nWAK5_Cleaning", "h_nWAK5_Cleaning", 5, 0, 5);
   TH2D* h_met_R2_Cleaning = new TH2D("h_met_R2_Cleaning", "h_met_R2_Cleaning", 50, 0, 1000, 25, 0, 1);
   TH1D* h_met_Cleaning = new TH1D("h_met_Cleaning", "h_met_Cleaning", 50, 0, 1000);
+  TH2D* h_metmu_R2metmu_Cleaning = new TH2D("h_metmu_R2metmu_Cleaning", "h_metmu_R2metmu_Cleaning", 50, 0, 1000, 25, 0, 1);
+  TH1D* h_metmu_Cleaning = new TH1D("h_metmu_Cleaning", "h_metmu_Cleaning", 50, 0, 1000);
   TH1D* h_j1pt_Cleaning = new TH1D("h_j1pt_Cleaning", "h_j1pt_Cleaning", 50, 0, 1000);
   TH1D* h_nj_Cleaning = new TH1D("h_nj_Cleaning", "h_nj_Cleaning", 20, 0, 20);
 
@@ -134,6 +137,9 @@ int main(int argc, char** argv)
   TH1D* h_MR_Cleaning = new TH1D("h_MR_Cleaning", "h_MR_Cleaning", 20, 0, MRmx);
   TH1D* h_R2_Cleaning = new TH1D("h_R2_Cleaning", "h_R2_Cleaning", 25, 0, 1);
   TH2D* h_MR_R2_Cleaning = new TH2D("h_MR_R2_Cleaning", "h_MR_R2_Cleaning", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D* h_R2metmu_Cleaning = new TH1D("h_R2metmu_Cleaning", "h_R2metmu_Cleaning", 25, 0, 1);
+  TH2D* h_MR_R2metmu_Cleaning = new TH2D("h_MR_R2_Cleaning", "h_MR_R2metmu_Cleaning", 20, 0, MRmx, 25, 0, 1);
 
   TH1D* h_MR_HCAL_noise = new TH1D("h_MR_HCAL_noise", "h_MR_HCAL_noise", 20, 0, MRmx);
   TH1D* h_R2_HCAL_noise = new TH1D("h_R2_HCAL_noise", "h_R2_HCAL_noise", 25, 0, 1);
@@ -231,8 +237,15 @@ int main(int argc, char** argv)
   TH2D * h_MR_mT_g1Mbg1W1LlmT = new TH2D("h_MR_mT_g1Mbg1W1LlmT", "h_MR_mT_g1Mbg1W1LlmT", 20, 0, MRmx, 50, 0, 500);
   TH2D * h_R2_mT_g1Mbg1W1LlmT = new TH2D("h_R2_mT_g1Mbg1W1LlmT", "h_R2_mT_g1Mbg1W1LlmT", 25, 0, 1, 50, 0, 500);
 
-
   // dimuon trajectory
+  TH1D * h_Zmass_2mu = new TH1D("h_Zmass_2mu", "h_Zmass_2mu", 20, 50, 130);
+  TH2D * h_R2_Zmass_2mu = new TH2D("h_R2_Zmass_2mu", "h_R2_Zmass_2mu", 20, 50, 130, 20, 0, MRmx);
+  TH2D * h_MR_Zmass_2mu = new TH2D("h_MR_Zmass_2mu", "h_MR_Zmass_2mu", 20, 50, 130, 20, 0, 1.);
+
+  TH1D * h_MR_2munoZmass = new TH1D("h_MR_2munoZmass", "h_MR_2munoZmass", 20, 0, MRmx);
+  TH1D * h_R2_2munoZmass = new TH1D("h_R2_2munoZmass", "h_R2_2munoZmass", 25, 0, 1);
+  TH2D * h_MR_R2_2munoZmass = new TH2D("h_MR_R2_2munoZmass", "h_MR_R2_2munoZmass", 20, 0, MRmx, 25, 0, 1);
+
   TH1D * h_MR_2mu = new TH1D("h_MR_2mu", "h_MR_2mu", 20, 0, MRmx);
   TH1D * h_R2_2mu = new TH1D("h_R2_2mu", "h_R2_2mu", 25, 0, 1);
   TH2D * h_MR_R2_2mu = new TH2D("h_MR_R2_2mu", "h_MR_R2_2mu", 20, 0, MRmx, 25, 0, 1);
@@ -248,6 +261,15 @@ int main(int argc, char** argv)
   TH1D * h_MR_g1Mb2mu0el = new TH1D("h_MR_g1Mb2mu0el", "h_MR_g1Mb2mu0el", 20, 0, MRmx);
   TH1D * h_R2_g1Mb2mu0el = new TH1D("h_R2_g1Mb2mu0el", "h_R2_g1Mb2mu0el", 25, 0, 1);
   TH2D * h_MR_R2_g1Mb2mu0el = new TH2D("h_MR_R2_g1Mb2mu0el", "h_MR_R2_g1Mb2mu0el", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D * h_MR_0Lbg1Y2mu0el = new TH1D("h_MR_0Lb2mu0el", "h_MR_0Lb2mu0el", 20, 0, MRmx);
+  TH1D * h_R2_0Lbg1Y2mu0el = new TH1D("h_R2_0Lb2mu0el", "h_R2_0Lb2mu0el", 25, 0, 1);
+  TH2D * h_MR_R2_0Lbg1Y2mu0el = new TH2D("h_MR_R2_0Lb2mu0el", "h_MR_R2_0Lb2mu0el", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_g1Mbg1Y2mu0el = new TH1D("h_MR_g1Mbg1Y2mu0el", "h_MR_g1Mbg1Y2mu0el", 20, 0, MRmx);
+  TH1D * h_R2_g1Mbg1Y2mu0el = new TH1D("h_R2_g1Mbg1Y2mu0el", "h_R2_g1Mbg1Y2mu0el", 25, 0, 1);
+  TH2D * h_MR_R2_g1Mbg1Y2mu0el = new TH2D("h_MR_R2_g1Mbg1Y2mu0el", "h_MR_R2_g1Mbg1Y2mu0el", 20, 0, MRmx, 25, 0, 1);
+
   
 
   // Gen level plots
@@ -283,10 +305,13 @@ int main(int argc, char** argv)
   ofile.count("g1Mbg1W1Ll", 0.0);
   ofile.count("g1Mbg1W1LlmT", 0.0);
 
+  ofile.count("2munoZmass", 0.0);
   ofile.count("2mu", 0.0);
   ofile.count("2mu0el", 0.0);
   ofile.count("0Lb2mu0el", 0.0);
   ofile.count("g1Mb2mu0el", 0.0);
+  ofile.count("0Lbg1Y2mu0el", 0.0);
+  ofile.count("g1Mbg1Y2mu0el", 0.0);
   
   TH1D* TTallhad = new TH1D("counts_TTallhad","",1,0,1);
   TTallhad->SetBit(TH1::kCanRebin);
@@ -315,10 +340,13 @@ int main(int argc, char** argv)
   TTallhad->Fill("g1Mb1Ll", 0.0);
   TTallhad->Fill("g1Mbg1W1Ll", 0.0);
   TTallhad->Fill("g1Mbg1W1LlmT", 0.0);
+  TTallhad->Fill("2munoZmass", 0.0);
   TTallhad->Fill("2mu", 0.0);
   TTallhad->Fill("2mu0el", 0.0);
   TTallhad->Fill("0Lb2mu0el", 0.0);
   TTallhad->Fill("g1Mb2mu0el", 0.0);
+  TTallhad->Fill("0Lbg1Y2mu0el", 0.0);
+  TTallhad->Fill("g1Mbg1Y2mu0el", 0.0);
 
   TTsemilep->Fill("NoCuts", 0.0);
   TTsemilep->Fill("Cleaning", 0.0);
@@ -340,10 +368,13 @@ int main(int argc, char** argv)
   TTsemilep->Fill("g1Mb1Ll", 0.0);
   TTsemilep->Fill("g1Mbg1W1Ll", 0.0);
   TTsemilep->Fill("g1Mbg1W1LlmT", 0.0);
+  TTsemilep->Fill("2munoZmass", 0.0);
   TTsemilep->Fill("2mu", 0.0);
   TTsemilep->Fill("2mu0el", 0.0);
   TTsemilep->Fill("0Lb2mu0el", 0.0);
   TTsemilep->Fill("g1Mb2mu0el", 0.0);
+  TTsemilep->Fill("0Lbg1Y2mu0el", 0.0);
+  TTsemilep->Fill("g1Mbg1Y2mu0el", 0.0);
 
   TTdilep->Fill("NoCuts", 0.0);
   TTdilep->Fill("Cleaning", 0.0);
@@ -365,11 +396,13 @@ int main(int argc, char** argv)
   TTdilep->Fill("g1Mb1Ll", 0.0);
   TTdilep->Fill("g1Mbg1W1Ll", 0.0);
   TTdilep->Fill("g1Mbg1W1LlmT", 0.0);
+  TTdilep->Fill("2munoZmass", 0.0);
   TTdilep->Fill("2mu", 0.0);
   TTdilep->Fill("2mu0el", 0.0);
   TTdilep->Fill("0Lb2mu0el", 0.0);
   TTdilep->Fill("g1Mb2mu0el", 0.0);
-
+  TTdilep->Fill("0Lbg1Y2mu0el", 0.0);
+  TTdilep->Fill("g1Mbg1Y2mu0el", 0.0);
 
 
   TH1::SetDefaultSumw2();
@@ -673,7 +706,7 @@ int main(int argc, char** argv)
       // jets - selected:
       // From https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetID
       std::vector<cmgpfjet_s> sjet;
-      std::vector<TLorentzVector> sjetl;
+      std::vector<TLorentzVector> LVsjet;
       std::vector<cmgpfjet_s> sbjet;
       std::vector<cmgpfjet_s> slbjet;
       for (unsigned int i=0; i<cmgpfjet.size(); i++) {
@@ -699,7 +732,7 @@ int main(int argc, char** argv)
 	TLorentzVector jl;
 	jl.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
 			cmgpfjet[i].phi, cmgpfjet[i].energy);
-	sjetl.push_back(jl);
+	LVsjet.push_back(jl);
       }
 
 
@@ -708,6 +741,7 @@ int main(int argc, char** argv)
       std::vector<jethelper4_s> sjet2;
       std::vector<jethelper4_s> sW;
       std::vector<jethelper4_s> aW;
+      std::vector<jethelper4_s> sY;
       for (unsigned int i=0; i<jethelper4.size(); i++) {
         if (!(jethelper4[i].pt > 30) ) continue;
         if (!(fabs(jethelper4[i].eta) < 3) ) continue;
@@ -718,6 +752,7 @@ int main(int argc, char** argv)
         h_jmass->Fill(jethelper4[i].mass);
 	// New Andreas cuts:
         if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+	sY.push_back(jethelper4[i]);
         h_d1ptsel_d2ptsel->Fill(jethelper4[i].daughter_0_pt, jethelper4[i].daughter_1_pt);
         h_d1msel_d2msel->Fill(jethelper4[i].daughter_0_mass, jethelper4[i].daughter_1_mass);
         //cout << jethelper4[i].pt << endl;
@@ -812,10 +847,19 @@ int main(int argc, char** argv)
       }
       // Muons - tight
       std::vector<cmgmuon1_s> smuon;
+      std::vector<TVector3> V3mu;
+      std::vector<TLorentzVector> LVmu;
       for (unsigned int i=0; i<cmgmuon1.size(); i++) {
-	if (!(cmgmuon1[i].pt > 25) ) continue;
+	if (!(cmgmuon1[i].pt > 20) ) continue;
 	if (!(fabs(cmgmuon1[i].eta) < 2.4) ) continue;
 	smuon.push_back(cmgmuon1[i]);
+        TVector3 lmu;
+        lmu.SetPtEtaPhi(cmgmuon1[i].pt, 0, cmgmuon1[i].phi);
+        V3mu.push_back(lmu);
+	TLorentzVector lvmu;
+	lvmu.SetPtEtaPhiE(cmgmuon1[i].pt, cmgmuon1[i].eta,
+			  cmgmuon1[i].phi, cmgmuon1[i].energy);
+        LVmu.push_back(lvmu);
       }
 
       // Electrons - veto:
@@ -860,9 +904,9 @@ int main(int argc, char** argv)
 
 
 
-
       // look at number of Ws and bs before any selection (besides cleaning and trigger)
       double nWs = sW.size();
+      double nYs = sY.size();
       double nbs = sbjet.size();
 
       h_nW_Cleaning->Fill(nWs, w);
@@ -876,28 +920,44 @@ int main(int argc, char** argv)
       // ---------------------
 
 
-      TVector3 metl;
-      metl.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
+      // Calculate MR and R2 ignoring muons
+      TVector3 V3met;
+      V3met.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
       TLorentzVector met;
       met.SetPtEtaPhiE(cmgbasemet2[0].pt, 0, cmgbasemet2[0].phi, cmgbasemet2[0].energy);
-      //cout << "MET info: " << cmgbasemet2[0].pt << " " << cmgbasemet2[0].phi << " " << cmgbasemet2[0].energy << endl;
-      std::vector<TLorentzVector> hemis = CombineJets(sjetl);
+      std::vector<TLorentzVector> LVhemis = CombineJets(LVsjet);
 
       double MR = -9999;
       double MTR = -9999;
       double R2 = -9999;
-      if (hemis.size() == 2) {
-	MR = CalcMR(hemis[0], hemis[1]);
-	if (MR == MR) {
-	  h_MR_Cleaning->Fill(MR, w);
-	  MTR = CalcMTR(hemis[0], hemis[1], metl);
-	  R2 = pow((MTR / MR),2);
-	  h_R2_Cleaning->Fill(R2, w);
-	  h_MR_R2_Cleaning->Fill(MR, R2, w);
-	  h_met_R2_Cleaning->Fill(cmgbasemet2[0].et, R2, w);
-	}
+      if (LVhemis.size() == 2) {
+        MR = CalcMR(LVhemis[0], LVhemis[1]);
+        if (MR != MR) continue;
+        h_MR_Cleaning->Fill(MR, w);
+        MTR = CalcMTR(LVhemis[0], LVhemis[1], V3met);
+        R2 = pow((MTR / MR),2);
+        h_R2_Cleaning->Fill(R2, w);
+        h_MR_R2_Cleaning->Fill(MR, R2, w);
+	h_met_R2_Cleaning->Fill(cmgbasemet2[0].et, R2, w);
       }
-      //cout << MR << " " << MTR << " " << R2 << endl;
+
+      // Calculate MR and R2 adding mus to MET
+      TVector3 V3metmu;
+      V3metmu.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
+      for (unsigned int i=0; i<V3mu.size(); i++) {
+        V3metmu += V3mu[i];
+      }
+      h_metmu_Cleaning->Fill(V3metmu.Pt(), w);
+
+      double MTRmetmu = -9999;
+      double R2metmu = -9999;
+      if (LVhemis.size() == 2) {
+        MTRmetmu = CalcMTR(LVhemis[0], LVhemis[1], V3metmu);
+        R2metmu = pow((MTRmetmu / MR),2);
+        h_R2metmu_Cleaning->Fill(R2metmu, w);
+        h_MR_R2metmu_Cleaning->Fill(MR, R2, w);
+        h_metmu_R2metmu_Cleaning->Fill(V3metmu.Pt(), R2, w);
+      }
 
 
       // ---------------------
@@ -1007,7 +1067,7 @@ int main(int argc, char** argv)
 
 
       // Only select events in MR-R2 SIG region 
-      if (!(MR > 800 && R2 > 0.08)) continue;
+      if (!(MR > 800 && R2metmu > 0.08)) continue;
       ofile.count("SIG", w);
       h_MR_SIG->Fill(MR, w);
       h_R2_SIG->Fill(R2, w);
@@ -1023,7 +1083,7 @@ int main(int argc, char** argv)
       // Compute the minDeltaPhi variable, taking the first three jets into account
       double minDeltaPhi = 99.;
       for (int jet=0; jet<3; ++jet){
-	double mdphi = fdeltaPhi(sjet[jet].phi,metl.Phi());
+	double mdphi = fdeltaPhi(sjet[jet].phi,V3met.Phi());
 	if (mdphi < minDeltaPhi)
 	  minDeltaPhi = mdphi;
       }
@@ -1226,11 +1286,38 @@ int main(int argc, char** argv)
 	} // end nmediumbs > 0
       } // end nlooseleptons == 1
 
+
+      // 2mu - Sezen look here
+      // Use the MRmu and R2mu here - but keep the histogram names the same
+      TLorentzVector LVZcand;
       if (ntightmuons == 2 && nloosemuons == 2) {
+	// Make sure that the muons are opposite-signed:
+	if (!(smuon[0].charge == -smuon[1].charge)) continue;
+	// See if the 2mu makes a Z:
+	for (unsigned int m=0; m<LVmu.size(); m++) {
+	  LVZcand += LVmu[m];
+	}
+        double Zmass = LVZcand.M();
+	h_Zmass_2mu->Fill(Zmass, w);
+	h_MR_Zmass_2mu->Fill(MR, Zmass, w);
+	h_R2_Zmass_2mu->Fill(R2, Zmass, w);
+	ofile.count("2munoZmass",w);
+	h_MR_2munoZmass->Fill(MR, w);
+	h_R2_2munoZmass->Fill(R2metmu, w);
+	h_MR_R2_2munoZmass->Fill(MR, R2metmu, w);
+	if(isTTallhad)
+	  TTallhad->Fill("2munoZmass", w);
+	else if(isTTsemilep)
+	  TTsemilep->Fill("2munoZmass", w);
+	else if(isTTdilep)
+	  TTdilep->Fill("2munoZmass", w);
+
+	if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	// add the Z cut here
 	ofile.count("2mu",w);
 	h_MR_2mu->Fill(MR, w);
-	h_R2_2mu->Fill(R2, w);
-	h_MR_R2_2mu->Fill(MR, R2, w);
+	h_R2_2mu->Fill(R2metmu, w);
+	h_MR_R2_2mu->Fill(MR, R2metmu, w);
 	if(isTTallhad)
 	  TTallhad->Fill("2mu", w);
 	else if(isTTsemilep)
@@ -1241,8 +1328,8 @@ int main(int argc, char** argv)
 	if (nlooseelectrons == 0){
 	  ofile.count("2mu0el",w);
 	  h_MR_2mu0el->Fill(MR, w);
-	  h_R2_2mu0el->Fill(R2, w);
-	  h_MR_R2_2mu0el->Fill(MR, R2, w);
+	  h_R2_2mu0el->Fill(R2metmu, w);
+	  h_MR_R2_2mu0el->Fill(MR, R2metmu, w);
 	  if(isTTallhad)
 	    TTallhad->Fill("2mu0el", w);
 	  else if(isTTsemilep)
@@ -1253,8 +1340,8 @@ int main(int argc, char** argv)
 	  if (nloosebs == 0){
 	    ofile.count("0Lb2mu0el",w);
 	    h_MR_0Lb2mu0el->Fill(MR, w);
-	    h_R2_0Lb2mu0el->Fill(R2, w);
-	    h_MR_R2_0Lb2mu0el->Fill(MR, R2, w);
+	    h_R2_0Lb2mu0el->Fill(R2metmu, w);
+	    h_MR_R2_0Lb2mu0el->Fill(MR, R2metmu, w);
 	    if(isTTallhad)
 	      TTallhad->Fill("0Lb2mu0el", w);
 	    else if(isTTsemilep)
@@ -1266,8 +1353,8 @@ int main(int argc, char** argv)
 	  if (nmediumbs >= 1){
 	    ofile.count("g1Mb2mu0el",w);
 	    h_MR_g1Mb2mu0el->Fill(MR, w);
-	    h_R2_g1Mb2mu0el->Fill(R2, w);
-	    h_MR_R2_g1Mb2mu0el->Fill(MR, R2, w);
+	    h_R2_g1Mb2mu0el->Fill(R2metmu, w);
+	    h_MR_R2_g1Mb2mu0el->Fill(MR, R2metmu, w);
 	    if(isTTallhad)
 	      TTallhad->Fill("g1Mb2mu0el", w);
 	    else if(isTTsemilep)
@@ -1275,6 +1362,33 @@ int main(int argc, char** argv)
 	    else if(isTTdilep)
 	      TTdilep->Fill("g1Mb2mu0el", w);
 	  } // end nmediumbs >= 1
+
+	  if (nloosebs == 0 and nYs >= 1){
+	    ofile.count("0Lbg1Y2mu0el",w);
+	    h_MR_0Lbg1Y2mu0el->Fill(MR, w);
+	    h_R2_0Lbg1Y2mu0el->Fill(R2metmu, w);
+	    h_MR_R2_0Lbg1Y2mu0el->Fill(MR, R2metmu, w);
+	    if(isTTallhad)
+	      TTallhad->Fill("0Lbg1Y2mu0el", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("0Lbg1Y2mu0el", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("0Lbg1Y2mu0el", w);
+	  }// end nloosebs == 0 and nYs >= 1
+
+	  if (nmediumbs >= 1 and nYs >= 1){
+	    ofile.count("g1Mbg1Y2mu0el",w);
+	    h_MR_g1Mbg1Y2mu0el->Fill(MR, w);
+	    h_R2_g1Mbg1Y2mu0el->Fill(R2metmu, w);
+	    h_MR_R2_g1Mbg1Y2mu0el->Fill(MR, R2metmu, w);
+	    if(isTTallhad)
+	      TTallhad->Fill("g1Mbg1Y2mu0el", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("g1Mbg1Y2mu0el", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("g1Mbg1Y2mu0el", w);
+	  } // end nmediumbs >= 1 and nYs >= 1
+
 	} // end nlooseelectrons == 0
       } // end ntightmuons == 2
       
