@@ -22,6 +22,13 @@ int main(int argc, char** argv)
 
   // Get the trigger histogram:
   TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
+  if (!fhlt){
+    fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
+  }
+  if (!fhlt){
+    cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
+    return 1;
+  }
   TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
   
   // Get file list and histogram filename from command line
@@ -141,6 +148,8 @@ int main(int argc, char** argv)
   TH1D* h_nWAK5_Cleaning = new TH1D("h_nWAK5_Cleaning", "h_nWAK5_Cleaning", 5, 0, 5);
   TH2D* h_met_R2_Cleaning = new TH2D("h_met_R2_Cleaning", "h_met_R2_Cleaning", 50, 0, 1000, 25, 0, 1);
   TH1D* h_met_Cleaning = new TH1D("h_met_Cleaning", "h_met_Cleaning", 50, 0, 1000);
+  TH2D* h_metmu_R2metmu_Cleaning = new TH2D("h_metmu_R2metmu_Cleaning", "h_metmu_R2metmu_Cleaning", 50, 0, 1000, 25, 0, 1);
+  TH1D* h_metmu_Cleaning = new TH1D("h_metmu_Cleaning", "h_metmu_Cleaning", 50, 0, 1000);
   TH1D* h_j1pt_Cleaning = new TH1D("h_j1pt_Cleaning", "h_j1pt_Cleaning", 50, 0, 1000);
   TH1D* h_nj_Cleaning = new TH1D("h_nj_Cleaning", "h_nj_Cleaning", 20, 0, 20);
 
@@ -155,6 +164,9 @@ int main(int argc, char** argv)
   TH1D* h_MR_Cleaning = new TH1D("h_MR_Cleaning", "h_MR_Cleaning", 20, 0, MRmx);
   TH1D* h_R2_Cleaning = new TH1D("h_R2_Cleaning", "h_R2_Cleaning", 25, 0, 1);
   TH2D* h_MR_R2_Cleaning = new TH2D("h_MR_R2_Cleaning", "h_MR_R2_Cleaning", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D* h_R2metmu_Cleaning = new TH1D("h_R2metmu_Cleaning", "h_R2metmu_Cleaning", 25, 0, 1);
+  TH2D* h_MR_R2metmu_Cleaning = new TH2D("h_MR_R2metmu_Cleaning", "h_MR_R2metmu_Cleaning", 20, 0, MRmx, 25, 0, 1);
 
   TH1D* h_MR_HCAL_noise = new TH1D("h_MR_HCAL_noise", "h_MR_HCAL_noise", 20, 0, MRmx);
   TH1D* h_R2_HCAL_noise = new TH1D("h_R2_HCAL_noise", "h_R2_HCAL_noise", 25, 0, 1);
@@ -264,6 +276,14 @@ int main(int argc, char** argv)
 
 
   // dimuon trajectory
+  TH1D * h_Zmass_2mu = new TH1D("h_Zmass_2mu", "h_Zmass_2mu", 20, 50, 130);
+  TH2D * h_R2_Zmass_2mu = new TH2D("h_R2_Zmass_2mu", "h_R2_Zmass_2mu", 20, 50, 130, 20, 0, MRmx);
+  TH2D * h_MR_Zmass_2mu = new TH2D("h_MR_Zmass_2mu", "h_MR_Zmass_2mu", 20, 50, 130, 20, 0, 1.);
+
+  TH1D * h_MR_2munoZmass = new TH1D("h_MR_2munoZmass", "h_MR_2munoZmass", 20, 0, MRmx);
+  TH1D * h_R2_2munoZmass = new TH1D("h_R2_2munoZmass", "h_R2_2munoZmass", 25, 0, 1);
+  TH2D * h_MR_R2_2munoZmass = new TH2D("h_MR_R2_2munoZmass", "h_MR_R2_2munoZmass", 20, 0, MRmx, 25, 0, 1);
+
   TH1D * h_MR_2mu = new TH1D("h_MR_2mu", "h_MR_2mu", 20, 0, MRmx);
   TH1D * h_R2_2mu = new TH1D("h_R2_2mu", "h_R2_2mu", 25, 0, 1);
   TH2D * h_MR_R2_2mu = new TH2D("h_MR_R2_2mu", "h_MR_R2_2mu", 20, 0, MRmx, 25, 0, 1);
@@ -280,6 +300,13 @@ int main(int argc, char** argv)
   TH1D * h_R2_g1Mb2mu0el = new TH1D("h_R2_g1Mb2mu0el", "h_R2_g1Mb2mu0el", 25, 0, 1);
   TH2D * h_MR_R2_g1Mb2mu0el = new TH2D("h_MR_R2_g1Mb2mu0el", "h_MR_R2_g1Mb2mu0el", 20, 0, MRmx, 25, 0, 1);
   
+  TH1D * h_MR_0Lbg1Y2mu0el = new TH1D("h_MR_0Lbg1Y2mu0el", "h_MR_0Lbg1Y2mu0el", 20, 0, MRmx);
+  TH1D * h_R2_0Lbg1Y2mu0el = new TH1D("h_R2_0Lbg1Y2mu0el", "h_R2_0Lbg1Y2mu0el", 25, 0, 1);
+  TH2D * h_MR_R2_0Lbg1Y2mu0el = new TH2D("h_MR_R2_0Lbg1Y2mu0el", "h_MR_R2_0Lbg1Y2mu0el", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_g1Mbg1Y2mu0el = new TH1D("h_MR_g1Mbg1Y2mu0el", "h_MR_g1Mbg1Y2mu0el", 20, 0, MRmx);
+  TH1D * h_R2_g1Mbg1Y2mu0el = new TH1D("h_R2_g1Mbg1Y2mu0el", "h_R2_g1Mbg1Y2mu0el", 25, 0, 1);
+  TH2D * h_MR_R2_g1Mbg1Y2mu0el = new TH2D("h_MR_R2_g1Mbg1Y2mu0el", "h_MR_R2_g1Mbg1Y2mu0el", 20, 0, MRmx, 25, 0, 1);
 
   // Gen level plots
   TH1D* h_gen_toppt = new TH1D("h_gen_toppt", "h_gen_toppt", 50, 0, 1000);
@@ -316,10 +343,13 @@ int main(int argc, char** argv)
   ofile.count("g1Mbg1W1LlmT100", 0.0);
   ofile.count("g1Mbg1W1LlmT", 0.0);
 
+  ofile.count("2munoZmass", 0.0);
   ofile.count("2mu", 0.0);
   ofile.count("2mu0el", 0.0);
   ofile.count("0Lb2mu0el", 0.0);
   ofile.count("g1Mb2mu0el", 0.0);
+  ofile.count("0Lbg1Y2mu0el", 0.0);
+  ofile.count("g1Mbg1Y2mu0el", 0.0);
   
   TH1D* TTallhad = new TH1D("counts_TTallhad","",1,0,1);
   TTallhad->SetBit(TH1::kCanRebin);
@@ -350,10 +380,13 @@ int main(int argc, char** argv)
   TTallhad->Fill("g1Mbg1W1Ll", 0.0);
   TTallhad->Fill("g1Mbg1W1LlmT100", 0.0);
   TTallhad->Fill("g1Mbg1W1LlmT", 0.0);
+  TTallhad->Fill("2munoZmass", 0.0);
   TTallhad->Fill("2mu", 0.0);
   TTallhad->Fill("2mu0el", 0.0);
   TTallhad->Fill("0Lb2mu0el", 0.0);
   TTallhad->Fill("g1Mb2mu0el", 0.0);
+  TTallhad->Fill("0Lbg1Y2mu0el", 0.0);
+  TTallhad->Fill("g1Mbg1Y2mu0el", 0.0);
 
   TTsemilep->Fill("NoCuts", 0.0);
   TTsemilep->Fill("Cleaning", 0.0);
@@ -377,10 +410,13 @@ int main(int argc, char** argv)
   TTsemilep->Fill("g1Mbg1W1Ll", 0.0);
   TTsemilep->Fill("g1Mbg1W1LlmT100", 0.0);
   TTsemilep->Fill("g1Mbg1W1LlmT", 0.0);
+  TTsemilep->Fill("2munoZmass", 0.0);
   TTsemilep->Fill("2mu", 0.0);
   TTsemilep->Fill("2mu0el", 0.0);
   TTsemilep->Fill("0Lb2mu0el", 0.0);
   TTsemilep->Fill("g1Mb2mu0el", 0.0);
+  TTsemilep->Fill("0Lbg1Y2mu0el", 0.0);
+  TTsemilep->Fill("g1Mbg1Y2mu0el", 0.0);
 
   TTdilep->Fill("NoCuts", 0.0);
   TTdilep->Fill("Cleaning", 0.0);
@@ -404,10 +440,13 @@ int main(int argc, char** argv)
   TTdilep->Fill("g1Mbg1W1Ll", 0.0);
   TTdilep->Fill("g1Mbg1W1LlmT100", 0.0);
   TTdilep->Fill("g1Mbg1W1LlmT", 0.0);
+  TTdilep->Fill("2munoZmass", 0.0);
   TTdilep->Fill("2mu", 0.0);
   TTdilep->Fill("2mu0el", 0.0);
   TTdilep->Fill("0Lb2mu0el", 0.0);
   TTdilep->Fill("g1Mb2mu0el", 0.0);
+  TTdilep->Fill("0Lbg1Y2mu0el", 0.0);
+  TTdilep->Fill("g1Mbg1Y2mu0el", 0.0);
 
 
 
@@ -769,7 +808,7 @@ int main(int argc, char** argv)
       // jets - selected:
       // From https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetID
       std::vector<cmgpfjet_s> sjet;
-      std::vector<TLorentzVector> sjetl;
+      std::vector<TLorentzVector> LVsjet;
       std::vector<cmgpfjet_s> sbjet;
       std::vector<cmgpfjet_s> slbjet;
       for (unsigned int i=0; i<cmgpfjet.size(); i++) {
@@ -795,7 +834,7 @@ int main(int argc, char** argv)
 	TLorentzVector jl;
 	jl.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
 			cmgpfjet[i].phi, cmgpfjet[i].energy);
-	sjetl.push_back(jl);
+	LVsjet.push_back(jl);
       }
 
 
@@ -804,6 +843,7 @@ int main(int argc, char** argv)
       std::vector<jethelper4_s> sjet2;
       std::vector<jethelper4_s> sW;
       std::vector<jethelper4_s> aW;
+      std::vector<jethelper4_s> sY;
       for (unsigned int i=0; i<jethelper4.size(); i++) {
         if (!(jethelper4[i].pt > 30) ) continue;
         if (!(fabs(jethelper4[i].eta) < 3) ) continue;
@@ -814,6 +854,7 @@ int main(int argc, char** argv)
         h_jmass->Fill(jethelper4[i].mass);
 	// New Andreas cuts:
         if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+	sY.push_back(jethelper4[i]);
         h_d1ptsel_d2ptsel->Fill(jethelper4[i].daughter_0_pt, jethelper4[i].daughter_1_pt);
         h_d1msel_d2msel->Fill(jethelper4[i].daughter_0_mass, jethelper4[i].daughter_1_mass);
         //cout << jethelper4[i].pt << endl;
@@ -908,10 +949,19 @@ int main(int argc, char** argv)
       }
       // Muons - tight
       std::vector<cmgmuon1_s> smuon;
+      std::vector<TVector3> V3mu;
+      std::vector<TLorentzVector> LVmu;
       for (unsigned int i=0; i<cmgmuon1.size(); i++) {
-	if (!(cmgmuon1[i].pt > 25) ) continue;
+	if (!(cmgmuon1[i].pt > 20) ) continue; // lowered from 25
 	if (!(fabs(cmgmuon1[i].eta) < 2.4) ) continue;
 	smuon.push_back(cmgmuon1[i]);
+        TVector3 lmu;
+        lmu.SetPtEtaPhi(cmgmuon1[i].pt, 0, cmgmuon1[i].phi);
+        V3mu.push_back(lmu);
+	TLorentzVector lvmu;
+	lvmu.SetPtEtaPhiE(cmgmuon1[i].pt, cmgmuon1[i].eta,
+			  cmgmuon1[i].phi, cmgmuon1[i].energy);
+        LVmu.push_back(lvmu);
       }
 
       // Electrons - veto:
@@ -959,6 +1009,7 @@ int main(int argc, char** argv)
 
       // look at number of Ws and bs before any selection (besides cleaning and trigger)
       double nWs = sW.size();
+      double nYs = sY.size();
       double nbs = sbjet.size();
 
       h_nW_Cleaning->Fill(nWs, w);
@@ -971,30 +1022,44 @@ int main(int argc, char** argv)
       // -- Razor variables --
       // ---------------------
 
-
-      TVector3 metl;
-      metl.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
+      // Calculate MR and R2 ignoring muons
+      TVector3 V3met;
+      V3met.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
       TLorentzVector met;
       met.SetPtEtaPhiE(cmgbasemet2[0].pt, 0, cmgbasemet2[0].phi, cmgbasemet2[0].energy);
-      //cout << "MET info: " << cmgbasemet2[0].pt << " " << cmgbasemet2[0].phi << " " << cmgbasemet2[0].energy << endl;
-      std::vector<TLorentzVector> hemis = CombineJets(sjetl);
+      std::vector<TLorentzVector> LVhemis = CombineJets(LVsjet);
 
       double MR = -9999;
       double MTR = -9999;
       double R2 = -9999;
-      if (hemis.size() == 2) {
-	MR = CalcMR(hemis[0], hemis[1]);
-	if (MR == MR) {
-	  h_MR_Cleaning->Fill(MR, w);
-	  MTR = CalcMTR(hemis[0], hemis[1], metl);
-	  R2 = pow((MTR / MR),2);
-	  h_R2_Cleaning->Fill(R2, w);
-	  h_MR_R2_Cleaning->Fill(MR, R2, w);
-	  h_met_R2_Cleaning->Fill(cmgbasemet2[0].et, R2, w);
-	}
+      if (LVhemis.size() == 2) {
+	MR = CalcMR(LVhemis[0], LVhemis[1]);
+	if (MR != MR) continue;
+	h_MR_Cleaning->Fill(MR, w);
+	MTR = CalcMTR(LVhemis[0], LVhemis[1], V3met);
+	R2 = pow((MTR / MR),2);
+	h_R2_Cleaning->Fill(R2, w);
+	h_MR_R2_Cleaning->Fill(MR, R2, w);
+	h_met_R2_Cleaning->Fill(cmgbasemet2[0].et, R2, w);
       }
-      //cout << MR << " " << MTR << " " << R2 << endl;
+      
+      // Calculate MR and R2 adding mus to MET
+      TVector3 V3metmu;
+      V3metmu.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
+      for (unsigned int i=0; i<V3mu.size(); i++) {
+        V3metmu += V3mu[i];
+      }
+      h_metmu_Cleaning->Fill(V3metmu.Pt(), w);
 
+      double MTRmetmu = -9999;
+      double R2metmu = -9999;
+      if (LVhemis.size() == 2) {
+        MTRmetmu = CalcMTR(LVhemis[0], LVhemis[1], V3metmu);
+        R2metmu = pow((MTRmetmu / MR),2);
+        h_R2metmu_Cleaning->Fill(R2metmu, w);
+        h_MR_R2metmu_Cleaning->Fill(MR, R2, w);
+        h_metmu_R2metmu_Cleaning->Fill(V3metmu.Pt(), R2, w);
+      }
 
       // ---------------------
       // -- fill histograms --
@@ -1101,30 +1166,6 @@ int main(int argc, char** argv)
       h_nW_nb_jet1ptg200->Fill(nWs, nbs, w);
       h_nWAK5_jet1ptg200->Fill(sWAK5.size(), w);
 
-
-      // Only select events in MR-R2 SIG region 
-      if (!(MR > 800 && R2 > 0.08)) continue;
-      ofile.count("SIG", w);
-      h_MR_SIG->Fill(MR, w);
-      h_R2_SIG->Fill(R2, w);
-      h_MR_R2_SIG->Fill(MR, R2, w);
-      if(isTTallhad)
-	TTallhad->Fill("SIG", w);
-      else if(isTTsemilep)
-	TTsemilep->Fill("SIG", w);
-      else if(isTTdilep)
-	TTdilep->Fill("SIG", w);
-
-
-      // Compute the minDeltaPhi variable, taking the first three jets into account
-      double minDeltaPhi = 99.;
-      for (int jet=0; jet<3; ++jet){
-	double mdphi = fdeltaPhi(sjet[jet].phi,metl.Phi());
-	if (mdphi < minDeltaPhi)
-	  minDeltaPhi = mdphi;
-      }
-
-
       // count number of leptons
       int nlooseelectrons = velectron.size();
       int nloosemuons = vmuon.size(); 
@@ -1132,275 +1173,352 @@ int main(int argc, char** argv)
       int ntightmuons = smuon.size();
       int ntightelectrons = selectron.size();
       int ntightleptons = ntightelectrons + ntightmuons;
-
+      
       // count number of b jets
       int nloosebs = slbjet.size();
       int nmediumbs = sbjet.size();
-
-      // 0 Lepton
-      if (nlooseelectrons == 0){
-	ofile.count("neleeq0", w);
-	h_MR_neleeq0->Fill(MR, w);
-	h_R2_neleeq0->Fill(R2, w);
-	h_MR_R2_neleeq0->Fill(MR, R2, w);
-	if(isTTallhad)
-	  TTallhad->Fill("neleeq0", w);
-	else if(isTTsemilep)
-	  TTsemilep->Fill("neleeq0", w);
-	else if(isTTdilep)
-	  TTdilep->Fill("neleeq0", w);
-		
-	if (nloosemuons == 0) {
-	  ofile.count("nmueq0", w);
-	  h_MR_nmueq0->Fill(MR, w);
-	  h_R2_nmueq0->Fill(R2, w);
-	  h_MR_R2_nmueq0->Fill(MR, R2, w);
-	  if(isTTallhad)
-	    TTallhad->Fill("nmueq0", w);
-	  else if(isTTsemilep)
-	    TTsemilep->Fill("nmueq0", w);
-	  else if(isTTdilep)
-	    TTdilep->Fill("nmueq0", w);
-	  
-	  if (eventhelperextra_trackIso == 0){
-	    ofile.count("trackIso", w);
-	    h_MR_trackIso->Fill(MR, w);
-	    h_R2_trackIso->Fill(R2, w);
-	    h_MR_R2_trackIso->Fill(MR, R2, w);
-	    if(isTTallhad)
-	      TTallhad->Fill("trackIso", w);
-	    else if(isTTsemilep)
-	      TTsemilep->Fill("trackIso", w);
-	    else if(isTTdilep)
-	      TTdilep->Fill("trackIso", w);
-
-	    if (nmediumbs > 0){
-	      ofile.count("g1Mb0Ll", w);
-	      h_MR_g1Mb0Ll->Fill(MR, w);
-	      h_R2_g1Mb0Ll->Fill(R2, w);
-	      h_MR_R2_g1Mb0Ll->Fill(MR, R2, w);
-	      if(isTTallhad)
-		TTallhad->Fill("g1Mb0Ll", w);
-	      else if(isTTsemilep)
-		TTsemilep->Fill("g1Mb0Ll", w);
-	      else if(isTTdilep)
-		TTdilep->Fill("g1Mb0Ll", w);
-	      
-	      // g1Mb g1W 0Ll
-	      if( sW.size() > 0){
-		ofile.count("g1Mbg1W0Ll",w);
-		h_MR_g1Mbg1W0Ll->Fill(MR, w);
-		h_R2_g1Mbg1W0Ll->Fill(R2, w);
-		h_MR_R2_g1Mbg1W0Ll->Fill(MR, R2, w);
-		h_njets_g1Mbg1W0Ll->Fill(sjet.size(),w);
-		if(isTTallhad)
-		  TTallhad->Fill("g1Mbg1W0Ll", w);
-		else if(isTTsemilep)
-		  TTsemilep->Fill("g1Mbg1W0Ll", w);
-		else if(isTTdilep)
-		  TTdilep->Fill("g1Mbg1W0Ll", w);
-		
-	      } // end of sW.size() > 0
-	    } // end of nmediumbs > 0
-
-	    if (nloosebs == 0){
-	      ofile.count("0Lb0Ll", w);
-	      h_MR_0Lb0Ll->Fill(MR, w);
-	      h_R2_0Lb0Ll->Fill(R2, w);
-	      h_MR_R2_0Lb0Ll->Fill(MR, R2, w);
-	      if(isTTallhad)
-		TTallhad->Fill("0Lb0Ll", w);
-	      else if(isTTsemilep)
-		TTsemilep->Fill("0Lb0Ll", w);
-	      else if(isTTdilep)
-		TTdilep->Fill("0Lb0Ll", w);
-	      
-	      // 0Lbg1uW0Ll -- QCD control region
-	      if( aW.size() > 0){
-		ofile.count("0Lbg1uW0Ll",w);
-		h_MR_0Lbg1uW0Ll->Fill(MR, w);
-		h_R2_0Lbg1uW0Ll->Fill(R2, w);
-		h_MR_R2_0Lbg1uW0Ll->Fill(MR, R2, w);
-		h_minDeltaPhi_0Lbg1uW0Ll->Fill(minDeltaPhi, w);
-		h_MR_minDeltaPhi_0Lbg1uW0Ll->Fill(MR, minDeltaPhi, w);
-		h_R2_minDeltaPhi_0Lbg1uW0Ll->Fill(R2, minDeltaPhi, w);
-		if(isTTallhad)
-		  TTallhad->Fill("0Lbg1uW0Ll", w);
-		else if(isTTsemilep)
-		  TTsemilep->Fill("0Lbg1uW0Ll", w);
-		else if(isTTdilep)
-		  TTdilep->Fill("0Lbg1uW0Ll", w);
-
-		// cut on mindDeltaPhi
-		if (minDeltaPhi < 0.3){
-		  ofile.count("0Lbg1uW0Ll_mdPhi0p3",w);
-		  h_MR_0Lbg1uW0Ll_mdPhi0p3->Fill(MR, w);
-		  h_R2_0Lbg1uW0Ll_mdPhi0p3->Fill(R2, w);
-		  h_MR_R2_0Lbg1uW0Ll_mdPhi0p3->Fill(MR, R2, w);
-		  if(isTTallhad)
-		    TTallhad->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
-		  else if(isTTsemilep)
-		    TTsemilep->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
-		  else if(isTTdilep)
-		    TTdilep->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
-		} // end of minDeltaPhi < 0.3
-	      } // end of aW.size() > 0
-
-	      // 0Lbg1W0Ll
-	      if( sW.size() > 0){
-		ofile.count("0Lbg1W0Ll",w);
-		h_MR_0Lbg1W0Ll->Fill(MR, w);
-		h_R2_0Lbg1W0Ll->Fill(R2, w);
-		h_MR_R2_0Lbg1W0Ll->Fill(MR, R2, w);
-		if(isTTallhad)
-		  TTallhad->Fill("0Lbg1W0Ll", w);
-		else if(isTTsemilep)
-		  TTsemilep->Fill("0Lbg1W0Ll", w);
-		else if(isTTdilep)
-		  TTdilep->Fill("0Lbg1W0Ll", w);
-	      } // end of sW.size() > 0
-	      
-	    } // end of nloosebs == 0
-	  } // end veto iso track
-	} // end veto muon
-      }  // end veto electron
       
-      
-      // 1 Loose, not tight lepton 
-      if(nlooseleptons == 1 && ntightleptons == 0){
-	// Calculate mT 
-	TLorentzVector lepton;
-	if (nlooseelectrons == 1)
-	  lepton.SetPtEtaPhiE(velectron[0].pt, velectron[0].eta, velectron[0].phi, velectron[0].energy);
-	else if (nloosemuons == 1)
-	  lepton.SetPtEtaPhiE(vmuon[0].pt, vmuon[0].eta, vmuon[0].phi, vmuon[0].energy);
-	double mT = CalcMT(lepton,met);
-
-	ofile.count("1Ll",w);
-	h_MR_1Ll->Fill(MR, w);
-	h_R2_1Ll->Fill(R2, w);
-	h_MR_R2_1Ll->Fill(MR, R2, w);
+      // Only select events in MR-R2 SIG region 
+      //if (!(MR > 800 && R2 > 0.08)) continue;
+      if (MR > 800 && R2 > 0.08){
+	ofile.count("SIG", w);
+	h_MR_SIG->Fill(MR, w);
+	h_R2_SIG->Fill(R2, w);
+	h_MR_R2_SIG->Fill(MR, R2, w);
 	if(isTTallhad)
-	  TTallhad->Fill("1Ll", w);
+	  TTallhad->Fill("SIG", w);
 	else if(isTTsemilep)
-	  TTsemilep->Fill("1Ll", w);
+	  TTsemilep->Fill("SIG", w);
 	else if(isTTdilep)
-	  TTdilep->Fill("1Ll", w);
+	  TTdilep->Fill("SIG", w);
 	
-	if (nmediumbs > 0){
-	  ofile.count("g1Mb1Ll",w);
-	  h_MR_g1Mb1Ll->Fill(MR, w);
-	  h_R2_g1Mb1Ll->Fill(R2, w);
-	  h_MR_R2_g1Mb1Ll->Fill(MR, R2, w);
-	  if(isTTallhad)
-	    TTallhad->Fill("g1Mb1Ll", w);
-	  else if(isTTsemilep)
-	    TTsemilep->Fill("g1Mb1Ll", w);
-	  else if(isTTdilep)
-	    TTdilep->Fill("g1Mb1Ll", w);
-	  
-	  if( sW.size() > 0 ){
-	    ofile.count("g1Mbg1W1Ll",w);
-	    h_MR_g1Mbg1W1Ll->Fill(MR, w);
-	    h_R2_g1Mbg1W1Ll->Fill(R2, w);
-	    h_MR_R2_g1Mbg1W1Ll->Fill(MR, R2, w);
-	    h_mT_g1Mbg1W1Ll->Fill(mT, w);
-	    h_MR_mT_g1Mbg1W1Ll->Fill(MR, mT, w);
-	    h_R2_mT_g1Mbg1W1Ll->Fill(R2, mT, w);
-	    if(isTTallhad)
-	      TTallhad->Fill("g1Mbg1W1Ll", w);
-	    else if(isTTsemilep)
-	      TTsemilep->Fill("g1Mbg1W1Ll", w);
-	    else if(isTTdilep)
-	      TTdilep->Fill("g1Mbg1W1Ll", w);
+	// Compute the minDeltaPhi variable, taking the first three jets into account
+	double minDeltaPhi = 99.;
+	for (int jet=0; jet<3; ++jet){
+	  double mdphi = fdeltaPhi(sjet[jet].phi,V3met.Phi());
+	  if (mdphi < minDeltaPhi)
+	    minDeltaPhi = mdphi;
+	}
 
-	    if (mT < 100){
-	      ofile.count("g1Mbg1W1LlmT100",w);
-	      h_MR_g1Mbg1W1LlmT100->Fill(MR, w);
-	      h_R2_g1Mbg1W1LlmT100->Fill(R2, w);
-	      h_MR_R2_g1Mbg1W1LlmT100->Fill(MR, R2, w);
-	      if(isTTallhad)
-		TTallhad->Fill("g1Mbg1W1LlmT100", w);
-	      else if(isTTsemilep)
-		TTsemilep->Fill("g1Mbg1W1LlmT100", w);
-	      else if(isTTdilep)
-		TTdilep->Fill("g1Mbg1W1LlmT100", w);
-
-	      // mT window
-	      if (mT > 30){
-		ofile.count("g1Mbg1W1LlmT",w);
-		h_MR_g1Mbg1W1LlmT->Fill(MR, w);
-		h_R2_g1Mbg1W1LlmT->Fill(R2, w);
-		h_MR_R2_g1Mbg1W1LlmT->Fill(MR, R2, w);
-		h_mT_g1Mbg1W1LlmT->Fill(mT, w);
-		h_MR_mT_g1Mbg1W1LlmT->Fill(MR, mT, w);
-		h_R2_mT_g1Mbg1W1LlmT->Fill(R2, mT, w);
-		if(isTTallhad)
-		  TTallhad->Fill("g1Mbg1W1LlmT", w);
-		else if(isTTsemilep)
-		  TTsemilep->Fill("g1Mbg1W1LlmT", w);
-		else if(isTTdilep)
-		  TTdilep->Fill("g1Mbg1W1LlmT", w);
-	      } // end mT > 30
-	    } // end mT < 100
-	  } // end sW.size()
-	} // end nmediumbs > 0
-      } // end nlooseleptons == 1
-
-      if (ntightmuons == 2 && nloosemuons == 2) {
-	ofile.count("2mu",w);
-	h_MR_2mu->Fill(MR, w);
-	h_R2_2mu->Fill(R2, w);
-	h_MR_R2_2mu->Fill(MR, R2, w);
-	if(isTTallhad)
-	  TTallhad->Fill("2mu", w);
-	else if(isTTsemilep)
-	  TTsemilep->Fill("2mu", w);
-	else if(isTTdilep)
-	  TTdilep->Fill("2mu", w);
-
+	// 0 Lepton
 	if (nlooseelectrons == 0){
-	  ofile.count("2mu0el",w);
-	  h_MR_2mu0el->Fill(MR, w);
-	  h_R2_2mu0el->Fill(R2, w);
-	  h_MR_R2_2mu0el->Fill(MR, R2, w);
+	  ofile.count("neleeq0", w);
+	  h_MR_neleeq0->Fill(MR, w);
+	  h_R2_neleeq0->Fill(R2, w);
+	  h_MR_R2_neleeq0->Fill(MR, R2, w);
 	  if(isTTallhad)
-	    TTallhad->Fill("2mu0el", w);
+	    TTallhad->Fill("neleeq0", w);
 	  else if(isTTsemilep)
-	    TTsemilep->Fill("2mu0el", w);
+	    TTsemilep->Fill("neleeq0", w);
 	  else if(isTTdilep)
-	    TTdilep->Fill("2mu0el", w);
-
-	  if (nloosebs == 0){
-	    ofile.count("0Lb2mu0el",w);
-	    h_MR_0Lb2mu0el->Fill(MR, w);
-	    h_R2_0Lb2mu0el->Fill(R2, w);
-	    h_MR_R2_0Lb2mu0el->Fill(MR, R2, w);
+	    TTdilep->Fill("neleeq0", w);
+	  
+	  if (nloosemuons == 0) {
+	    ofile.count("nmueq0", w);
+	    h_MR_nmueq0->Fill(MR, w);
+	    h_R2_nmueq0->Fill(R2, w);
+	    h_MR_R2_nmueq0->Fill(MR, R2, w);
 	    if(isTTallhad)
-	      TTallhad->Fill("0Lb2mu0el", w);
+	      TTallhad->Fill("nmueq0", w);
 	    else if(isTTsemilep)
-	      TTsemilep->Fill("0Lb2mu0el", w);
+	      TTsemilep->Fill("nmueq0", w);
 	    else if(isTTdilep)
-	      TTdilep->Fill("0Lb2mu0el", w);
-	  }// end nloosebs == 0
-
-	  if (nmediumbs >= 1){
-	    ofile.count("g1Mb2mu0el",w);
-	    h_MR_g1Mb2mu0el->Fill(MR, w);
-	    h_R2_g1Mb2mu0el->Fill(R2, w);
-	    h_MR_R2_g1Mb2mu0el->Fill(MR, R2, w);
+	      TTdilep->Fill("nmueq0", w);
+	    
+	    if (eventhelperextra_trackIso == 0){
+	      ofile.count("trackIso", w);
+	      h_MR_trackIso->Fill(MR, w);
+	      h_R2_trackIso->Fill(R2, w);
+	      h_MR_R2_trackIso->Fill(MR, R2, w);
+	      if(isTTallhad)
+		TTallhad->Fill("trackIso", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("trackIso", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("trackIso", w);
+	      
+	      if (nmediumbs > 0){
+		ofile.count("g1Mb0Ll", w);
+		h_MR_g1Mb0Ll->Fill(MR, w);
+		h_R2_g1Mb0Ll->Fill(R2, w);
+		h_MR_R2_g1Mb0Ll->Fill(MR, R2, w);
+		if(isTTallhad)
+		  TTallhad->Fill("g1Mb0Ll", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("g1Mb0Ll", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("g1Mb0Ll", w);
+		
+		// g1Mb g1W 0Ll
+		if( sW.size() > 0){
+		  ofile.count("g1Mbg1W0Ll",w);
+		  h_MR_g1Mbg1W0Ll->Fill(MR, w);
+		  h_R2_g1Mbg1W0Ll->Fill(R2, w);
+		  h_MR_R2_g1Mbg1W0Ll->Fill(MR, R2, w);
+		  h_njets_g1Mbg1W0Ll->Fill(sjet.size(),w);
+		  if(isTTallhad)
+		    TTallhad->Fill("g1Mbg1W0Ll", w);
+		  else if(isTTsemilep)
+		    TTsemilep->Fill("g1Mbg1W0Ll", w);
+		  else if(isTTdilep)
+		    TTdilep->Fill("g1Mbg1W0Ll", w);
+		  
+		} // end of sW.size() > 0
+	      } // end of nmediumbs > 0
+	      
+	      if (nloosebs == 0){
+		ofile.count("0Lb0Ll", w);
+		h_MR_0Lb0Ll->Fill(MR, w);
+		h_R2_0Lb0Ll->Fill(R2, w);
+		h_MR_R2_0Lb0Ll->Fill(MR, R2, w);
+		if(isTTallhad)
+		  TTallhad->Fill("0Lb0Ll", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("0Lb0Ll", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("0Lb0Ll", w);
+		
+		// 0Lbg1uW0Ll -- QCD control region
+		if( aW.size() > 0){
+		  ofile.count("0Lbg1uW0Ll",w);
+		  h_MR_0Lbg1uW0Ll->Fill(MR, w);
+		  h_R2_0Lbg1uW0Ll->Fill(R2, w);
+		  h_MR_R2_0Lbg1uW0Ll->Fill(MR, R2, w);
+		  h_minDeltaPhi_0Lbg1uW0Ll->Fill(minDeltaPhi, w);
+		  h_MR_minDeltaPhi_0Lbg1uW0Ll->Fill(MR, minDeltaPhi, w);
+		  h_R2_minDeltaPhi_0Lbg1uW0Ll->Fill(R2, minDeltaPhi, w);
+		  if(isTTallhad)
+		    TTallhad->Fill("0Lbg1uW0Ll", w);
+		  else if(isTTsemilep)
+		    TTsemilep->Fill("0Lbg1uW0Ll", w);
+		  else if(isTTdilep)
+		    TTdilep->Fill("0Lbg1uW0Ll", w);
+		  
+		  // cut on mindDeltaPhi
+		  if (minDeltaPhi < 0.3){
+		    ofile.count("0Lbg1uW0Ll_mdPhi0p3",w);
+		    h_MR_0Lbg1uW0Ll_mdPhi0p3->Fill(MR, w);
+		    h_R2_0Lbg1uW0Ll_mdPhi0p3->Fill(R2, w);
+		    h_MR_R2_0Lbg1uW0Ll_mdPhi0p3->Fill(MR, R2, w);
+		    if(isTTallhad)
+		      TTallhad->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
+		    else if(isTTsemilep)
+		      TTsemilep->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
+		    else if(isTTdilep)
+		      TTdilep->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
+		  } // end of minDeltaPhi < 0.3
+		} // end of aW.size() > 0
+		
+		// 0Lbg1W0Ll
+		if( sW.size() > 0){
+		  ofile.count("0Lbg1W0Ll",w);
+		  h_MR_0Lbg1W0Ll->Fill(MR, w);
+		  h_R2_0Lbg1W0Ll->Fill(R2, w);
+		  h_MR_R2_0Lbg1W0Ll->Fill(MR, R2, w);
+		  if(isTTallhad)
+		    TTallhad->Fill("0Lbg1W0Ll", w);
+		  else if(isTTsemilep)
+		    TTsemilep->Fill("0Lbg1W0Ll", w);
+		  else if(isTTdilep)
+		    TTdilep->Fill("0Lbg1W0Ll", w);
+		} // end of sW.size() > 0
+		
+	      } // end of nloosebs == 0
+	    } // end veto iso track
+	  } // end veto muon
+	}  // end veto electron
+	
+	
+	// 1 Loose, not tight lepton 
+	if(nlooseleptons == 1 && ntightleptons == 0){
+	  // Calculate mT 
+	  TLorentzVector lepton;
+	  if (nlooseelectrons == 1)
+	    lepton.SetPtEtaPhiE(velectron[0].pt, velectron[0].eta, velectron[0].phi, velectron[0].energy);
+	  else if (nloosemuons == 1)
+	    lepton.SetPtEtaPhiE(vmuon[0].pt, vmuon[0].eta, vmuon[0].phi, vmuon[0].energy);
+	  double mT = CalcMT(lepton,met);
+	  
+	  ofile.count("1Ll",w);
+	  h_MR_1Ll->Fill(MR, w);
+	  h_R2_1Ll->Fill(R2, w);
+	  h_MR_R2_1Ll->Fill(MR, R2, w);
+	  if(isTTallhad)
+	    TTallhad->Fill("1Ll", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("1Ll", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("1Ll", w);
+	  
+	  if (nmediumbs > 0){
+	    ofile.count("g1Mb1Ll",w);
+	    h_MR_g1Mb1Ll->Fill(MR, w);
+	    h_R2_g1Mb1Ll->Fill(R2, w);
+	    h_MR_R2_g1Mb1Ll->Fill(MR, R2, w);
 	    if(isTTallhad)
-	      TTallhad->Fill("g1Mb2mu0el", w);
+	      TTallhad->Fill("g1Mb1Ll", w);
 	    else if(isTTsemilep)
-	      TTsemilep->Fill("g1Mb2mu0el", w);
+	      TTsemilep->Fill("g1Mb1Ll", w);
 	    else if(isTTdilep)
-	      TTdilep->Fill("g1Mb2mu0el", w);
-	  } // end nmediumbs >= 1
-	} // end nlooseelectrons == 0
-      } // end ntightmuons == 2
+	      TTdilep->Fill("g1Mb1Ll", w);
+	    
+	    if( sW.size() > 0 ){
+	      ofile.count("g1Mbg1W1Ll",w);
+	      h_MR_g1Mbg1W1Ll->Fill(MR, w);
+	      h_R2_g1Mbg1W1Ll->Fill(R2, w);
+	      h_MR_R2_g1Mbg1W1Ll->Fill(MR, R2, w);
+	      h_mT_g1Mbg1W1Ll->Fill(mT, w);
+	      h_MR_mT_g1Mbg1W1Ll->Fill(MR, mT, w);
+	      h_R2_mT_g1Mbg1W1Ll->Fill(R2, mT, w);
+	      if(isTTallhad)
+		TTallhad->Fill("g1Mbg1W1Ll", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("g1Mbg1W1Ll", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("g1Mbg1W1Ll", w);
+	      
+	      if (mT < 100){
+		ofile.count("g1Mbg1W1LlmT100",w);
+		h_MR_g1Mbg1W1LlmT100->Fill(MR, w);
+		h_R2_g1Mbg1W1LlmT100->Fill(R2, w);
+		h_MR_R2_g1Mbg1W1LlmT100->Fill(MR, R2, w);
+		if(isTTallhad)
+		  TTallhad->Fill("g1Mbg1W1LlmT100", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("g1Mbg1W1LlmT100", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("g1Mbg1W1LlmT100", w);
+		
+		// mT window
+		if (mT > 30){
+		  ofile.count("g1Mbg1W1LlmT",w);
+		  h_MR_g1Mbg1W1LlmT->Fill(MR, w);
+		  h_R2_g1Mbg1W1LlmT->Fill(R2, w);
+		  h_MR_R2_g1Mbg1W1LlmT->Fill(MR, R2, w);
+		  h_mT_g1Mbg1W1LlmT->Fill(mT, w);
+		  h_MR_mT_g1Mbg1W1LlmT->Fill(MR, mT, w);
+		  h_R2_mT_g1Mbg1W1LlmT->Fill(R2, mT, w);
+		  if(isTTallhad)
+		    TTallhad->Fill("g1Mbg1W1LlmT", w);
+		  else if(isTTsemilep)
+		    TTsemilep->Fill("g1Mbg1W1LlmT", w);
+		  else if(isTTdilep)
+		    TTdilep->Fill("g1Mbg1W1LlmT", w);
+		} // end mT > 30
+	      } // end mT < 100
+	    } // end sW.size()
+	  } // end nmediumbs > 0
+	} // end nlooseleptons == 1
+      } // end of MR>800 R2>0.08
       
-    } // end for
 
+      // Start the 2mu stuff here.
+      // Need to use R2metmu to define the signal region
+      if (MR > 800 && R2metmu > 0.08){
+	TLorentzVector LVZcand;
+	if (ntightmuons == 2 && nloosemuons == 2) {
+	  // Make sure that the muons are opposite-signed:
+	  if (!(smuon[0].charge == -smuon[1].charge)) continue;
+	  // See if the 2mu makes a Z:
+	  for (unsigned int m=0; m<LVmu.size(); m++) {
+	    LVZcand += LVmu[m];
+	  }
+	  double Zmass = LVZcand.M();
+	  h_Zmass_2mu->Fill(Zmass, w);
+	  h_MR_Zmass_2mu->Fill(MR, Zmass, w);
+	  h_R2_Zmass_2mu->Fill(R2metmu, Zmass, w);
+
+	  ofile.count("2munoZmass",w);
+	  h_MR_2munoZmass->Fill(MR, w);
+	  h_R2_2munoZmass->Fill(R2metmu, w);
+	  h_MR_R2_2munoZmass->Fill(MR, R2metmu, w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2munoZmass", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2munoZmass", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("2munoZmass", w);
+	  
+	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	  ofile.count("2mu",w);
+	  h_MR_2mu->Fill(MR, w);
+	  h_R2_2mu->Fill(R2metmu, w);
+	  h_MR_R2_2mu->Fill(MR, R2metmu, w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2mu", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2mu", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("2mu", w);
+	  
+	  if (nlooseelectrons == 0){
+	    ofile.count("2mu0el",w);
+	    h_MR_2mu0el->Fill(MR, w);
+	    h_R2_2mu0el->Fill(R2metmu, w);
+	    h_MR_R2_2mu0el->Fill(MR, R2metmu, w);
+	    if(isTTallhad)
+	      TTallhad->Fill("2mu0el", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("2mu0el", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("2mu0el", w);
+	    
+	    if (nloosebs == 0){
+	      ofile.count("0Lb2mu0el",w);
+	      h_MR_0Lb2mu0el->Fill(MR, w);
+	      h_R2_0Lb2mu0el->Fill(R2metmu, w);
+	      h_MR_R2_0Lb2mu0el->Fill(MR, R2metmu, w);
+	      if(isTTallhad)
+		TTallhad->Fill("0Lb2mu0el", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("0Lb2mu0el", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("0Lb2mu0el", w);
+
+	      if (nYs >= 1){
+		ofile.count("0Lbg1Y2mu0el",w);
+		h_MR_0Lbg1Y2mu0el->Fill(MR, w);
+		h_R2_0Lbg1Y2mu0el->Fill(R2metmu, w);
+		h_MR_R2_0Lbg1Y2mu0el->Fill(MR, R2metmu, w);
+		if(isTTallhad)
+		  TTallhad->Fill("0Lbg1Y2mu0el", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("0Lbg1Y2mu0el", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("0Lbg1Y2mu0el", w);
+	      }// nYs >= 1
+	    }// end nloosebs == 0
+	    
+	    if (nmediumbs >= 1){
+	      ofile.count("g1Mb2mu0el",w);
+	      h_MR_g1Mb2mu0el->Fill(MR, w);
+	      h_R2_g1Mb2mu0el->Fill(R2metmu, w);
+	      h_MR_R2_g1Mb2mu0el->Fill(MR, R2metmu, w);
+	      if(isTTallhad)
+		TTallhad->Fill("g1Mb2mu0el", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("g1Mb2mu0el", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("g1Mb2mu0el", w);
+	    
+	      if (nYs >= 1){
+		ofile.count("g1Mbg1Y2mu0el",w);
+		h_MR_g1Mbg1Y2mu0el->Fill(MR, w);
+		h_R2_g1Mbg1Y2mu0el->Fill(R2metmu, w);
+		h_MR_R2_g1Mbg1Y2mu0el->Fill(MR, R2metmu, w);
+		if(isTTallhad)
+		  TTallhad->Fill("g1Mbg1Y2mu0el", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("g1Mbg1Y2mu0el", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("g1Mbg1Y2mu0el", w);
+	      } // end nYs >= 1
+	    } // end nmediumbs >= 1
+	  } // end nlooseelectrons == 0
+	} // end ntightmuons == 2
+      } // end of MR>800 R2metmu>0.08      
+    } // end event loop
+  
   fhlt->Close();
   stream.close();
   ofile.close();
