@@ -77,9 +77,13 @@ int main(int argc, char** argv)
   double lumi = cmdline.lumi;
 
   string sample = "";
+  if ( argc > 6 )
+    sample = string(argv[6]);
   
   bool doISRreweighting = false;
-  if (sample == "T2tt" || sample == "T1ttcc")
+  if (sample == "T2tt" || sample == "T1ttcc" 
+      || sample == "TTJets" || sample == "WJets" 
+      || sample == "ZJets" )
     doISRreweighting = true;
 
   // Calculate the normalization factor for the event weights
@@ -135,6 +139,11 @@ int main(int argc, char** argv)
   TH1D* h_j1pt_Cleaning = new TH1D("h_j1pt_Cleaning", "h_j1pt_Cleaning", 50, 0, 1000);
   TH1D* h_nj_Cleaning = new TH1D("h_nj_Cleaning", "h_nj_Cleaning", 20, 0, 20);
 
+  TH2D* h_met_R2_Cleaning_ISR = new TH2D("h_met_R2_Cleaning_ISR", "h_met_R2_Cleaning_ISR", 50, 0, 1000, 25, 0, 1);
+  TH1D* h_met_Cleaning_ISR = new TH1D("h_met_Cleaning_ISR", "h_met_Cleaning_ISR", 50, 0, 1000);
+  TH1D* h_j1pt_Cleaning_ISR = new TH1D("h_j1pt_Cleaning_ISR", "h_j1pt_Cleaning_ISR", 50, 0, 1000);
+  TH1D* h_nj_Cleaning_ISR = new TH1D("h_nj_Cleaning_ISR", "h_nj_Cleaning_ISR", 20, 0, 20);
+
   TH1D* h_nW_jet1ptg200 = new TH1D("h_nW_jet1ptg200", "h_nW_jet1ptg200", 5, 0, 5);
   TH1D* h_nb_jet1ptg200 = new TH1D("h_nb_jet1ptg200", "h_nb_jet1ptg200", 5, 0, 5);
   TH2D* h_nW_nb_jet1ptg200 = new TH2D("h_nW_nb_jet1ptg200", "h_nW_nb_jet1ptg200", 5, 0, 5, 5, 0, 5);
@@ -146,6 +155,10 @@ int main(int argc, char** argv)
   TH1D* h_MR_Cleaning = new TH1D("h_MR_Cleaning", "h_MR_Cleaning", 20, 0, MRmx);
   TH1D* h_R2_Cleaning = new TH1D("h_R2_Cleaning", "h_R2_Cleaning", 25, 0, 1);
   TH2D* h_MR_R2_Cleaning = new TH2D("h_MR_R2_Cleaning", "h_MR_R2_Cleaning", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D* h_MR_Cleaning_ISR = new TH1D("h_MR_Cleaning_ISR", "h_MR_Cleaning_ISR", 20, 0, MRmx);
+  TH1D* h_R2_Cleaning_ISR = new TH1D("h_R2_Cleaning_ISR", "h_R2_Cleaning_ISR", 25, 0, 1);
+  TH2D* h_MR_R2_Cleaning_ISR = new TH2D("h_MR_R2_Cleaning_ISR", "h_MR_R2_Cleaning_ISR", 20, 0, MRmx, 25, 0, 1);
 
   TH1D* h_MR_HCAL_noise = new TH1D("h_MR_HCAL_noise", "h_MR_HCAL_noise", 20, 0, MRmx);
   TH1D* h_R2_HCAL_noise = new TH1D("h_R2_HCAL_noise", "h_R2_HCAL_noise", 25, 0, 1);
@@ -701,11 +714,18 @@ int main(int argc, char** argv)
 	    ID_to_find = 1000006;
 	  if (sample == "T1ttcc")
 	    ID_to_find = 1000021;
+	  if (sample == "TTJets")
+	    ID_to_find = 6;
+	  if (sample == "WJets")
+	    ID_to_find = 24;
+	  if (sample == "ZJets")
+	    ID_to_find = 23;
 	  for (unsigned int i=0; i<genparticlehelper.size(); i++) {
 	    if (genparticlehelper[i].status != 3) continue;
 	    if (fabs(genparticlehelper[i].pdgId) == ID_to_find){
 	      TLorentzVector TLV_temp; 
-	      TLV_temp.SetPtEtaPhiM(genparticlehelper[i].pt,genparticlehelper[i].eta,genparticlehelper[i].phi,genparticlehelper[i].mass);
+	      TLV_temp.SetPtEtaPhiM(genparticlehelper[i].pt,genparticlehelper[i].eta
+				    ,genparticlehelper[i].phi,genparticlehelper[i].mass);
 	      recoilsystem += TLV_temp;
 	    }
 	  }
@@ -966,11 +986,15 @@ int main(int argc, char** argv)
 	MR = CalcMR(hemis[0], hemis[1]);
 	if (MR == MR) {
 	  h_MR_Cleaning->Fill(MR, w);
+	  h_MR_Cleaning_ISR->Fill(MR, w_ISR_nominal);
 	  MTR = CalcMTR(hemis[0], hemis[1], metl);
 	  R2 = pow((MTR / MR),2);
 	  h_R2_Cleaning->Fill(R2, w);
 	  h_MR_R2_Cleaning->Fill(MR, R2, w);
 	  h_met_R2_Cleaning->Fill(cmgbasemet2[0].et, R2, w);
+	  h_R2_Cleaning_ISR->Fill(R2, w*w_ISR_nominal);
+	  h_MR_R2_Cleaning_ISR->Fill(MR, R2, w*w_ISR_nominal);
+	  h_met_R2_Cleaning_ISR->Fill(cmgbasemet2[0].et, R2, w*w_ISR_nominal);
 	}
       }
       //cout << MR << " " << MTR << " " << R2 << endl;
@@ -986,6 +1010,12 @@ int main(int argc, char** argv)
         h_j1pt_Cleaning->Fill(sjet[0].pt, w);
       }
       h_nj_Cleaning->Fill(sjet.size(), w);
+
+      h_met_Cleaning_ISR->Fill(cmgbasemet2[0].et, w_ISR_nominal);
+      if (sjet.size() > 0) {
+        h_j1pt_Cleaning_ISR->Fill(sjet[0].pt, w_ISR_nominal);
+      }
+      h_nj_Cleaning_ISR->Fill(sjet.size(), w_ISR_nominal);
 
       // ---------------------
       // -- event selection --

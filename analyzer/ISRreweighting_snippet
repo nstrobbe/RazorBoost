@@ -1,0 +1,59 @@
+  string sample = "";
+  if ( argc > 6 )
+    sample = string(argv[6]);
+  
+  bool doISRreweighting = false;
+  if (sample == "T2tt" || sample == "T1ttcc"
+      || sample == "TTJets" || sample == "WJets" 
+      || sample == "ZJets" )
+    doISRreweighting = true;
+
+  // To go in the event loop
+
+      // *****************************************************
+      // ***  ISR Reweighting recipe for Madgraph samples  ***
+      // *****************************************************
+      // per event weights to apply
+      double w_ISR_nominal = 1.;
+      double w_ISR_up = 1.; // always stays 1, i.e. no reweighting
+      double w_ISR_down = 1.;
+      if (doISRreweighting)
+	{
+	  // recipe can be found at https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMST2ccMadgraph8TeV
+	  // find system recoiling against ISR: 
+	  TLorentzVector recoilsystem(0,0,0,0); 
+	  int ID_to_find = -1;
+	  if (sample == "T2tt")
+	    ID_to_find = 1000006;
+	  if (sample == "T1ttcc")
+	    ID_to_find = 1000021;
+	  if (sample == "TTJets")
+	    ID_to_find = 6;
+	  if (sample == "WJets")
+	    ID_to_find = 24;
+	  if (sample == "ZJets")
+	    ID_to_find = 23;
+	  for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+	    if (genparticlehelper[i].status != 3) continue;
+	    if (fabs(genparticlehelper[i].pdgId) == ID_to_find){
+	      TLorentzVector TLV_temp; 
+	      TLV_temp.SetPtEtaPhiM(genparticlehelper[i].pt,genparticlehelper[i].eta,genparticlehelper[i].phi,genparticlehelper[i].mass);
+	      recoilsystem += TLV_temp;
+	    }
+	  }
+	  // get the pt of the recoil system, apply weights accordingly
+	  double pt_ISR = recoilsystem.Pt();
+	  if (pt_ISR <= 120){
+	    w_ISR_nominal = 1.;
+	    w_ISR_down = 1.;
+	  } else if (pt_ISR <= 150){
+	    w_ISR_nominal = 0.95;
+	    w_ISR_down = 0.9;
+	  } else if (pt_ISR <= 250){
+	    w_ISR_nominal = 0.9;
+	    w_ISR_down = 0.8;
+	  } else {
+	    w_ISR_nominal = 0.8;
+	    w_ISR_down = 0.6;
+	  }
+	}
