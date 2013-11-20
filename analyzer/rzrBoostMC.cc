@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------------
 #include "rzrBTanalyzercmd.h"
 #include "utils.h"
+#include <math.h>
 
 #include "TLorentzVector.h"
 
@@ -229,6 +230,10 @@ int main(int argc, char** argv)
   TH1D * h_minDeltaPhi_0Lbg1uW0Ll = new TH1D("h_minDeltaPhi_0Lbg1uW0Ll", "h_minDeltaPhi_0Lbg1uW0Ll", 50, 0, 5);
   TH2D * h_MR_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhi_0Lbg1uW0Ll", "h_MR_minDeltaPhi_0Lbg1uW0Ll", 20, 0, MRmx, 50, 0, 5);
   TH2D * h_R2_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_R2_minDeltaPhi_0Lbg1uW0Ll", "h_R2_minDeltaPhi_0Lbg1uW0Ll", 25, 0, 1, 50, 0, 5);
+  
+  TH1D * h_minDeltaPhiHat_0Lbg1uW0Ll = new TH1D("h_minDeltaPhiHat_0Lbg1uW0Ll", "h_minDeltaPhiHat_0Lbg1uW0Ll", 50, 0, 5);
+  TH2D * h_MR_minDeltaPhiHat_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhiHat_0Lbg1uW0Ll", "h_MR_minDeltaPhiHat_0Lbg1uW0Ll", 20, 0, MRmx, 50, 0, 5);
+  TH2D * h_R2_minDeltaPhiHat_0Lbg1uW0Ll = new TH2D("h_R2_minDeltaPhiHat_0Lbg1uW0Ll", "h_R2_minDeltaPhiHat_0Lbg1uW0Ll", 25, 0, 1, 50, 0, 5);
   
   // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhi < 0.3
   TH1D * h_MR_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhi0p3", "h_MR_0Lbg1uW0Ll_mdPhi0p3", 20, 0, MRmx);
@@ -1193,11 +1198,25 @@ int main(int argc, char** argv)
 	  TTdilep->Fill("SIG", w);
 	
 	// Compute the minDeltaPhi variable, taking the first three jets into account
+	// Compute the minDeltaPhiHat variable, taking the first three jets into account
 	double minDeltaPhi = 99.;
+	double minDeltaPhiHat = 99;
 	for (int jet=0; jet<3; ++jet){
 	  double mdphi = fdeltaPhi(sjet[jet].phi,V3met.Phi());
 	  if (mdphi < minDeltaPhi)
 	    minDeltaPhi = mdphi;
+	  // compute resolution on T_i
+	  double sigma_T_i_2 = 0;
+	  for (int j=0; j<(signed)sjet.size(); ++j){
+	    if(j==jet) continue;
+	    double alpha = fdeltaPhi(sjet[jet].phi,sjet[j].phi); 
+	    sigma_T_i_2 += pow( 0.1*sjet[j].pt*sin(alpha) ,2); // could also have to be sin(pi - alpha), but sin is the same for both anyways...
+	  }
+	  // compute resolution on dphi_i
+	  double sigma_dphi_i = atan(sqrt(sigma_T_i_2)/V3met.Pt());
+	  double mdphihat = mdphi/sigma_dphi_i;
+	  if (mdphihat < minDeltaPhiHat)
+	    minDeltaPhiHat = mdphihat;
 	}
 
 	// 0 Lepton
@@ -1284,9 +1303,15 @@ int main(int argc, char** argv)
 		  h_MR_0Lbg1uW0Ll->Fill(MR, w);
 		  h_R2_0Lbg1uW0Ll->Fill(R2, w);
 		  h_MR_R2_0Lbg1uW0Ll->Fill(MR, R2, w);
+
 		  h_minDeltaPhi_0Lbg1uW0Ll->Fill(minDeltaPhi, w);
 		  h_MR_minDeltaPhi_0Lbg1uW0Ll->Fill(MR, minDeltaPhi, w);
 		  h_R2_minDeltaPhi_0Lbg1uW0Ll->Fill(R2, minDeltaPhi, w);
+
+		  h_minDeltaPhiHat_0Lbg1uW0Ll->Fill(minDeltaPhiHat, w);
+		  h_MR_minDeltaPhiHat_0Lbg1uW0Ll->Fill(MR, minDeltaPhiHat, w);
+		  h_R2_minDeltaPhiHat_0Lbg1uW0Ll->Fill(R2, minDeltaPhiHat, w);
+
 		  if(isTTallhad)
 		    TTallhad->Fill("0Lbg1uW0Ll", w);
 		  else if(isTTsemilep)
