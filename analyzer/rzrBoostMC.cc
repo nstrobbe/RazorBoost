@@ -88,11 +88,11 @@ int main(int argc, char** argv)
   string sample = "";
   if ( argc > 6 )
     sample = string(argv[6]);
-  
-  bool doISRreweighting = false;
   string ISR = "";
   if ( argc > 7 )
     ISR = string(argv[7]);
+
+  bool doISRreweighting = false;
   if (ISR == "ISR_True" 
       && (sample == "T2tt" || sample == "T1ttcc" 
 	  || sample == "TTJets" || sample == "WJets" || sample == "ZJets" )
