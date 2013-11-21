@@ -182,7 +182,7 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
 # ----------------------------------------------- # 
 def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
                , outputdir="plots", outfile=0, cname="canvas", plotinfo="Selection X"
-               , ratiotitle="ratio", logscale=False, scale="No", intlumi=19.789):
+               , ratiotitle="ratio", logscale=False, scale="No", scalefactor=1, intlumi=19.789):
 
     # First do some checks on the input
     if outfile == 0:
@@ -243,26 +243,29 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
 
     # scale MC to data if required
     if scale == "Yes":
-        mc_int = htotal.Integral(0,htotal.GetNbinsX()+1)
-        if mc_int == 0:
-            mc_int = 1.
-        data_int = hdata.Integral()
-        sf = data_int/mc_int
+        sf = scalefactor
+        if sf == 1: # we should rescale to match data
+            mc_int = htotal.Integral(0,htotal.GetNbinsX()+1)
+            if mc_int == 0:
+                mc_int = 1.
+            data_int = hdata.Integral()
+            sf = data_int/mc_int
         for h in histos:
             h.Scale(sf)
         print "Scaled all histograms by factor", sf
     # scale only QCD to match data in the first non-empty bin
     if scale == "QCD":
-        # find first non-empty bin
-        first_bin = 0
-        for b in range(hdata.GetNbinsX()):
-            if hdata.GetBinContent(b+1)>0:
-                first_bin = b+1
-                break
-        # compute the scale factor
-        sf = 1
-        if histos[hQCD_index].GetBinContent(first_bin) != 0:
-            sf = (hdata.GetBinContent(first_bin) - htotal.GetBinContent(first_bin) + histos[hQCD_index].GetBinContent(first_bin)) / histos[hQCD_index].GetBinContent(first_bin)
+        sf = scalefactor
+        if sf == 1:
+            # find first non-empty bin
+            first_bin = 0
+            for b in range(hdata.GetNbinsX()):
+                if hdata.GetBinContent(b+1)>0:
+                    first_bin = b+1
+                    break
+            # compute the scale factor
+            if histos[hQCD_index].GetBinContent(first_bin) != 0:
+                sf = (hdata.GetBinContent(first_bin) - htotal.GetBinContent(first_bin) + histos[hQCD_index].GetBinContent(first_bin)) / histos[hQCD_index].GetBinContent(first_bin)
         histos[hQCD_index].Scale(sf)
         print "Scaled QCD histogram by factor", sf
     if scale != "No":
