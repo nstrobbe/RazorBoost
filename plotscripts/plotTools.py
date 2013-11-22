@@ -180,6 +180,7 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
 # ----------------------------------------------- #
 # -- Plot routine for Data/MC comparison plots -- #
 # ----------------------------------------------- # 
+# TODO:  add option to run without data histogram
 def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
                , outputdir="plots", outfile=0, cname="canvas", plotinfo="Selection X"
                , ratiotitle="ratio", logscale=False, scale="No", scalefactor=1, intlumi=19.789):

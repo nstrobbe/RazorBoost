@@ -73,10 +73,20 @@ if __name__ == '__main__':
                                  cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="No")
 
+            htitle = "Data/MC comparison plot with total MC integral scaled to match Data"
+            plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
+                                 cname="DataMC_%s_%s_scaled"%(var,cut), plotinfo="Selection %s"%(cut),
+                                 ratiotitle="Data/MC", logscale=True, scale="Yes")
+
             htitle = "Data/MC comparison plot with QCD scaled up to match Data in first bin"
             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
                                  cname="DataMC_%s_%s_QCDscaled"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="QCD")
+
+            htitle = "Data/MC comparison plot with QCD scaled up by factor of 2"
+            plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
+                                 cname="DataMC_%s_%s_QCDscaled_factor2"%(var,cut), plotinfo="Selection %s"%(cut),
+                                 ratiotitle="Data/MC", logscale=True, scale="QCD", scalefactor=2)
 
     outfile.Close()
 
