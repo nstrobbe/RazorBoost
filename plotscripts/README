@@ -3,6 +3,69 @@
 ==     Please add a description for each script                     ==
 ======================================================================
 
+******************
+** plotTools.py **
+******************
+
+This is the script containing all the plotting routines. 
+It should not be used directly to plot, but should rather be imported 
+in other plotscripts
+
+Currenlty implemented functions: 
+
+SetBoostStyle()
+	This will set the style for our plots
+
+ConstructHDict(h,<options>)
+	This will construct a dictionary with all the information related to histogram h
+	Pass the options as named arguments (option1=value1,option3=value3,...)
+	Supported options with the default values:
+		name		= "name"
+		title		= "title"
+		color		= rt.kBlue	# color for line, marker, fill
+		appear_in_ratio	= "Yes"		# whether to appear in ratio plot or not
+						# Values can be: "Yes", "No", "Ref" (when denominator) 
+                linestyle	= 1
+		linewidth	= 2
+		markerstyle	= 7
+		markersize	= 1
+		fillstyle	= 0
+                xtitle		= ""
+		ytitle		= ""
+
+ConstructLDict(xmin,xmax,ymin,ymax,title)
+	This will construct a dictionary containing the positional information 
+	needed to create a legend, in addition to a possible title for the legend.
+
+PlotDataMC(hdictlist_bg, hdict_data, <options>)
+	This routine makes Data/MC comparison plot, and thus needs a list of bg histograms and a data histogram
+	The other supported options with their defaults are:
+		hdictlist_sig	= 0
+		legdict		= 0
+               	outputdir	= "plots"
+		outfile		= 0
+		cname		= "canvas"
+		plotinfo	= "Selection X"		# Additional text string to appear on plot
+               	ratiotitle	= "ratio"		# Y axis title of the ratio plot
+		logscale	= False			# Log scale for Y axis: True or False
+		scale		= "No"			# How to scale the histograms ("No", "Yes", "QCD", "Width") 
+		scalefactor	= 1			# Additional scalefactor to be applied, usage depends on scale option
+		intlumi		= 19.789
+
+	How to use the scale and scalefactor options: 
+		"No" 	: No scaling, scalefactor never used
+		"Yes" 	: Scale the total background by scalefactor. If scalefactor==1, scale to match data.
+		"QCD" 	: Only scale the QCD histogram by scalefactor. If scalefactor==1, scale to match data.
+		"Width" : For variable binning, divide by bin width, and multiply by scalefactor
+
+
+************************
+** getDataMCplots2.py **
+************************
+
+======================================================================
+======================================================================
+
 *************************
 ** getBGcomposition.py ** 
 *************************
