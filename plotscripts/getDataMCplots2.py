@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "test_plots"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131120/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20131125_varbin"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131122/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -66,12 +66,23 @@ if __name__ == '__main__':
                 hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle)
                 hsiglist.append(hdict)
 
-            hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle="MR",ytitle="Events",markerstyle=20)
+            hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
 
             # now make the actual plot
             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
                                  cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="No")
+            if var == "MR":
+                hdict_data2 = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events/(100 GeV)",markerstyle=20)
+                plotTools.PlotDataMC(hlist,hdict_data2,hsiglist,outputdir=outputdir, outfile=outfile,
+                                     cname="DataMC_%s_%s_width"%(var,cut), plotinfo="Selection %s"%(cut),
+                                     ratiotitle="Data/MC", logscale=True, scale="Width", scalefactor=100)
+            else:
+                hdict_data2 = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events/(0.01)",markerstyle=20)
+                
+                plotTools.PlotDataMC(hlist,hdict_data2,hsiglist,outputdir=outputdir, outfile=outfile,
+                                     cname="DataMC_%s_%s_width"%(var,cut), plotinfo="Selection %s"%(cut),
+                                     ratiotitle="Data/MC", logscale=True, scale="Width", scalefactor=0.01)
 
             htitle = "Data/MC comparison plot with total MC integral scaled to match Data"
             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
@@ -83,10 +94,37 @@ if __name__ == '__main__':
                                  cname="DataMC_%s_%s_QCDscaled"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="QCD")
 
-            htitle = "Data/MC comparison plot with QCD scaled up by factor of 2"
-            plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
-                                 cname="DataMC_%s_%s_QCDscaled_factor2"%(var,cut), plotinfo="Selection %s"%(cut),
-                                 ratiotitle="Data/MC", logscale=True, scale="QCD", scalefactor=2)
+#             htitle = "Data/MC comparison plot with QCD scaled up by factor of 1.98"
+#             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
+#                                  cname="DataMC_%s_%s_QCDscaled_factor1p98"%(var,cut), plotinfo="Selection %s"%(cut),
+#                                  ratiotitle="Data/MC", logscale=True, scale="QCD", scalefactor=1.98)
+
+#             htitle = "Data/MC comparison plot with QCD scaled up by factor of 2.09"
+#             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
+#                                  cname="DataMC_%s_%s_QCDscaled_factor2p09"%(var,cut), plotinfo="Selection %s"%(cut),
+#                                  ratiotitle="Data/MC", logscale=True, scale="QCD", scalefactor=2.09)
+
+    # make plot of minDeltaPhiHat
+    hname = "h_minDeltaPhiHat_0Lbg1uW0Ll"
+    htitle = "Data/MC comparison plot"
+    hlist = []
+    for i in range(len(mc_datasets)):
+        if not flist[i]: continue
+        hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle)
+        hlist.append(hdict)
+        
+    hsiglist = []
+    for i in range(len(sig_datasets)):
+        if not fsiglist[i]: continue
+        hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle)
+        hsiglist.append(hdict)
+
+    hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle="MR",ytitle="Events",markerstyle=20)
+
+    plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
+                         cname="DataMC_minDeltaPhiHat_0Lbg1uW0Ll", plotinfo="Selection 0Lbg1uW0Ll",
+                         ratiotitle="Data/MC", logscale=True, scale="No")
+    
 
     outfile.Close()
 

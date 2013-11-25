@@ -254,6 +254,16 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
         for h in histos:
             h.Scale(sf)
         print "Scaled all histograms by factor", sf
+
+    # Scale everything according to the bin width
+    if scale == "Width":
+        for h in histos:
+            h.Scale(scalefactor,"width")
+        hdata.Scale(scalefactor,"width")
+        for h in hsignal:
+            h.Scale(scalefactor,"width")
+        print "Will plot per bin width"
+        
     # scale only QCD to match data in the first non-empty bin
     if scale == "QCD":
         sf = scalefactor
@@ -269,6 +279,7 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
                 sf = (hdata.GetBinContent(first_bin) - htotal.GetBinContent(first_bin) + histos[hQCD_index].GetBinContent(first_bin)) / histos[hQCD_index].GetBinContent(first_bin)
         histos[hQCD_index].Scale(sf)
         print "Scaled QCD histogram by factor", sf
+
     if scale != "No":
         # we scaled some histograms, will need to remake htotal
         htotal = histos[0].Clone()
