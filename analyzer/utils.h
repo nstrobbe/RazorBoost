@@ -103,3 +103,12 @@ double CalcMTR(TLorentzVector ja, TLorentzVector jb, TVector3 met){
 double CalcMT(TLorentzVector lepton, TLorentzVector pfmet){
   return sqrt( 2 * lepton.Pt() * pfmet.Pt() * ( 1 - cos( pfmet.Phi() - lepton.Phi() ) ) );
 }
+
+// Scalefactor for top pt reweighting
+// Taken from this twiki: https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting#Studies
+// Values used are the ones for the 8 TeV, all combined measurement
+double GetTopPtScaleFactor(double toppt){ // toppt is generator top(antitop) pt
+  double a = 0.156;
+  double b = -0.00137;
+  return exp(a+b*toppt);
+}
