@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20131125_varbin"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131122/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20131125_varbin_2"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131125/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -72,6 +72,8 @@ if __name__ == '__main__':
             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
                                  cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="No")
+
+            # scale according to bin width; need to adjust y axis title according to variable
             if var == "MR":
                 hdict_data2 = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events/(100 GeV)",markerstyle=20)
                 plotTools.PlotDataMC(hlist,hdict_data2,hsiglist,outputdir=outputdir, outfile=outfile,
