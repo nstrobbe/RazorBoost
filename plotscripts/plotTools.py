@@ -177,6 +177,86 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
         canvas.Write()
     canvas.Close()
 
+# --------------------------------------------------------------- #
+# -- Plot routine for 1D comparison plots without a ratio plot -- #
+# --------------------------------------------------------------- # 
+def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
+           ,logscale=False,scale=True):
+    # First do some checks on the input
+    if outfile == 0:
+        print "You did not pass me a root file to store the plots. I will only produce pdf files."
+    if not os.path.isdir(outputdir):
+        print "Output directory doesn't exist yet"
+        print "Will create directory %s" % (outputdir)
+        os.makedirs(outputdir)
+
+    # placeholder for draw objects
+    rootEvil = []
+
+    # Make the canvas
+    canvas = rt.TCanvas(cname,"")
+    canvas.SetLeftMargin(0.15)
+    canvas.SetBottomMargin(0.15)
+    if logscale:
+        canvas.SetLogy(1)
+    canvas.cd()
+    
+    # Make the legend
+    legend = rt.TLegend(0.67,0.5,0.87,0.87,"")
+    if legdict != 0:
+        legend = rt.TLegend(legdict["xmin"],legdict["ymin"],legdict["xmax"],legdict["ymax"],legdict["title"])
+    legend.SetFillColor(0)
+    legend.SetBorderSize(0)
+
+    # Get histograms from a list of dictionaries, and plot them 
+    print "Getting all histograms"
+
+    first = 0 # to keep track whether this is the first histogram we're plotting
+    for hdict in hdictlist:
+        h = hdict["histogram"] # Get the histogram
+        h.Sumw2() # need to put this otherwise errors in ratio plot are wrong
+        if scale:
+            sf = h.Integral(0,h.GetNbinsX()+1)
+            h.Scale(1./sf)
+                
+        if scale:
+            h.GetYaxis().SetTitle("A.U.")
+        else:
+            h.GetYaxis().SetTitle("Events")
+        h.GetXaxis().SetTitle(hdict["xtitle"])
+        h.GetXaxis().SetTitleSize(0.05)
+        h.GetXaxis().SetTitleOffset(1.1)
+        h.GetXaxis().SetLabelSize(0.04)
+    
+        h.GetYaxis().SetTitleSize(0.055)
+        h.GetYaxis().SetTitleOffset(1.1)
+        h.GetYaxis().SetLabelSize(0.04)
+        h.SetLineColor(hdict["color"])
+        h.SetLineWidth(hdict["linewidth"])
+        if hdict["fillstyle"] != 0:
+            h.SetFillStyle(hdict["fillstyle"])
+            h.SetFillColor(hdict["color"])
+        h.SetTitle(hdict["title"])
+        legend.AddEntry(h,hdict["name"],"l")
+        h.SetMinimum(0.00005)
+        if logscale and scale:
+            h.SetMaximum(1)
+        drawoption = "HIST"
+        if first > 0:
+            drawoption = "HIST same"
+        rootEvil.append(h.DrawClone(drawoption))
+        first = first+1
+        
+    print "Drew all histograms"
+    legend.Draw("same") 
+    
+    canvas.cd()
+    canvas.SaveAs(outputdir+"/"+cname+".pdf")
+    if outfile != 0:
+        outfile.cd()
+        canvas.Write()
+    canvas.Close()
+
 # ----------------------------------------------- #
 # -- Plot routine for Data/MC comparison plots -- #
 # ----------------------------------------------- # 
@@ -213,6 +293,7 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
         print hdict["name"], "doesn't exist, will stop making this plot now"
         return
     hdata = hdict_data["histogram"].Clone()
+    hdata.Sumw2()
     hdata.SetMarkerStyle(hdict_data["markerstyle"])
     hdata.SetLineColor(hdict_data["color"])
     hdata.GetYaxis().SetTitle(hdict_data["ytitle"])
