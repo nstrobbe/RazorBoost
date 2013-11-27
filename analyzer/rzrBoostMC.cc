@@ -501,6 +501,13 @@ int main(int argc, char** argv)
   TH1D* h_gen_dRqq = new TH1D("h_gen_dRqq", "h_gen_dRqq", 200, 0, 5);
   TH2D* h_gen_Wpt_dRqq = new TH2D("h_gen_Wpt_dRqq", "h_gen_Wpt_dRqq", 200, 0, 1000, 200, 0, 5);
 
+  TH1D* h_gen_top1pt_g1Mb0Ll = new TH1D("h_gen_top1pt_g1Mb0Ll", "h_gen_top1pt_g1Mb0Ll", 50, 0, 1000);
+  TH1D* h_gen_dRWb_g1Mb0Ll = new TH1D("h_gen_dRWb_g1Mb0Ll", "h_gen_dRWb_g1Mb0Ll", 200, 0, 5);
+  TH2D* h_gen_top1pt_dRWb_g1Mb0Ll = new TH2D("h_gen_top1pt_dRWb_g1Mb0Ll", "h_gen_top1pt_dRWb_g1Mb0Ll", 200, 0, 1000, 200, 0, 5);
+  TH1D* h_gen_W1pt_g1Mb0Ll = new TH1D("h_gen_W1pt_g1Mb0Ll", "h_gen_W1pt_g1Mb0Ll", 50, 0, 1000);
+  TH1D* h_gen_dRqq_g1Mb0Ll = new TH1D("h_gen_dRqq_g1Mb0Ll", "h_gen_dRqq_g1Mb0Ll", 200, 0, 5);
+  TH2D* h_gen_W1pt_dRqq_g1Mb0Ll = new TH2D("h_gen_W1pt_dRqq_g1Mb0Ll", "h_gen_W1pt_dRqq_g1Mb0Ll", 200, 0, 1000, 200, 0, 5);
+
   // Define the order of bins in the counts histogram:
   
   ofile.count("NoCuts", 0.0);
@@ -1451,6 +1458,58 @@ int main(int argc, char** argv)
 		  TTsemilep->Fill("g1Mb0Ll", w);
 		else if(isTTdilep)
 		  TTdilep->Fill("g1Mb0Ll", w);
+
+
+		double gen_toppt = 0;
+		double dRWb = 0;
+		double gen_Wpt = 0;
+		double dRqq = 0;
+		for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+		  if (genparticlehelper[i].status != 3) continue;
+		  if (fabs(genparticlehelper[i].pdgId) == 6) {
+		    std::vector<genparticlehelper_s> topdaughters;
+		    int id1 = genparticlehelper[i].firstDaughter;
+		    int id2 = genparticlehelper[i].lastDaughter;
+		    topdaughters.push_back(genparticlehelper[id1]);
+		    topdaughters.push_back(genparticlehelper[id2]);
+
+		    if ((fabs(topdaughters[0].pdgId) == 5 || fabs(topdaughters[0].pdgId) == 24) 
+			&& (fabs(topdaughters[1].pdgId) == 5 || fabs(topdaughters[1].pdgId) == 24)) {
+		      double toppt = genparticlehelper[i].pt;
+		      double dRWb_ = fdeltaR(genparticlehelper[id1].eta, genparticlehelper[id1].phi,
+					    genparticlehelper[id2].eta, genparticlehelper[id2].phi);
+		      if (toppt > gen_toppt){
+			gen_toppt = toppt;
+			dRWb = dRWb_;
+		      }
+		    }
+		  }
+		  if (fabs(genparticlehelper[i].pdgId) == 24) {
+		    std::vector<genparticlehelper_s> Wdaughters;
+		    int id1 = genparticlehelper[i].firstDaughter;
+		    int id2 = genparticlehelper[i].lastDaughter;
+		    Wdaughters.push_back(genparticlehelper[id1]);
+		    Wdaughters.push_back(genparticlehelper[id2]);
+
+		    if ((fabs(Wdaughters[0].pdgId) <= 5 ) && (fabs(Wdaughters[1].pdgId) <= 5)) {
+		      double Wpt = genparticlehelper[i].pt;
+		      double dRqq_ = fdeltaR(genparticlehelper[id1].eta, genparticlehelper[id1].phi,
+					    genparticlehelper[id2].eta, genparticlehelper[id2].phi);
+		      if (Wpt > gen_Wpt){
+			gen_Wpt = Wpt;
+			dRqq = dRqq_;
+		      }
+		    }
+		  }
+		  
+		}
+		h_gen_top1pt_g1Mb0Ll->Fill(gen_toppt,w);
+		h_gen_dRWb_g1Mb0Ll->Fill(dRWb,w);
+		h_gen_top1pt_dRWb_g1Mb0Ll->Fill(gen_toppt, dRWb,w);
+		h_gen_W1pt_g1Mb0Ll->Fill(gen_Wpt,w);
+		h_gen_dRqq_g1Mb0Ll->Fill(dRqq,w);
+		h_gen_W1pt_dRqq_g1Mb0Ll->Fill(gen_Wpt,dRqq,w);
+		
 		
 		// g1Mb g1W 0Ll
 		if( sW.size() > 0){
