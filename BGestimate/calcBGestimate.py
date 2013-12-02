@@ -11,7 +11,7 @@ def make_info_dict(base,
     # this will contain all the info pertaining to all background processes.
     info = dict()
     # for each process, form a list with following information:
-    # [filename, fromMC, ]
+    # [filename, fromMC, CR if required]
     info["QCD"] = [base+"QCD.root", QCD_fromMC, QCD_CR]
     info["TTJets"] = [base+"TTJets.root", TTJets_fromMC, TTJets_CR] 
     info["WJetsToLNu"] = [base+"WJetsToLNu.root", WJetsToLNu_fromMC, WJetsToLNu_CR]
@@ -25,7 +25,7 @@ def make_info_dict(base,
 
     return info
 
-def calcBGfromCR(process, SIG, CR, fdataname, infodict, outfile):
+def calcBGfromCR(process, SIG, CR, fdataname, infodict, outfile, bin_by_bin=True):
     hCRname = "h_MR_R2_" + CR
     hSIGname = "h_MR_R2_" + SIG
 
@@ -64,13 +64,17 @@ def calcBGfromCR(process, SIG, CR, fdataname, infodict, outfile):
     h_ratio = h_SIG.Clone()
     h_ratio.Sumw2()
     h_ratio.Divide(h_CR)
-
+    ratio = h_SIG.Integral()/h_CR.Integral() if h_CR.Integral()>0 else 1
+    
     # now do the actual estimate: (data - others) * ratio
     BGestimate = hdata.Clone("h_"+process+"_in_"+SIG+"_from_"+CR)
     BGestimate.Sumw2()
     BGestimate.Add(otherBG,-1)
-    BGestimate.Multiply(h_ratio)
-
+    if bin_by_bin:
+        BGestimate.Multiply(h_ratio)
+    else:
+        BGestimate.Scale(ratio)
+        
     outfile.cd()
     BGestimate.Write()
     fdata.Close()
@@ -79,13 +83,13 @@ def calcBGfromCR(process, SIG, CR, fdataname, infodict, outfile):
     return BGestimate
 
     
-def doBGestimate(region,infodict,fdata):
+def doBGestimate(region,infodict,fdata,extra_info="",bin_by_bin=True):
     # We need to sum the contributions of all the BG components
     # Some will be taken straight from MC, others from control region
     # all this information is provided in the "info" dictionary
 
     # file to store the estimate
-    outfile = TFile.Open("BGestimate_"+region+".root","RECREATE")
+    outfile = TFile.Open("BGestimate_"+region+"_"+extra_info+".root","RECREATE")
     BGestimate = 0
     for name,info in infodict.iteritems():
         print "Determine background", name
@@ -108,7 +112,7 @@ def doBGestimate(region,infodict,fdata):
             f.Close()
         else:
             # we need to take it from a control region
-            h = calcBGfromCR(name, region, info[2], fdata, infodict, outfile)
+            h = calcBGfromCR(name, region, info[2], fdata, infodict, outfile, bin_by_bin)
             print h
             BGestimate.Add(h)
             
@@ -132,4 +136,6 @@ if __name__ == "__main__":
                               QCD_fromMC=False,QCD_CR="0Lbg1uW0Ll_mdPhi0p3",
                               TTJets_fromMC=False,TTJets_CR="g1Mbg1W1LlmT100")
 
-    doBGestimate("g1Mbg1W0Ll",SIG_info,inputdir+analyzer+"_data.root") # BG estimate for signal region
+    doBGestimate("g1Mbg1W0Ll",SIG_info,inputdir+analyzer+"_data.root","",True) # BG estimate for signal region
+
+    doBGestimate("g1Mbg1W0Ll",SIG_info,inputdir+analyzer+"_data.root","global",False) # BG estimate for signal region
