@@ -27,7 +27,7 @@ exe = dwork+anl
 
 # Get the samples list file:
 if len(sys.argv) < 2:
-    print 'Run as python '+sys.argv[0]+' <sample list filename>'
+    print 'Run as python '+sys.argv[0]+' <sample list filename> and optional: <ISR_True> <TopPt_True>'
     sys.exit()
 
 samplesfile = sys.argv[1]
@@ -40,6 +40,12 @@ names['exe'] = exe
 names['drestmp'] = drestmp
 names['anl'] = anl
 
+names['ISR'] = "" 
+names['Top_pT'] = ""
+if len(sys.argv) > 2:
+    names['ISR'] = sys.argv[2]
+if len(sys.argv) > 3:
+    names['ISR'] = sys.argv[2]
 
 # Total number of runs
 nrunstot = 0
@@ -57,6 +63,7 @@ for d in datasets:
     xsect = -1
     totweight = -1
     lumi = -1
+    samp = "None"
     d = strip(d)
     d = split(d)
     if len(d) >= 2:
@@ -65,10 +72,13 @@ for d in datasets:
             lumi = intlumi
     if len(d) >= 3:
         xsect = d[2]
-    if len(d) == 4:
+    if len(d) >= 4:
         totweight = d[3]
+    if len(d) == 5:
+        samp = d[4]
     names['xsect'] = xsect
     names['totweight'] = totweight 
+    names['sample'] = samp
     names['lumi'] = lumi
     d = split(d[0], '%')
     print d

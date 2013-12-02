@@ -82,6 +82,7 @@ int main(int argc, char** argv)
   string fsample = cmdline.filelist;
   double xsect = cmdline.xsect;
   // ! totweight should contain the proper ISR weights if we want to do ISRreweighting !
+  // ! totweight should contain the proper top pT weights if we want to do top Pt reweighting !
   double totweight = cmdline.totweight; 
   double lumi = cmdline.lumi;
 
@@ -91,13 +92,23 @@ int main(int argc, char** argv)
   string ISR = "";
   if ( argc > 7 )
     ISR = string(argv[7]);
+  string TopPt = "";
+  if ( argc > 8 )
+    TopPt = string(argv[8]);
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
       && (sample == "T2tt" || sample == "T1ttcc" 
 	  || sample == "TTJets" || sample == "WJets" || sample == "ZJets" )
-      )
+      ){
     doISRreweighting = true;
+    cout << "Will do ISR reweighting" << endl;
+  }
+  bool doTopPtreweighting = false;
+  if (sample == "TTJets" && TopPt == "TopPt_True"){
+    doTopPtreweighting = true;
+    cout << "Will do top pt reweighting" << endl;
+  }
 
   // Calculate the normalization factor for the event weights
   // The original MC weight will be divided by this quantity
@@ -139,6 +150,10 @@ int main(int argc, char** argv)
   TH1D* h_totalISRweight_nominal = new TH1D("h_totalISRweight_nominal", "h_totalISRweight_nominal", 1, 1, 2); // nominal ISR weight
   TH1D* h_totalISRweight_up = new TH1D("h_totalISRweight_up", "h_totalISRweight_up", 1, 1, 2); //  ISR up weight
   TH1D* h_totalISRweight_down = new TH1D("h_totalISRweight_down", "h_totalISRweight_down", 1, 1, 2); // ISR down weight
+
+  TH1D* h_totalTopPTweight_nominal = new TH1D("h_totalTopPTweight_nominal", "h_totalTopPTweight_nominal", 1, 1, 2); // nominal ISR weight
+  TH1D* h_totalTopPTweight_up = new TH1D("h_totalTopPTweight_up", "h_totalTopPTweight_up", 1, 1, 2); //  ISR up weight
+  TH1D* h_totalTopPTweight_down = new TH1D("h_totalTopPTweight_down", "h_totalTopPTweight_down", 1, 1, 2); // ISR down weight
 
   // W tagging plots
 
@@ -984,6 +999,29 @@ int main(int argc, char** argv)
       //if (doISRreweighting)
       //w = w*w_ISR_nominal;
      
+      // **************************************************************
+      // ***  Top Pt Reweighting recipe for Madgraph TTbar samples  ***
+      // **************************************************************
+      // per event weights to apply
+      double w_TopPt_nominal = 1.;
+      double w_TopPt_up = 1.; 
+      double w_TopPt_down = 1.; // always stays 1, i.e. no reweighting     
+      if(doTopPtreweighting){
+	for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+	  if (genparticlehelper[i].status != 3) continue;
+	  if (fabs(genparticlehelper[i].pdgId) == 6){
+	    double wtemp = GetTopPtScaleFactor(genparticlehelper[i].pt);
+	    //cout << "wtemp: " << wtemp << endl;
+	    w_TopPt_nominal = w_TopPt_nominal * wtemp;
+	  }
+	}
+	w_TopPt_up = w_TopPt_nominal;
+	w_TopPt_nominal = sqrt(w_TopPt_nominal);
+      }
+      h_totalTopPTweight_nominal->Fill(1,w_TopPt_nominal);
+      h_totalTopPTweight_up->Fill(1,w_TopPt_up);
+      h_totalTopPTweight_down->Fill(1,w_TopPt_down);
+
       // ----------------------
       // -- object selection --
       // ----------------------

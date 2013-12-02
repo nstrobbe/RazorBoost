@@ -67,7 +67,7 @@ for d in datasets:
             lumi = intlumi
     if len(d) >= 3:
         xsect = d[2]
-    if len(d) == 4:
+    if len(d) >= 4:
         totweight = d[3]
     names['xsect'] = xsect
     names['totweight'] = totweight 

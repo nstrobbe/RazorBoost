@@ -19,9 +19,12 @@ lumi = '%(lumi)s'
 nmflisttmp = '%(nmflisttmp)s'
 nmhistotmp = '%(nmhistotmp)s'
 histo = anl+'_histograms.root'
+sample = '%(sample)s'
+ISR = '%(ISR)s'
+Top_pT = '%(Top_pT)s'
 
 # Args:
-args = nmflisttmp+' '+xsect+' '+totweight+' '+lumi+' '+histo
+args = nmflisttmp+' '+xsect+' '+totweight+' '+lumi+' '+histo+' '+sample+' '+ISR+' '+Top_pT
 
 # Run
 os.system(exe+' '+args)
