@@ -17,34 +17,37 @@ def SetBoostStyle():
 # -- Constructor for histogram dictionary     -- #
 # ---------------------------------------------- # 
 def ConstructHDict(h, name="name", color=rt.kBlue, title="title", appear_in_ratio="Yes"
-                   , linestyle=1, linewidth=2, markerstyle=7, markersize=1, fillstyle=0
-                   , xtitle="", ytitle=""):
+                   , linestyle=1, linewidth=2, markerstyle=20, markersize=1, fillstyle=0
+                   , xtitle="", ytitle="", drawoption = "hist"
+                   , appear_in_legend=True):
     hdict = {}
-    hdict["name"] = name                       # what will appear in the legend
-    hdict["histogram"] = h                     # the actual histogram
-    hdict["color"] = color                     # the color for the histogram
-    hdict["title"] = title                     # title of the histogram
-    hdict["appear in ratio"] = appear_in_ratio # can be "Yes", "No", "Ref"
-    hdict["linestyle"] = linestyle             # line style
-    hdict["linewidth"] = linewidth             # line width
-    hdict["markerstyle"] = markerstyle         # marker style
-    hdict["markersize"] = markersize           # marker size
-    hdict["fillstyle"] = fillstyle             # fill style
-    hdict["xtitle"] = xtitle                   # x axis title
-    hdict["ytitle"] = ytitle                   # y axis title
+    hdict["name"] = name                         # what will appear in the legend
+    hdict["histogram"] = h                       # the actual histogram
+    hdict["color"] = color                       # the color for the histogram
+    hdict["title"] = title                       # title of the histogram
+    hdict["appear in ratio"] = appear_in_ratio   # can be "Yes", "No", "Ref"
+    hdict["appear in legend"] = appear_in_legend # can be "Yes", "No", "Ref"
+    hdict["linestyle"] = linestyle               # line style
+    hdict["linewidth"] = linewidth               # line width
+    hdict["markerstyle"] = markerstyle           # marker style
+    hdict["markersize"] = markersize             # marker size
+    hdict["fillstyle"] = fillstyle               # fill style
+    hdict["xtitle"] = xtitle                     # x axis title
+    hdict["ytitle"] = ytitle                     # y axis title
+    hdict["drawoption"] = drawoption             # draw option
     return hdict
 
 # ---------------------------------------------- #
 # -- Constructor for legend dictionary        -- #
 # ---------------------------------------------- # 
-def ConstructLDict(xmin,xmax,ymin,ymax,title):
-    ldict = {}
+def ConstructLDict(xmin,xmax,ymin,ymax,title=""):
+    legdict = {}
     legdict["xmin"] = xmin
     legdict["ymin"] = ymin
     legdict["xmax"] = xmax
     legdict["ymax"] = ymax
     legdict["title"] = title
-    return ldict
+    return legdict
 
 # ---------------------------------------------- #
 # -- Plot routine for 2D plots                -- #
@@ -56,7 +59,7 @@ def Plot2D():
 # -- Plot routine for 1D comparison plots     -- #
 # ---------------------------------------------- # 
 def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
-                    ,ratiotitle="ratio",logscale=False,scale=True):
+                    ,ratiotitle="ratio",logscale=False,scale="No"):
     # First do some checks on the input
     if outfile == 0:
         print "You did not pass me a root file to store the plots. I will only produce pdf files."
@@ -94,15 +97,17 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
     for hdict in hdictlist:
         h = hdict["histogram"] # Get the histogram
         h.Sumw2() # need to put this otherwise errors in ratio plot are wrong
-        if scale:
+        if scale == "Yes":
             sf = h.Integral(0,h.GetNbinsX()+1)
             h.Scale(1./sf)
-                
+        if scale == "Width":
+            h.scale(1,"width")
+            
         if hdict["appear in ratio"] == "Ref":
             print "Found ref histo"
             h_ref=h.Clone("h_ref")
 
-        if scale:
+        if scale == "Yes":
             h.GetYaxis().SetTitle("A.U.")
         else:
             h.GetYaxis().SetTitle("Events")
@@ -110,15 +115,36 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
         h.GetYaxis().SetTitleSize(0.055)
         h.GetYaxis().SetTitleOffset(0.8)
         h.GetYaxis().SetLabelSize(0.05)
+
         h.SetLineColor(hdict["color"])
         h.SetLineWidth(hdict["linewidth"])
+        if hdict["fillstyle"] != 0:
+            h.SetFillStyle(hdict["fillstyle"])
+            h.SetFillColor(hdict["color"])
+        if "P" in hdict["drawoption"]:
+            h.SetMarkerColor(hdict["color"])
+            h.SetMarkerSize(hdict["markersize"])
+            h.SetMarkerStyle(hdict["markerstyle"])
         h.SetTitle(hdict["title"])
-        legend.AddEntry(h,hdict["name"],"l")
-        h.SetMinimum(0.00005)
-        drawoption = "HIST"
+
+        if hdict["appear in legend"]:
+            legoption = "l"
+            if "E" in hdict["drawoption"]:
+                legoption = "epl"
+            legend.AddEntry(h,hdict["name"],legoption)
+            
+        if logscale:
+            h.SetMinimum(0.00005)
+
+        drawoption = hdict["drawoption"]
         if first > 0:
-            drawoption = "HIST same"
+            drawoption = drawoption + " same"
         rootEvil.append(h.DrawClone(drawoption))
+        if "E2" in drawoption:
+            if first > 0:
+                rootEvil.append(h.DrawClone(drawoption.replace("E2","E0")))
+            else:
+                rootEvil.append(h.DrawClone(drawoption.replace("E2","E0")+" same"))
         first = first+1
         
     print "Drew all histograms"
@@ -146,6 +172,7 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
 
         ratio.SetMarkerColor(hdict["color"])
         ratio.SetMarkerStyle(hdict["markerstyle"])
+        ratio.SetMarkerSize(hdict["markersize"])
         ratio.SetTitle("")
         ratio.SetName("ratio"+str(firstB))
         ratio.GetYaxis().SetRangeUser(0,2.2)
@@ -181,7 +208,7 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
 # -- Plot routine for 1D comparison plots without a ratio plot -- #
 # --------------------------------------------------------------- # 
 def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
-           ,logscale=False,scale=True):
+           ,logscale=False,scale="No"):
     # First do some checks on the input
     if outfile == 0:
         print "You did not pass me a root file to store the plots. I will only produce pdf files."
@@ -215,36 +242,55 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
     for hdict in hdictlist:
         h = hdict["histogram"] # Get the histogram
         h.Sumw2() # need to put this otherwise errors in ratio plot are wrong
-        if scale:
+        if scale == "Yes":
             sf = h.Integral(0,h.GetNbinsX()+1)
             h.Scale(1./sf)
-                
-        if scale:
+        if scale == "Width":
+            h.Scale(1,"width")
+            
+        if scale == "Yes":
             h.GetYaxis().SetTitle("A.U.")
         else:
             h.GetYaxis().SetTitle("Events")
+
         h.GetXaxis().SetTitle(hdict["xtitle"])
         h.GetXaxis().SetTitleSize(0.05)
         h.GetXaxis().SetTitleOffset(1.1)
         h.GetXaxis().SetLabelSize(0.04)
-    
         h.GetYaxis().SetTitleSize(0.055)
         h.GetYaxis().SetTitleOffset(1.1)
         h.GetYaxis().SetLabelSize(0.04)
+
         h.SetLineColor(hdict["color"])
         h.SetLineWidth(hdict["linewidth"])
         if hdict["fillstyle"] != 0:
             h.SetFillStyle(hdict["fillstyle"])
             h.SetFillColor(hdict["color"])
+        if "P" in hdict["drawoption"]:
+            h.SetMarkerColor(hdict["color"])
+            h.SetMarkerSize(hdict["markersize"])
+            h.SetMarkerStyle(hdict["markerstyle"])
         h.SetTitle(hdict["title"])
-        legend.AddEntry(h,hdict["name"],"l")
-        h.SetMinimum(0.00005)
-        if logscale and scale:
-            h.SetMaximum(1)
-        drawoption = "HIST"
+
+        if hdict["appear in legend"]:
+            legoption = "l"
+            if "E" in hdict["drawoption"]:
+                legoption = "epl"
+            legend.AddEntry(h,hdict["name"],legoption)
+        if logscale:
+            h.SetMinimum(0.00005)
+            if scale == "Yes":
+                h.SetMaximum(1)
+
+        drawoption = hdict["drawoption"]
         if first > 0:
-            drawoption = "HIST same"
+            drawoption = drawoption + " same"
         rootEvil.append(h.DrawClone(drawoption))
+        if "E2" in drawoption:
+            if first > 0:
+                rootEvil.append(h.DrawClone(drawoption.replace("E2","E0")))
+            else:
+                rootEvil.append(h.DrawClone(drawoption.replace("E2","E0")+" same"))
         first = first+1
         
     print "Drew all histograms"
@@ -376,10 +422,12 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     legend.SetBorderSize(0)
     legend.AddEntry(hdata," data ("+ str(intlumi) + "/fb)","epl")
     for i,h in enumerate(histos):
-        legend.AddEntry(h,hdictlist_bg[i]["name"],"f")
+        if hdictlist_bg[i]["appear in legend"]:
+            legend.AddEntry(h,hdictlist_bg[i]["name"],"f")
     for i,h in enumerate(hsignal):
-        legend.AddEntry(h,hdictlist_sig[i]["name"],"f")
-
+        if hdictlist_sig[i]["appear in legend"]:
+            legend.AddEntry(h,hdictlist_sig[i]["name"],"f")
+        
     # Get the maximum of the histograms, so that we can set the Y-axis range
     maxi = hdata.GetMaximum()
     if htotal.GetMaximum() > maxi:
@@ -398,7 +446,8 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     hdata.GetYaxis().SetTitleOffset(0.8)
     hdata.GetYaxis().SetLabelSize(0.05)
     hdata.SetMaximum(2.*maxi)
-    hdata.SetMinimum(0.007)
+    if logscale:
+        hdata.SetMinimum(0.007)
     hdata.Draw("EP")
     mc.Draw("same")
     hdata.Draw("EPsame")
