@@ -136,6 +136,10 @@ if __name__ == "__main__":
                               QCD_fromMC=False,QCD_CR="0Lbg1uW0Ll_mdPhi0p3",
                               TTJets_fromMC=False,TTJets_CR="g1Mbg1W1LlmT100")
 
-    doBGestimate("g1Mbg1W0Ll",SIG_info,inputdir+analyzer+"_data.root","",True) # BG estimate for signal region
+    #doBGestimate(region,infodict,fdata,extra_info,bin_by_bin)
+    doBGestimate("g1Mbg1W0Ll",SIG_info,inputdir+analyzer+"_data.root","",True) # BG estimate for signal region, using bin-by-bin ratio
 
-    doBGestimate("g1Mbg1W0Ll",SIG_info,inputdir+analyzer+"_data.root","global",False) # BG estimate for signal region
+    doBGestimate("g1Mbg1W0Ll",SIG_info,inputdir+analyzer+"_data.root","global",False) # BG estimate for signal region, using global MC ratio
+
+    # need to add functionality to do for example: estimate TTJets from TTJets CR ( taking QCD from QCD CR and rest from MC)
+
