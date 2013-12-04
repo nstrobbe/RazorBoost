@@ -1186,7 +1186,7 @@ int main(int argc, char** argv)
       std::vector<TVector3> V3mu;
       std::vector<TLorentzVector> LVmu;
       for (unsigned int i=0; i<cmgmuon1.size(); i++) {
-	if (!(cmgmuon1[i].pt > 20) ) continue; // lowered from 25
+	if (!(cmgmuon1[i].pt > 10) ) continue; // lowered from 25
 	if (!(fabs(cmgmuon1[i].eta) < 2.4) ) continue;
 	smuon.push_back(cmgmuon1[i]);
         TVector3 lmu;
@@ -1212,7 +1212,7 @@ int main(int argc, char** argv)
       // Electrons - tight
       std::vector<cmgelectron1_s> selectron;
       for (unsigned int i=0; i<cmgelectron1.size(); i++) {
-        if (!(cmgelectron1[i].pt > 30) ) continue;
+        if (!(cmgelectron1[i].pt > 10) ) continue;
         if (!(fabs(cmgelectron1[i].eta) < 2.5) ) continue;
         // veto 1.442 < |eta| < 1.556? --> is already done in the collection ??
         if (!(fabs(cmgelectron1[i].eta) < 1.442 && fabs(cmgelectron1[i].eta) < 1.556) ) continue;
@@ -1648,8 +1648,8 @@ int main(int argc, char** argv)
 	}  // end veto electron
 	
 	
-	// 1 Loose, not tight lepton 
-	if(nlooseleptons == 1 && ntightleptons == 0){
+	// 1 Loose lepton
+	if(nlooseleptons == 1){
 	  // Calculate mT 
 	  TLorentzVector lepton;
 	  if (nlooseelectrons == 1)
