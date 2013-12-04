@@ -3,48 +3,7 @@ from string import *
 from ROOT import TFile
 from math import sqrt 
 
-def printCutPercentage(cut,info):
-    ttj = 0
-    wj = 0
-    qcd =0
-    diboson= 0
-    top = 0
-    zjets = 0
-    zll = 0
-    triboson = 0
-    ttX = 0
-    for sample,t in info.iteritems():
-        c = t[0][cut]
-        w = t[1]
-        effxs = c #*w*intlumi
-        if "_TTJets_" in sample:
-            ttj = ttj + effxs
-        if "_WJetsToLNu_" in sample:
-            wj = wj + effxs
-        if "_QCD_" in sample:
-            qcd = qcd + effxs
-        if "_WW_" in sample:
-            diboson = diboson + effxs
-        if "_WZ_" in sample:
-            diboson = diboson + effxs
-        if "_ZZ_" in sample:
-            diboson = diboson + effxs
-        if "_T_" in sample:
-            top = top + effxs
-        if "_Tbar_" in sample:
-            top = top + effxs
-        if "_ZJetsToNuNu_" in sample:
-            zjets = zjets + effxs
-        if "_DYJets" in sample: 
-            zll = zll + effxs
-        if "_WZZ_" in sample or "_WWZ" in sample or "_WWW_" in sample or "_WWGJets_" in sample or "_ZZZ" in sample:
-            triboson = triboson + effxs
-        if "_TTGJets_" in sample or "_TTbarW" in sample or "_ttbarZ_" in sample or "_TTWWJets_" in sample:
-            ttX = ttX + effxs
-    total = ttj + wj + qcd + diboson + top + zjets + zll + triboson + ttX
-    print "Cut %s \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f" % (cut,qcd*100./total,ttj*100./total,wj*100./total,diboson*100./total,top*100./total,zjets*100./total,zll*100./total,triboson*100./total,ttX*100./total) 
-
-def printCut(cut,info,intlumi):
+def printCut(cut,info,signame="T1ttcc",option="Counts"):
     ttj = 0
     wj = 0
     qcd = 0
@@ -54,11 +13,13 @@ def printCut(cut,info,intlumi):
     zll = 0
     triboson = 0
     ttX = 0
-    #sig = 0
+    Wbb = 0
+    DYhad = 0
+    sig = 0
     for sample,t in info.iteritems():
         c = t[0][cut]
         w = t[1]
-        effxs = c #*w*intlumi
+        effxs = c 
         if "TTJets" in sample:
             ttj = ttj + effxs
         if "WJets" in sample:
@@ -83,10 +44,24 @@ def printCut(cut,info,intlumi):
             triboson = triboson + effxs
         if "_TTGJets_" in sample or "_TTbarW" in sample or "_ttbarZ_" in sample or "_TTWWJets_" in sample:
             ttX = ttX + effxs
-        # if "T1ttcc" in sample:
-        #    sig = sig + effxs
+        if "_DYToCC_" in sample or "_DYToBB_" in sample:
+            DYhad = DYhad + effxs
+        if "_Wbb_" in sample:
+            Wbb = Wbb + effxs
+        if signame in sample:
+            sig = sig + effxs
+    total = ttj + wj + qcd + diboson + top + zjets + zll + triboson + ttX + Wbb + DYhad
+
+    if option == "Counts":
+        print "Cut %s \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX,Wbb,DYhad,sig)
+        row = "%s & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g \\\\ \n" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX,Wbb,DYhad,total,sig) 
+        return row.replace("%","\%")
     
-    print "Cut %s \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX) 
+    elif option = "Percentage":
+        print "Cut %s \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f" % (cut,qcd*100./total,ttj*100./total,wj*100./total,diboson*100./total,top*100./total,zjets*100./total,zll*100./total,triboson*100./total,ttX*100./total,Wbb*100./total,DYhad*100./total)
+        row = " & {0:.1%} & {1:.1%} & {2:.1%} & {3:.1%} & {4:.1%} & {5:.1%} & {6:.1%} & {7:.1%} & {8:.1%} & {9:.1%} & {10:.1%} \\\\ \n".format(qcd/total,ttj/total,wj/total,diboson/total,top/total,zjets/total,zll/total,triboson/total,ttX/total,Wbb*100./total,DYhad*100./total )
+        return row.replace("%","\%")
+
     
 def getTTjetsComposition(cut,counts_allhad,counts_semilep,counts_dilep):
     allhad = counts_allhad[cut]
@@ -99,100 +74,6 @@ def getTTjetsComposition(cut,counts_allhad,counts_semilep,counts_dilep):
     else: 
         print "Cut %s \t %.2f \t %.2f \t %.2f" % (cut,allhad/total,semilep/total,dilep/total)
 
-
-def getrow(cut,info,intlumi):
-    ttj = 0
-    wj = 0
-    qcd = 0
-    diboson = 0
-    top = 0
-    zjets = 0
-    zll = 0
-    triboson = 0
-    ttX = 0
-    #sig = 0
-    for sample,t in info.iteritems():
-        c = t[0][cut]
-        w = t[1]
-        effxs = c #*w*intlumi
-        if "TTJets" in sample:
-            ttj = ttj + effxs
-        if "WJets" in sample:
-            wj = wj + effxs
-        if "QCD" in sample:
-            qcd = qcd + effxs
-        if "WW" in sample:
-            diboson = diboson + effxs
-        if "WZ" in sample:
-            diboson = diboson + effxs
-        if "ZZ" in sample:
-            diboson = diboson + effxs
-        if "_T_" in sample:
-            top = top + effxs
-        if "_Tbar_" in sample:
-            top = top + effxs
-        if "_ZJetsToNuNu_" in sample:
-            zjets = zjets + effxs
-        if "_DYJets" in sample: 
-            zll = zll + effxs
-        if "_WZZ_" in sample or "_WWZ" in sample or "_WWW_" in sample or "_WWGJets_" in sample or "_ZZZ" in sample:
-            triboson = triboson + effxs
-        if "_TTGJets_" in sample or "_TTbarW" in sample or "_ttbarZ_" in sample or "_TTWWJets_" in sample:
-            ttX = ttX + effxs
-        # if "T1ttcc" in sample:
-        #    sig = sig + effxs
-    
-    totalbg = ttj+wj+qcd+diboson+top+zjets+zll+triboson+ttX
-    #sign = sig/sqrt(totalbg)
-    #row = "%s & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.2g \\\\ \n" % (cut,qcd,ttj,wj,diboson,top,zjets,totalbg,sig,sign) 
-    row = "%s & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g \\\\ \n" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX,totalbg) 
-    print row
-    return row.replace("%","\%")
-
-
-def getrowpercentage(cut,info,intlumi):
-    ttj = 0
-    wj = 0
-    qcd = 0
-    diboson = 0
-    top = 0
-    zjets = 0
-    zll = 0
-    triboson = 0
-    ttX = 0
-    for sample,t in info.iteritems():
-        c = t[0][cut]
-        w = t[1]
-        effxs = c #*w*intlumi
-        if "TTJets" in sample:
-            ttj = ttj + effxs
-        if "WJets" in sample:
-            wj = wj + effxs
-        if "QCD" in sample:
-            qcd = qcd + effxs
-        if "WW" in sample:
-            diboson = diboson + effxs
-        if "WZ" in sample:
-            diboson = diboson + effxs
-        if "ZZ" in sample:
-            diboson = diboson + effxs
-        if "_T_" in sample:
-            top = top + effxs
-        if "_Tbar_" in sample:
-            top = top + effxs
-        if "_ZJetsToNuNu_" in sample:
-            zjets = zjets + effxs
-        if "_DYJets" in sample: 
-            zll = zll + effxs
-        if "_WZZ_" in sample or "_WWZ" in sample or "_WWW_" in sample or "_WWGJets_" in sample or "_ZZZ" in sample:
-            triboson = triboson + effxs
-        if "_TTGJets_" in sample or "_TTbarW" in sample or "_ttbarZ_" in sample or "_TTWWJets_" in sample:
-            ttX = ttX + effxs
-    
-    totalbg = ttj+wj+qcd+diboson+top+zjets+zll+triboson+ttX
-    row = " & {0:.1%} & {1:.1%} & {2:.1%} & {3:.1%} & {4:.1%} & {5:.1%} & {6:.1%} & {7:.1%} & {8:.1%} \\\\ \n".format(qcd/totalbg,ttj/totalbg,wj/totalbg,diboson/totalbg,top/totalbg,zjets/totalbg,zll/totalbg,triboson/totalbg,ttX/totalbg)
-    print row
-    return row.replace("%","\%")
 
 def makeCutflowTable(info,intlumi):
     table = open("cutflow.tex",'w')
@@ -268,9 +149,9 @@ Cut & QCD & TTJets & WJets & VV & T & Zinv & Zll & VVV & TTX & Total \\\\ \\hlin
 def allcuts():
     cuts = ["NoCuts","Cleaning","HCAL_noise","vertexg0","njetge3","HLT","jet1ptg200",
             "SIG","neleeq0","nmueq0","trackIso",
-            "g1Mb0Ll","g1Mbg1W0Ll","0Lb0Ll","0Lbg1uW0Ll","0Lbg1W0Ll",
-            "1Ll","g1Mb1Ll","g1Mbg1W1Ll", 
-            "2mu","2mu0el","0Lb2mu0el","g1Mb2mu0el" 
+            "g1Mb0Ll","g1Mbg1W0Ll","0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1W0Ll",
+            "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100","g1Mbg1W1LlmT",
+            "2mu","2mu0el","0Lb2mu0el","0Lbg1Y2mu0el","g1Mb2mu0el","g1Mbg1Y2mu0el"
             ]
     return cuts
 
@@ -291,17 +172,20 @@ if __name__ == '__main__':
         
     # Integrated luminosity in pb-1s
     intlumi = 19789.
-    #intlumi = 5126.
+
+    # input information
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131125"
+    analyzer = "rzrBoostMC"
+    signame = "T1ttcc_325_300"
 
     # get signal info
-    #fs = TFile.Open("selge3j/summary/rzrBTevsel_plots_T1ttcc_325_300.root")
-    #histos = fs.Get("counts")
-    #countss = {}
-    #for bin in range(histos.GetNbinsX()):
-    #    countss[histos.GetXaxis().GetBinLabel(bin+1)] = histos.GetBinContent(bin+1)
-    # print "xsec, counts", xsect, counts["NoCuts"]
-    #weights = 0.0243547/countss["NoCuts"]
-    #info["T1ttcc"] = (countss,weights)
+    fs = TFile.Open(inputdir + "/" + analyzer + "_" + signame + ".root")
+    histos = fs.Get("counts")
+    countss = {}
+    for bin in range(histos.GetNbinsX()):
+        countss[histos.GetXaxis().GetBinLabel(bin+1)] = histos.GetBinContent(bin+1)
+    weights = 0.0243547/countss["NoCuts"]
+    info[signame] = (countss,weights)
     
     
     for d in datasets:
@@ -330,7 +214,7 @@ if __name__ == '__main__':
 
         # print samplew_
         # get the count:
-        f = TFile.Open("results_BoostMC_1/rzrBoostMC"+samplew_+"histo.root")
+        f = TFile.Open(inputdir+"/"+analyzer+samplew_+"histo.root")
         histo = f.Get("counts")
         counts = {}
         for bin in range(histo.GetNbinsX()):
