@@ -181,6 +181,9 @@ int main(int argc, char** argv)
   TH1D* h_met_Cleaning = new TH1D("h_met_Cleaning", "h_met_Cleaning", 50, 0, 1000);
   TH2D* h_metmu_R2metmu_Cleaning = new TH2D("h_metmu_R2metmu_Cleaning", "h_metmu_R2metmu_Cleaning", 50, 0, 1000, 25, 0, 1);
   TH1D* h_metmu_Cleaning = new TH1D("h_metmu_Cleaning", "h_metmu_Cleaning", 50, 0, 1000);
+  TH2D* h_metel_R2metel_Cleaning = new TH2D("h_metel_R2metel_Cleaning", "h_metel_R2metel_Cleaning", 50, 0, 1000, 25, 0, 1);
+  TH1D* h_metel_Cleaning = new TH1D("h_metel_Cleaning", "h_metel_Cleaning", 50, 0, 1000);
+
   TH1D* h_j1pt_Cleaning = new TH1D("h_j1pt_Cleaning", "h_j1pt_Cleaning", 50, 0, 1000);
   TH1D* h_nj_Cleaning = new TH1D("h_nj_Cleaning", "h_nj_Cleaning", 20, 0, 20);
 
@@ -198,6 +201,8 @@ int main(int argc, char** argv)
 
   TH1D* h_R2metmu_Cleaning = new TH1D("h_R2metmu_Cleaning", "h_R2metmu_Cleaning", 25, 0, 1);
   TH2D* h_MR_R2metmu_Cleaning = new TH2D("h_MR_R2metmu_Cleaning", "h_MR_R2metmu_Cleaning", 20, 0, MRmx, 25, 0, 1);
+  TH1D* h_R2metel_Cleaning = new TH1D("h_R2metel_Cleaning", "h_R2metel_Cleaning", 25, 0, 1);
+  TH2D* h_MR_R2metel_Cleaning = new TH2D("h_MR_R2metel_Cleaning", "h_MR_R2metel_Cleaning", 20, 0, MRmx, 25, 0, 1);
 
   TH1D* h_MR_HCAL_noise = new TH1D("h_MR_HCAL_noise", "h_MR_HCAL_noise", 20, 0, MRmx);
   TH1D* h_R2_HCAL_noise = new TH1D("h_R2_HCAL_noise", "h_R2_HCAL_noise", 25, 0, 1);
@@ -315,6 +320,35 @@ int main(int argc, char** argv)
   TH2D * h_R2_mT_g1Mbg1W1LlmT = new TH2D("h_R2_mT_g1Mbg1W1LlmT", "h_R2_mT_g1Mbg1W1LlmT", 25, 0, 1, 50, 0, 500);
 
 
+  // 0Lb1Ll
+  TH1D * h_MR_0Lb1Ll = new TH1D("h_MR_0Lb1Ll", "h_MR_0Lb1Ll", 20, 0, MRmx);
+  TH1D * h_R2_0Lb1Ll = new TH1D("h_R2_0Lb1Ll", "h_R2_0Lb1Ll", 25, 0, 1);
+  TH2D * h_MR_R2_0Lb1Ll = new TH2D("h_MR_R2_0Lb1Ll", "h_MR_R2_0Lb1Ll", 20, 0, MRmx, 25, 0, 1);
+
+  // 0Lbg1Y1Ll ; Wj control region: == 0 Lb; >= 1 Y; 1 Ll
+  TH1D * h_MR_0Lbg1Y1Ll = new TH1D("h_MR_0Lbg1Y1Ll", "h_MR_0Lbg1Y1Ll", 20, 0, MRmx);
+  TH1D * h_R2_0Lbg1Y1Ll = new TH1D("h_R2_0Lbg1Y1Ll", "h_R2_0Lbg1Y1Ll", 25, 0, 1);
+  TH2D * h_MR_R2_0Lbg1Y1Ll = new TH2D("h_MR_R2_0Lbg1Y1Ll", "h_MR_R2_0Lbg1Y1Ll", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D * h_mT_0Lbg1Y1Ll = new TH1D("h_mT_0Lbg1Y1Ll", "h_mT_0Lbg1Y1Ll", 50, 0, 500);
+  TH2D * h_MR_mT_0Lbg1Y1Ll = new TH2D("h_MR_mT_0Lbg1Y1Ll", "h_MR_mT_0Lbg1Y1Ll", 20, 0, MRmx, 50, 0, 500);
+  TH2D * h_R2_mT_0Lbg1Y1Ll = new TH2D("h_R2_mT_0Lbg1Y1Ll", "h_R2_mT_0Lbg1Y1Ll", 25, 0, 1, 50, 0, 500);
+
+  // 0Lbg1Y1LlmT ; Wj control region: == 1 Lb; >= 1 Y; 1 Ll; mT<100
+  TH1D * h_MR_0Lbg1Y1LlmT100 = new TH1D("h_MR_0Lbg1Y1LlmT100", "h_MR_0Lbg1Y1LlmT100", 20, 0, MRmx);
+  TH1D * h_R2_0Lbg1Y1LlmT100 = new TH1D("h_R2_0Lbg1Y1LlmT100", "h_R2_0Lbg1Y1LlmT100", 25, 0, 1);
+  TH2D * h_MR_R2_0Lbg1Y1LlmT100 = new TH2D("h_MR_R2_0Lbg1Y1LlmT100", "h_MR_R2_0Lbg1Y1LlmT100", 20, 0, MRmx, 25, 0, 1);
+
+  // 0Lbg1Y1LlmT ; Wj control region: == 0 Lb; >= 1 Y; 1 Ll; 30<mT<100
+  TH1D * h_MR_0Lbg1Y1LlmT = new TH1D("h_MR_0Lbg1Y1LlmT", "h_MR_0Lbg1Y1LlmT", 20, 0, MRmx);
+  TH1D * h_R2_0Lbg1Y1LlmT = new TH1D("h_R2_0Lbg1Y1LlmT", "h_R2_0Lbg1Y1LlmT", 25, 0, 1);
+  TH2D * h_MR_R2_0Lbg1Y1LlmT = new TH2D("h_MR_R2_0Lbg1Y1LlmT", "h_MR_R2_0Lbg1Y1LlmT", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D * h_mT_0Lbg1Y1LlmT = new TH1D("h_mT_0Lbg1Y1LlmT", "h_mT_0Lbg1Y1LlmT", 50, 0, 500);
+  TH2D * h_MR_mT_0Lbg1Y1LlmT = new TH2D("h_MR_mT_0Lbg1Y1LlmT", "h_MR_mT_0Lbg1Y1LlmT", 20, 0, MRmx, 50, 0, 500);
+  TH2D * h_R2_mT_0Lbg1Y1LlmT = new TH2D("h_R2_mT_0Lbg1Y1LlmT", "h_R2_mT_0Lbg1Y1LlmT", 25, 0, 1, 50, 0, 500);
+
+
   // dimuon trajectory
   TH1D * h_Zmass_2mu = new TH1D("h_Zmass_2mu", "h_Zmass_2mu", 20, 50, 130);
   TH2D * h_R2_Zmass_2mu = new TH2D("h_R2_Zmass_2mu", "h_R2_Zmass_2mu", 20, 50, 130, 20, 0, MRmx);
@@ -347,6 +381,75 @@ int main(int argc, char** argv)
   TH1D * h_MR_g1Mbg1Y2mu0el = new TH1D("h_MR_g1Mbg1Y2mu0el", "h_MR_g1Mbg1Y2mu0el", 20, 0, MRmx);
   TH1D * h_R2_g1Mbg1Y2mu0el = new TH1D("h_R2_g1Mbg1Y2mu0el", "h_R2_g1Mbg1Y2mu0el", 25, 0, 1);
   TH2D * h_MR_R2_g1Mbg1Y2mu0el = new TH2D("h_MR_R2_g1Mbg1Y2mu0el", "h_MR_R2_g1Mbg1Y2mu0el", 20, 0, MRmx, 25, 0, 1);
+
+
+  // dielectron trajectory
+  TH1D * h_Zmass_2el = new TH1D("h_Zmass_2el", "h_Zmass_2el", 20, 50, 130);
+  TH2D * h_R2_Zmass_2el = new TH2D("h_R2_Zmass_2el", "h_R2_Zmass_2el", 20, 50, 130, 20, 0, MRmx);
+  TH2D * h_MR_Zmass_2el = new TH2D("h_MR_Zmass_2el", "h_MR_Zmass_2el", 20, 50, 130, 20, 0, 1.);
+
+  TH1D * h_MR_2elnoZmass = new TH1D("h_MR_2elnoZmass", "h_MR_2elnoZmass", 20, 0, MRmx);
+  TH1D * h_R2_2elnoZmass = new TH1D("h_R2_2elnoZmass", "h_R2_2elnoZmass", 25, 0, 1);
+  TH2D * h_MR_R2_2elnoZmass = new TH2D("h_MR_R2_2elnoZmass", "h_MR_R2_2elnoZmass", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D * h_MR_2el = new TH1D("h_MR_2el", "h_MR_2el", 20, 0, MRmx);
+  TH1D * h_R2_2el = new TH1D("h_R2_2el", "h_R2_2el", 25, 0, 1);
+  TH2D * h_MR_R2_2el = new TH2D("h_MR_R2_2el", "h_MR_R2_2el", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_2el0mu = new TH1D("h_MR_2el0mu", "h_MR_2el0mu", 20, 0, MRmx);
+  TH1D * h_R2_2el0mu = new TH1D("h_R2_2el0mu", "h_R2_2el0mu", 25, 0, 1);
+  TH2D * h_MR_R2_2el0mu = new TH2D("h_MR_R2_2el0mu", "h_MR_R2_2el0mu", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_0Lb2el0mu = new TH1D("h_MR_0Lb2el0mu", "h_MR_0Lb2el0mu", 20, 0, MRmx);
+  TH1D * h_R2_0Lb2el0mu = new TH1D("h_R2_0Lb2el0mu", "h_R2_0Lb2el0mu", 25, 0, 1);
+  TH2D * h_MR_R2_0Lb2el0mu = new TH2D("h_MR_R2_0Lb2el0mu", "h_MR_R2_0Lb2el0mu", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_g1Mb2el0mu = new TH1D("h_MR_g1Mb2el0mu", "h_MR_g1Mb2el0mu", 20, 0, MRmx);
+  TH1D * h_R2_g1Mb2el0mu = new TH1D("h_R2_g1Mb2el0mu", "h_R2_g1Mb2el0mu", 25, 0, 1);
+  TH2D * h_MR_R2_g1Mb2el0mu = new TH2D("h_MR_R2_g1Mb2el0mu", "h_MR_R2_g1Mb2el0mu", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_0Lbg1Y2el0mu = new TH1D("h_MR_0Lbg1Y2el0mu", "h_MR_0Lbg1Y2el0mu", 20, 0, MRmx);
+  TH1D * h_R2_0Lbg1Y2el0mu = new TH1D("h_R2_0Lbg1Y2el0mu", "h_R2_0Lbg1Y2el0mu", 25, 0, 1);
+  TH2D * h_MR_R2_0Lbg1Y2el0mu = new TH2D("h_MR_R2_0Lbg1Y2el0mu", "h_MR_R2_0Lbg1Y2el0mu", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_g1Mbg1Y2el0mu = new TH1D("h_MR_g1Mbg1Y2el0mu", "h_MR_g1Mbg1Y2el0mu", 20, 0, MRmx);
+  TH1D * h_R2_g1Mbg1Y2el0mu = new TH1D("h_R2_g1Mbg1Y2el0mu", "h_R2_g1Mbg1Y2el0mu", 25, 0, 1);
+  TH2D * h_MR_R2_g1Mbg1Y2el0mu = new TH2D("h_MR_R2_g1Mbg1Y2el0mu", "h_MR_R2_g1Mbg1Y2el0mu", 20, 0, MRmx, 25, 0, 1);
+
+
+  // dilepton trajectory
+  TH1D * h_Zmass_2l = new TH1D("h_Zmass_2l", "h_Zmass_2l", 20, 50, 130);
+  TH2D * h_R2_Zmass_2l = new TH2D("h_R2_Zmass_2l", "h_R2_Zmass_2l", 20, 50, 130, 20, 0, MRmx);
+  TH2D * h_MR_Zmass_2l = new TH2D("h_MR_Zmass_2l", "h_MR_Zmass_2l", 20, 50, 130, 20, 0, 1.);
+
+  TH1D * h_MR_2lnoZmass = new TH1D("h_MR_2lnoZmass", "h_MR_2lnoZmass", 20, 0, MRmx);
+  TH1D * h_R2_2lnoZmass = new TH1D("h_R2_2lnoZmass", "h_R2_2lnoZmass", 25, 0, 1);
+  TH2D * h_MR_R2_2lnoZmass = new TH2D("h_MR_R2_2lnoZmass", "h_MR_R2_2lnoZmass", 20, 0, MRmx, 25, 0, 1);
+
+  TH1D * h_MR_2l = new TH1D("h_MR_2l", "h_MR_2l", 20, 0, MRmx);
+  TH1D * h_R2_2l = new TH1D("h_R2_2l", "h_R2_2l", 25, 0, 1);
+  TH2D * h_MR_R2_2l = new TH2D("h_MR_R2_2l", "h_MR_R2_2l", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_2l0ol = new TH1D("h_MR_2l0ol", "h_MR_2l0ol", 20, 0, MRmx);
+  TH1D * h_R2_2l0ol = new TH1D("h_R2_2l0ol", "h_R2_2l0ol", 25, 0, 1);
+  TH2D * h_MR_R2_2l0ol = new TH2D("h_MR_R2_2l0ol", "h_MR_R2_2l0ol", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_0Lb2l0ol = new TH1D("h_MR_0Lb2l0ol", "h_MR_0Lb2l0ol", 20, 0, MRmx);
+  TH1D * h_R2_0Lb2l0ol = new TH1D("h_R2_0Lb2l0ol", "h_R2_0Lb2l0ol", 25, 0, 1);
+  TH2D * h_MR_R2_0Lb2l0ol = new TH2D("h_MR_R2_0Lb2l0ol", "h_MR_R2_0Lb2l0ol", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_g1Mb2l0ol = new TH1D("h_MR_g1Mb2l0ol", "h_MR_g1Mb2l0ol", 20, 0, MRmx);
+  TH1D * h_R2_g1Mb2l0ol = new TH1D("h_R2_g1Mb2l0ol", "h_R2_g1Mb2l0ol", 25, 0, 1);
+  TH2D * h_MR_R2_g1Mb2l0ol = new TH2D("h_MR_R2_g1Mb2l0ol", "h_MR_R2_g1Mb2l0ol", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_0Lbg1Y2l0ol = new TH1D("h_MR_0Lbg1Y2l0ol", "h_MR_0Lbg1Y2l0ol", 20, 0, MRmx);
+  TH1D * h_R2_0Lbg1Y2l0ol = new TH1D("h_R2_0Lbg1Y2l0ol", "h_R2_0Lbg1Y2l0ol", 25, 0, 1);
+  TH2D * h_MR_R2_0Lbg1Y2l0ol = new TH2D("h_MR_R2_0Lbg1Y2l0ol", "h_MR_R2_0Lbg1Y2l0ol", 20, 0, MRmx, 25, 0, 1);
+  
+  TH1D * h_MR_g1Mbg1Y2l0ol = new TH1D("h_MR_g1Mbg1Y2l0ol", "h_MR_g1Mbg1Y2l0ol", 20, 0, MRmx);
+  TH1D * h_R2_g1Mbg1Y2l0ol = new TH1D("h_R2_g1Mbg1Y2l0ol", "h_R2_g1Mbg1Y2l0ol", 25, 0, 1);
+  TH2D * h_MR_R2_g1Mbg1Y2l0ol = new TH2D("h_MR_R2_g1Mbg1Y2l0ol", "h_MR_R2_g1Mbg1Y2l0ol", 20, 0, MRmx, 25, 0, 1);
+
 
   if (binning == "variable"){
     cout << "Will redefine histograms for variable binning" << endl;
@@ -596,6 +699,13 @@ int main(int argc, char** argv)
   TTallhad->Fill("g1Mb2mu0el", 0.0);
   TTallhad->Fill("0Lbg1Y2mu0el", 0.0);
   TTallhad->Fill("g1Mbg1Y2mu0el", 0.0);
+  TTallhad->Fill("2el", 0.0);
+  TTallhad->Fill("2el0mu", 0.0);
+  TTallhad->Fill("0Lb2el0mu", 0.0);
+  TTallhad->Fill("g1Mb2el0mu", 0.0);
+  TTallhad->Fill("0Lbg1Y2el0mu", 0.0);
+  TTallhad->Fill("g1Mbg1Y2el0mu", 0.0);
+
 
   TTsemilep->Fill("NoCuts", 0.0);
   TTsemilep->Fill("Cleaning", 0.0);
@@ -627,6 +737,13 @@ int main(int argc, char** argv)
   TTsemilep->Fill("g1Mb2mu0el", 0.0);
   TTsemilep->Fill("0Lbg1Y2mu0el", 0.0);
   TTsemilep->Fill("g1Mbg1Y2mu0el", 0.0);
+  TTsemilep->Fill("2el", 0.0);
+  TTsemilep->Fill("2el0mu", 0.0);
+  TTsemilep->Fill("0Lb2el0mu", 0.0);
+  TTsemilep->Fill("g1Mb2el0mu", 0.0);
+  TTsemilep->Fill("0Lbg1Y2el0mu", 0.0);
+  TTsemilep->Fill("g1Mbg1Y2el0mu", 0.0);
+
 
   TTdilep->Fill("NoCuts", 0.0);
   TTdilep->Fill("Cleaning", 0.0);
@@ -658,7 +775,12 @@ int main(int argc, char** argv)
   TTdilep->Fill("g1Mb2mu0el", 0.0);
   TTdilep->Fill("0Lbg1Y2mu0el", 0.0);
   TTdilep->Fill("g1Mbg1Y2mu0el", 0.0);
-
+  TTdilep->Fill("2el", 0.0);
+  TTdilep->Fill("2el0mu", 0.0);
+  TTdilep->Fill("0Lb2el0mu", 0.0);
+  TTdilep->Fill("g1Mb2el0mu", 0.0);
+  TTdilep->Fill("0Lbg1Y2el0mu", 0.0);
+  TTdilep->Fill("g1Mbg1Y2el0mu", 0.0);
 
 
   TH1::SetDefaultSumw2();
@@ -730,7 +852,7 @@ int main(int argc, char** argv)
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v3 == 1 ||
 		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
-		 //triggerresultshelper_HLT_PFHT650_v5 == 1 ||
+		 //triggerresultshelper_HLT]_PFHT650_v5 == 1 ||
 		 //triggerresultshelper_HLT_HT750_v1 == 1 ||
 		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
 		 )) continue;
@@ -1211,12 +1333,22 @@ int main(int argc, char** argv)
       }
       // Electrons - tight
       std::vector<cmgelectron1_s> selectron;
+      std::vector<TVector3> V3el;
+      std::vector<TLorentzVector> LVel;
       for (unsigned int i=0; i<cmgelectron1.size(); i++) {
         if (!(cmgelectron1[i].pt > 10) ) continue;
         if (!(fabs(cmgelectron1[i].eta) < 2.5) ) continue;
         // veto 1.442 < |eta| < 1.556? --> is already done in the collection ??
         if (!(fabs(cmgelectron1[i].eta) < 1.442 && fabs(cmgelectron1[i].eta) < 1.556) ) continue;
         selectron.push_back(cmgelectron1[i]);
+        TVector3 lel;
+        lel.SetPtEtaPhi(cmgelectron1[i].pt, 0, cmgelectron1[i].phi);
+        V3el.push_back(lel);
+	TLorentzVector lvel;
+	lvel.SetPtEtaPhiE(cmgelectron1[i].pt, cmgelectron1[i].eta,
+			  cmgelectron1[i].phi, cmgelectron1[i].energy);
+        LVel.push_back(lvel);
+
       }
 
       // Taus - veto
@@ -1293,6 +1425,24 @@ int main(int argc, char** argv)
         h_R2metmu_Cleaning->Fill(R2metmu, w);
         h_MR_R2metmu_Cleaning->Fill(MR, R2, w);
         h_metmu_R2metmu_Cleaning->Fill(V3metmu.Pt(), R2, w);
+      }
+
+      // Calculate MR and R2 adding electrons to MET
+      TVector3 V3metel;
+      V3metel.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
+      for (unsigned int i=0; i<V3el.size(); i++) {
+        V3metel += V3el[i];
+      }
+      h_metel_Cleaning->Fill(V3metel.Pt(), w);
+
+      double MTRmetel = -9999;
+      double R2metel = -9999;
+      if (LVhemis.size() == 2) {
+        MTRmetel = CalcMTR(LVhemis[0], LVhemis[1], V3metel);
+        R2metel = pow((MTRmetel / MR),2);
+        h_R2metel_Cleaning->Fill(R2metel, w);
+        h_MR_R2metel_Cleaning->Fill(MR, R2, w);
+        h_metel_R2metel_Cleaning->Fill(V3metel.Pt(), R2, w);
       }
 
       // ---------------------
@@ -1727,6 +1877,67 @@ int main(int argc, char** argv)
 	      } // end mT < 100
 	    } // end sW.size()
 	  } // end nmediumbs > 0
+
+
+	  if (nloosebs == 0){
+	    ofile.count("0Lb1Ll",w);
+	    h_MR_0Lb1Ll->Fill(MR, w);
+	    h_R2_0Lb1Ll->Fill(R2, w);
+	    h_MR_R2_0Lb1Ll->Fill(MR, R2, w);
+	    if(isTTallhad)
+	      TTallhad->Fill("0Lb1Ll", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("0Lb1Ll", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("0Lb1Ll", w);
+	    
+	    if( sY.size() > 0 ){
+	      ofile.count("0Lbg1Y1Ll",w);
+	      h_MR_0Lbg1Y1Ll->Fill(MR, w);
+	      h_R2_0Lbg1Y1Ll->Fill(R2, w);
+	      h_MR_R2_0Lbg1Y1Ll->Fill(MR, R2, w);
+	      h_mT_0Lbg1Y1Ll->Fill(mT, w);
+	      h_MR_mT_0Lbg1Y1Ll->Fill(MR, mT, w);
+	      h_R2_mT_0Lbg1Y1Ll->Fill(R2, mT, w);
+	      if(isTTallhad)
+		TTallhad->Fill("0Lbg1Y1Ll", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("0Lbg1Y1Ll", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("0Lbg1Y1Ll", w);
+	      
+	      if (mT < 100){
+		ofile.count("0Lbg1Y1LlmT100",w);
+		h_MR_0Lbg1Y1LlmT100->Fill(MR, w);
+		h_R2_0Lbg1Y1LlmT100->Fill(R2, w);
+		h_MR_R2_0Lbg1Y1LlmT100->Fill(MR, R2, w);
+		if(isTTallhad)
+		  TTallhad->Fill("0Lbg1Y1LlmT100", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("0Lbg1Y1LlmT100", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("0Lbg1Y1LlmT100", w);
+		
+		// mT window
+		if (mT > 30){
+		  ofile.count("0Lbg1Y1LlmT",w);
+		  h_MR_0Lbg1Y1LlmT->Fill(MR, w);
+		  h_R2_0Lbg1Y1LlmT->Fill(R2, w);
+		  h_MR_R2_0Lbg1Y1LlmT->Fill(MR, R2, w);
+		  h_mT_0Lbg1Y1LlmT->Fill(mT, w);
+		  h_MR_mT_0Lbg1Y1LlmT->Fill(MR, mT, w);
+		  h_R2_mT_0Lbg1Y1LlmT->Fill(R2, mT, w);
+		  if(isTTallhad)
+		    TTallhad->Fill("0Lbg1Y1LlmT", w);
+		  else if(isTTsemilep)
+		    TTsemilep->Fill("0Lbg1Y1LlmT", w);
+		  else if(isTTdilep)
+		    TTdilep->Fill("0Lbg1Y1LlmT", w);
+		} // end mT > 30
+	      } // end mT < 100
+	    } // end sY.size()
+	  } // end nloosebs > 0
+
 	} // end nlooseleptons == 1
       } // end of MR>800 R2>0.08
       
@@ -1746,6 +1957,9 @@ int main(int argc, char** argv)
 	  h_Zmass_2mu->Fill(Zmass, w);
 	  h_MR_Zmass_2mu->Fill(MR, Zmass, w);
 	  h_R2_Zmass_2mu->Fill(R2metmu, Zmass, w);
+	  h_Zmass_2l->Fill(Zmass, w);
+	  h_MR_Zmass_2l->Fill(MR, Zmass, w);
+	  h_R2_Zmass_2l->Fill(R2metmu, Zmass, w);
 
 	  ofile.count("2munoZmass",w);
 	  h_MR_2munoZmass->Fill(MR, w);
@@ -1757,6 +1971,16 @@ int main(int argc, char** argv)
 	    TTsemilep->Fill("2munoZmass", w);
 	  else if(isTTdilep)
 	    TTdilep->Fill("2munoZmass", w);
+	  ofile.count("2lnoZmass",w);
+	  h_MR_2lnoZmass->Fill(MR, w);
+	  h_R2_2lnoZmass->Fill(R2metmu, w);
+	  h_MR_R2_2lnoZmass->Fill(MR, R2metmu, w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2lnoZmass", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2lnoZmass", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("2lnoZmass", w);
 	  
 	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
 	  ofile.count("2mu",w);
@@ -1769,6 +1993,16 @@ int main(int argc, char** argv)
 	    TTsemilep->Fill("2mu", w);
 	  else if(isTTdilep)
 	    TTdilep->Fill("2mu", w);
+	  ofile.count("2l",w);
+	  h_MR_2l->Fill(MR, w);
+	  h_R2_2l->Fill(R2metmu, w);
+	  h_MR_R2_2l->Fill(MR, R2metmu, w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2l", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2l", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("2l", w);
 	  
 	  if (nlooseelectrons == 0){
 	    ofile.count("2mu0el",w);
@@ -1781,6 +2015,16 @@ int main(int argc, char** argv)
 	      TTsemilep->Fill("2mu0el", w);
 	    else if(isTTdilep)
 	      TTdilep->Fill("2mu0el", w);
+	    ofile.count("2l0ol",w);
+	    h_MR_2l0ol->Fill(MR, w);
+	    h_R2_2l0ol->Fill(R2metmu, w);
+	    h_MR_R2_2l0ol->Fill(MR, R2metmu, w);
+	    if(isTTallhad)
+	      TTallhad->Fill("2l0ol", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("2l0ol", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("2l0ol", w);
 	    
 	    if (nloosebs == 0){
 	      ofile.count("0Lb2mu0el",w);
@@ -1793,6 +2037,16 @@ int main(int argc, char** argv)
 		TTsemilep->Fill("0Lb2mu0el", w);
 	      else if(isTTdilep)
 		TTdilep->Fill("0Lb2mu0el", w);
+	      ofile.count("0Lb2mu0el",w);
+	      h_MR_0Lb2l0ol->Fill(MR, w);
+	      h_R2_0Lb2l0ol->Fill(R2metmu, w);
+	      h_MR_R2_0Lb2l0ol->Fill(MR, R2metmu, w);
+	      if(isTTallhad)
+		TTallhad->Fill("0Lb2l0ol", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("0Lb2l0ol", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("0Lb2l0ol", w);
 
 	      if (nYs >= 1){
 		ofile.count("0Lbg1Y2mu0el",w);
@@ -1805,9 +2059,19 @@ int main(int argc, char** argv)
 		  TTsemilep->Fill("0Lbg1Y2mu0el", w);
 		else if(isTTdilep)
 		  TTdilep->Fill("0Lbg1Y2mu0el", w);
+		ofile.count("0Lbg1Y2l0ol",w);
+		h_MR_0Lbg1Y2l0ol->Fill(MR, w);
+		h_R2_0Lbg1Y2l0ol->Fill(R2metmu, w);
+		h_MR_R2_0Lbg1Y2l0ol->Fill(MR, R2metmu, w);
+		if(isTTallhad)
+		  TTallhad->Fill("0Lbg1Y2l0ol", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("0Lbg1Y2l0ol", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("0Lbg1Y2l0ol", w);
 	      }// nYs >= 1
 	    }// end nloosebs == 0
-	    
+
 	    if (nmediumbs >= 1){
 	      ofile.count("g1Mb2mu0el",w);
 	      h_MR_g1Mb2mu0el->Fill(MR, w);
@@ -1819,6 +2083,16 @@ int main(int argc, char** argv)
 		TTsemilep->Fill("g1Mb2mu0el", w);
 	      else if(isTTdilep)
 		TTdilep->Fill("g1Mb2mu0el", w);
+	      ofile.count("g1Mb2mu0el",w);
+	      h_MR_g1Mb2l0ol->Fill(MR, w);
+	      h_R2_g1Mb2l0ol->Fill(R2metmu, w);
+	      h_MR_R2_g1Mb2l0ol->Fill(MR, R2metmu, w);
+	      if(isTTallhad)
+		TTallhad->Fill("g1Mb2l0ol", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("g1Mb2l0ol", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("g1Mb2l0ol", w);
 	    
 	      if (nYs >= 1){
 		ofile.count("g1Mbg1Y2mu0el",w);
@@ -1831,11 +2105,202 @@ int main(int argc, char** argv)
 		  TTsemilep->Fill("g1Mbg1Y2mu0el", w);
 		else if(isTTdilep)
 		  TTdilep->Fill("g1Mbg1Y2mu0el", w);
+		ofile.count("g1Mbg1Y2l0ol",w);
+		h_MR_g1Mbg1Y2l0ol->Fill(MR, w);
+		h_R2_g1Mbg1Y2l0ol->Fill(R2metmu, w);
+		h_MR_R2_g1Mbg1Y2l0ol->Fill(MR, R2metmu, w);
+		if(isTTallhad)
+		  TTallhad->Fill("g1Mbg1Y2l0ol", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("g1Mbg1Y2l0ol", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("g1Mbg1Y2l0ol", w);
 	      } // end nYs >= 1
 	    } // end nmediumbs >= 1
 	  } // end nlooseelectrons == 0
 	} // end ntightmuons == 2
-      } // end of MR>800 R2metmu>0.08      
+      } // end of MR>800 R2metmu>0.08
+
+      // Start the 2el stuff here.
+      // Need to use R2metel to define the signal region
+      if (MR > 800 && R2metel > 0.08){
+	TLorentzVector LVZcand;
+	if (ntightelectrons == 2 && nlooseelectrons == 2) {
+	  // Make sure that the electrons are opposite-signed:
+	  if (!(selectron[0].charge == -selectron[1].charge)) continue;
+	  // See if the 2el makes a Z:
+	  for (unsigned int e=0; e<LVel.size(); e++) {
+	    LVZcand += LVel[e];
+	  }
+	  double Zmass = LVZcand.M();
+	  h_Zmass_2el->Fill(Zmass, w);
+	  h_MR_Zmass_2el->Fill(MR, Zmass, w);
+	  h_R2_Zmass_2el->Fill(R2metel, Zmass, w);
+	  h_Zmass_2l->Fill(Zmass, w);
+	  h_MR_Zmass_2el->Fill(MR, Zmass, w);
+	  h_R2_Zmass_2el->Fill(R2metel, Zmass, w);
+
+	  ofile.count("2elnoZmass",w);
+	  h_MR_2elnoZmass->Fill(MR, w);
+	  h_R2_2elnoZmass->Fill(R2metel, w);
+	  h_MR_R2_2elnoZmass->Fill(MR, R2metel, w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2elnoZmass", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2elnoZmass", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("2elnoZmass", w);
+	  ofile.count("2lnoZmass",w);
+	  h_MR_2lnoZmass->Fill(MR, w);
+	  h_R2_2lnoZmass->Fill(R2metel, w);
+	  h_MR_R2_2lnoZmass->Fill(MR, R2metel, w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2lnoZmass", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2lnoZmass", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("2lnoZmass", w);
+
+     	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	  ofile.count("2el",w);
+	  h_MR_2el->Fill(MR, w);
+	  h_R2_2el->Fill(R2metel, w);
+	  h_MR_R2_2el->Fill(MR, R2metel, w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2el", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2el", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("2el", w);
+	  ofile.count("2l",w);
+	  h_MR_2l->Fill(MR, w);
+	  h_R2_2l->Fill(R2metel, w);
+	  h_MR_R2_2l->Fill(MR, R2metel, w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2l", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2l", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("2l", w);
+	  
+	  if (nlooseelectrons == 0){
+	    ofile.count("2el0mu",w);
+	    h_MR_2el0mu->Fill(MR, w);
+	    h_R2_2el0mu->Fill(R2metel, w);
+	    h_MR_R2_2el0mu->Fill(MR, R2metel, w);
+	    if(isTTallhad)
+	      TTallhad->Fill("2el0mu", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("2el0mu", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("2el0mu", w);
+	    ofile.count("2l0ol",w);
+	    h_MR_2l0ol->Fill(MR, w);
+	    h_R2_2l0ol->Fill(R2metel, w);
+	    h_MR_R2_2l0ol->Fill(MR, R2metel, w);
+	    if(isTTallhad)
+	      TTallhad->Fill("2l0ol", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("2l0ol", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("2l0ol", w);
+	    
+	    if (nloosebs == 0){
+	      ofile.count("0Lb2el0mu",w);
+	      h_MR_0Lb2el0mu->Fill(MR, w);
+	      h_R2_0Lb2el0mu->Fill(R2metel, w);
+	      h_MR_R2_0Lb2el0mu->Fill(MR, R2metel, w);
+	      if(isTTallhad)
+		TTallhad->Fill("0Lb2el0mu", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("0Lb2el0mu", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("0Lb2el0mu", w);
+	      ofile.count("0Lb2el0mu",w);
+	      h_MR_0Lb2l0ol->Fill(MR, w);
+	      h_R2_0Lb2l0ol->Fill(R2metel, w);
+	      h_MR_R2_0Lb2l0ol->Fill(MR, R2metel, w);
+	      if(isTTallhad)
+		TTallhad->Fill("0Lb2l0ol", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("0Lb2l0ol", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("0Lb2l0ol", w);
+
+	      if (nYs >= 1){
+		ofile.count("0Lbg1Y2el0mu",w);
+		h_MR_0Lbg1Y2el0mu->Fill(MR, w);
+		h_R2_0Lbg1Y2el0mu->Fill(R2metel, w);
+		h_MR_R2_0Lbg1Y2el0mu->Fill(MR, R2metel, w);
+		if(isTTallhad)
+		  TTallhad->Fill("0Lbg1Y2el0mu", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("0Lbg1Y2el0mu", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("0Lbg1Y2el0mu", w);
+		ofile.count("0Lbg1Y2el0mu",w);
+		h_MR_0Lbg1Y2l0ol->Fill(MR, w);
+		h_R2_0Lbg1Y2l0ol->Fill(R2metel, w);
+		h_MR_R2_0Lbg1Y2l0ol->Fill(MR, R2metel, w);
+		if(isTTallhad)
+		  TTallhad->Fill("0Lbg1Y2l0ol", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("0Lbg1Y2l0ol", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("0Lbg1Y2l0ol", w);
+	      }// nYs >= 1
+	    }// end nloosebs == 0
+	    
+	    if (nmediumbs >= 1){
+	      ofile.count("g1Mb2el0mu",w);
+	      h_MR_g1Mb2el0mu->Fill(MR, w);
+	      h_R2_g1Mb2el0mu->Fill(R2metel, w);
+	      h_MR_R2_g1Mb2el0mu->Fill(MR, R2metel, w);
+	      if(isTTallhad)
+		TTallhad->Fill("g1Mb2el0mu", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("g1Mb2el0mu", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("g1Mb2el0mu", w);
+	      ofile.count("g1Mb2el0mu",w);
+	      h_MR_g1Mb2l0ol->Fill(MR, w);
+	      h_R2_g1Mb2l0ol->Fill(R2metel, w);
+	      h_MR_R2_g1Mb2l0ol->Fill(MR, R2metel, w);
+	      if(isTTallhad)
+		TTallhad->Fill("g1Mb2l0ol", w);
+	      else if(isTTsemilep)
+		TTsemilep->Fill("g1Mb2l0ol", w);
+	      else if(isTTdilep)
+		TTdilep->Fill("g1Mb2l0ol", w);
+	    
+	      if (nYs >= 1){
+		ofile.count("g1Mbg1Y2el0mu",w);
+		h_MR_g1Mbg1Y2el0mu->Fill(MR, w);
+		h_R2_g1Mbg1Y2el0mu->Fill(R2metel, w);
+		h_MR_R2_g1Mbg1Y2el0mu->Fill(MR, R2metel, w);
+		if(isTTallhad)
+		  TTallhad->Fill("g1Mbg1Y2el0mu", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("g1Mbg1Y2el0mu", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("g1Mbg1Y2el0mu", w);
+		ofile.count("g1Mbg1Y2l0ol",w);
+		h_MR_g1Mbg1Y2l0ol->Fill(MR, w);
+		h_R2_g1Mbg1Y2l0ol->Fill(R2metel, w);
+		h_MR_R2_g1Mbg1Y2l0ol->Fill(MR, R2metel, w);
+		if(isTTallhad)
+		  TTallhad->Fill("g1Mbg1Y2l0ol", w);
+		else if(isTTsemilep)
+		  TTsemilep->Fill("g1Mbg1Y2l0ol", w);
+		else if(isTTdilep)
+		  TTdilep->Fill("g1Mbg1Y2l0ol", w);
+	      } // end nYs >= 1
+	    } // end nmediumbs >= 1
+	  } // end nlooseelectrons == 0
+	} // end ntightelectrons == 2
+      } // end of MR>800 R2metel>0.08
+
+
     } // end event loop
   
   fhlt->Close();
