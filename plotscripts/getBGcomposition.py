@@ -57,7 +57,7 @@ def printCut(cut,info,signame="T1ttcc",option="Counts"):
         row = "%s & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g \\\\ \n" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX,Wbb,DYhad,total,sig) 
         return row.replace("%","\%")
     
-    elif option = "Percentage":
+    elif option == "Percentage":
         print "Cut %s \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f" % (cut,qcd*100./total,ttj*100./total,wj*100./total,diboson*100./total,top*100./total,zjets*100./total,zll*100./total,triboson*100./total,ttX*100./total,Wbb*100./total,DYhad*100./total)
         row = " & {0:.1%} & {1:.1%} & {2:.1%} & {3:.1%} & {4:.1%} & {5:.1%} & {6:.1%} & {7:.1%} & {8:.1%} & {9:.1%} & {10:.1%} \\\\ \n".format(qcd/total,ttj/total,wj/total,diboson/total,top/total,zjets/total,zll/total,triboson/total,ttX/total,Wbb*100./total,DYhad*100./total )
         return row.replace("%","\%")
@@ -75,70 +75,26 @@ def getTTjetsComposition(cut,counts_allhad,counts_semilep,counts_dilep):
         print "Cut %s \t %.2f \t %.2f \t %.2f" % (cut,allhad/total,semilep/total,dilep/total)
 
 
-def makeCutflowTable(info,intlumi):
+def makeCutflowTable(info,intlumi,cuts,signame):
     table = open("cutflow.tex",'w')
     # get the table header stuff
     header = """\\begin{sidewaystable}[p]
 \\centering
-\\caption{Cutflow table, event counts are normalized to $19.789\\textrm{fb}^{-1}$. }
-\\begin{tabular}{| l || c | c | c | c | c | c | c | c | c || c |}
+\\caption{Cutflow table, event counts are normalized to $%(lumi)s\\textrm{fb}^{-1}$. }
+\\begin{tabular}{| l || c | c | c | c | c | c | c | c | c | c | c || c || c |}
 \\hline
-Cut & QCD & TTJets & WJets & VV & T & Zinv & Zll & VVV & TTX & Total \\\\ \\hline
-"""
+Cut & QCD & TTJets & WJets & VV & T & Zinv & Zll & VVV & TTX & Wbb & DYhad & Total & Signal \\\\ \\hline
+""" % {"lumi":intlumi}
     table.write(header)
 
     # put the body of the table
-    table.write(getrow("NoCuts",info,intlumi))
-    table.write(getrow("Cleaning",info,intlumi))
-    table.write(getrow("vertexg0",info,intlumi))
-    table.write(getrow("njetge3",info,intlumi))
-    table.write(getrow("HLT",info,intlumi))
-    table.write(getrow("jet1ptg200",info,intlumi))
-    table.write(getrow("SIG",info,intlumi))
-    table.write(getrowpercentage("SIG",info,intlumi))
-
-    table.write("\\hline \\hline \n")
-
-    table.write(getrow("neleeq0",info,intlumi))
-    table.write(getrow("nmueq0",info,intlumi))
-    table.write(getrow("trackIso",info,intlumi))
-
-    table.write("\\hline \n")
-
-    table.write(getrow("g1Mb0Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("g1Mb0Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrow("g1Mbg1W0Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("g1Mbg1W0Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrow("0Lb0Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("0Lb0Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrow("0Lbg1uW0Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("0Lbg1uW0Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrow("0Lbg1W0Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("0Lbg1W0Ll",info,intlumi).replace("_","\\_"))
-
-    table.write("\\hline \n")
-
-    table.write(getrow("1Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("1Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrow("g1Mb1Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("g1Mb1Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrow("g1Mbg1W1Ll",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("g1Mbg1W1Ll",info,intlumi).replace("_","\\_"))
-
-    table.write("\\hline \n")
-
-    table.write(getrow("2mu",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("2mu",info,intlumi).replace("_","\\_"))
-    table.write(getrow("2mu0el",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("2mu0el",info,intlumi).replace("_","\\_"))
-    table.write(getrow("0Lb2mu0el",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("0Lb2mu0el",info,intlumi).replace("_","\\_"))
-    table.write(getrow("g1Mb2mu0el",info,intlumi).replace("_","\\_"))
-    table.write(getrowpercentage("g1Mb2mu0el",info,intlumi).replace("_","\\_"))
-
+    for cut in cuts:
+        table.write( printCut(cut,info,signame,"Counts") )
+        table.write( printCut(cut,info,signame,"Percentage") )
+        table.write("\\hline\n")
+        
     # put the table closing stuff
-    footer = """\\hline
-\\end{tabular}
+    footer = """\\end{tabular}
 \\label{tab:cutflow}
 \\end{sidewaystable}
 """
@@ -149,7 +105,7 @@ Cut & QCD & TTJets & WJets & VV & T & Zinv & Zll & VVV & TTX & Total \\\\ \\hlin
 def allcuts():
     cuts = ["NoCuts","Cleaning","HCAL_noise","vertexg0","njetge3","HLT","jet1ptg200",
             "SIG","neleeq0","nmueq0","trackIso",
-            "g1Mb0Ll","g1Mbg1W0Ll","0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1W0Ll",
+            "g1Mb0Ll","g1Mbg1W0Ll","0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1W0Ll",
             "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100","g1Mbg1W1LlmT",
             "2mu","2mu0el","0Lb2mu0el","0Lbg1Y2mu0el","g1Mb2mu0el","g1Mbg1Y2mu0el"
             ]
@@ -170,21 +126,22 @@ if __name__ == '__main__':
     counts_semilep = {}
     counts_dilep = {}
         
-    # Integrated luminosity in pb-1s
-    intlumi = 19789.
+    # Integrated luminosity in fb-1s
+    intlumi = 19.789
 
     # input information
     inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131125"
     analyzer = "rzrBoostMC"
     signame = "T1ttcc_325_300"
-
+    sigxs = 0.0243547
+    
     # get signal info
-    fs = TFile.Open(inputdir + "/" + analyzer + "_" + signame + ".root")
+    fs = TFile.Open(inputdir + "/summary/" + analyzer + "_" + signame + ".root")
     histos = fs.Get("counts")
     countss = {}
     for bin in range(histos.GetNbinsX()):
         countss[histos.GetXaxis().GetBinLabel(bin+1)] = histos.GetBinContent(bin+1)
-    weights = 0.0243547/countss["NoCuts"]
+    weights = sigxs/countss["NoCuts"]
     info[signame] = (countss,weights)
     
     
@@ -223,6 +180,7 @@ if __name__ == '__main__':
         if counts["NoCuts"] == 0: continue
         weight = float(xsect)/counts["NoCuts"]
         info[samplew_] = (counts,weight)
+
         # now also get TTbar composition
         if "_TTJets_" in samplew_:
             h_allhad = f.Get("counts_TTallhad")
@@ -239,17 +197,11 @@ if __name__ == '__main__':
 
 
     cuts = allcuts()
-    print "Cut \t \t qcd \t ttj \t wj \t diboson \t single top \t Zinv \t Zll \t VVV \t TTX \n"
+    print "Make cutflow table"
 
-    print "Counts for %d pb-1 of data" % (intlumi,)
-    for cut in cuts:
-        printCut(cut,info,intlumi)
-        
-    print "\n"
-    
-    print "Background composition in percent"
-    for cut in cuts:
-        printCutPercentage(cut,info)
+    print "Cut \t \t qcd \t ttj \t wj \t diboson \t single top \t Zinv \t Zll \t VVV \t TTX \t Wbb \t DYhad \t signal \n"
+    print "Counts and percentage for %d fb-1 of data" % (intlumi)
+    makeCutflowTable(info,intlumi,cuts,signame)
 
     print "\n"
     
@@ -259,5 +211,3 @@ if __name__ == '__main__':
         getTTjetsComposition(cut,counts_allhad,counts_semilep,counts_dilep)
 
 
-    print "Make cutflow table"
-    makeCutflowTable(info,intlumi)
