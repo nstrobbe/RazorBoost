@@ -107,25 +107,28 @@ if __name__ == '__main__':
 #                                  ratiotitle="Data/MC", logscale=True, scale="QCD", scalefactor=2.09)
 
     # make plot of minDeltaPhiHat
-    hname = "h_minDeltaPhiHat_0Lbg1uW0Ll"
+    hnames = ["h_minDeltaPhiHat_0Lbg1uW0Ll","h_minDeltaPhi_0Lbg1uW0Ll"]
     htitle = "Data/MC comparison plot"
-    hlist = []
-    for i in range(len(mc_datasets)):
-        if not flist[i]: continue
-        hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle)
-        hlist.append(hdict)
+    for hname in hnames:
+        var = hname.split("_")[1]
         
-    hsiglist = []
-    for i in range(len(sig_datasets)):
-        if not fsiglist[i]: continue
-        hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle)
-        hsiglist.append(hdict)
+        hlist = []
+        for i in range(len(mc_datasets)):
+            if not flist[i]: continue
+            hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle)
+            hlist.append(hdict)
+        
+        hsiglist = []
+        for i in range(len(sig_datasets)):
+            if not fsiglist[i]: continue
+            hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle)
+            hsiglist.append(hdict)
 
-    hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle="MR",ytitle="Events",markerstyle=20)
+        hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
 
-    plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
-                         cname="DataMC_minDeltaPhiHat_0Lbg1uW0Ll", plotinfo="Selection 0Lbg1uW0Ll",
-                         ratiotitle="Data/MC", logscale=True, scale="No")
+        plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
+                             cname="DataMC_"+hname.replace("h_",""), plotinfo="Selection 0Lbg1uW0Ll",
+                             ratiotitle="Data/MC", logscale=True, scale="No")
     
 
     outfile.Close()
