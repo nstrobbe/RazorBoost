@@ -521,8 +521,8 @@ int main(int argc, char** argv)
     h_MR_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhi_0Lbg1uW0Ll", "h_MR_minDeltaPhi_0Lbg1uW0Ll", nbins_MR, bins_MR, 50, 0., 5.);
     h_R2_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_R2_minDeltaPhi_0Lbg1uW0Ll", "h_R2_minDeltaPhi_0Lbg1uW0Ll", nbins_R2, bins_R2, 50, 0, 5);
     
-    h_MR_minDeltaPhiHat_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhiHat_0Lbg1uW0Ll", "h_MR_minDeltaPhiHat_0Lbg1uW0Ll", nbins_MR, bins_MR, 50, 0, 5);
-    h_R2_minDeltaPhiHat_0Lbg1uW0Ll = new TH2D("h_R2_minDeltaPhiHat_0Lbg1uW0Ll", "h_R2_minDeltaPhiHat_0Lbg1uW0Ll", nbins_R2, bins_R2, 50, 0, 5);
+    h_MR_minDeltaPhiHat_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhiHat_0Lbg1uW0Ll", "h_MR_minDeltaPhiHat_0Lbg1uW0Ll", nbins_MR, bins_MR, 30, 0, 15);
+    h_R2_minDeltaPhiHat_0Lbg1uW0Ll = new TH2D("h_R2_minDeltaPhiHat_0Lbg1uW0Ll", "h_R2_minDeltaPhiHat_0Lbg1uW0Ll", nbins_R2, bins_R2, 30, 0, 15);
     
     // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhi < 0.3
     h_MR_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhi0p3", "h_MR_0Lbg1uW0Ll_mdPhi0p3", nbins_MR, bins_MR);
@@ -852,7 +852,7 @@ int main(int argc, char** argv)
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v3 == 1 ||
 		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
-		 //triggerresultshelper_HLT]_PFHT650_v5 == 1 ||
+		 //triggerresultshelper_HLT_PFHT650_v5 == 1 ||
 		 //triggerresultshelper_HLT_HT750_v1 == 1 ||
 		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
 		 )) continue;
