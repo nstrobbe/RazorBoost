@@ -2,6 +2,14 @@
 
 import os,sys
 from string import *
+from optparse import OptionParser
+
+usage = "Usage: python %prog samplesfile [options]"
+parser = OptionParser(usage=usage)
+parser.add_option("--ISR", action="store_true", dest="ISR", default=False, help="Switch on ISR reweighting")
+parser.add_option("--TopPt", action="store_true", dest="TopPt", default=False, help="Switch on Top Pt reweighting")
+(option,args) = parser.parse_args()
+
 
 anl = 'rzrBoostMC'
 
@@ -26,26 +34,25 @@ exe = dwork+anl
 #os.system('rm -f '+dflisttmp+anl+'_*')
 
 # Get the samples list file:
-if len(sys.argv) < 2:
-    print 'Run as python '+sys.argv[0]+' <sample list filename> and optional: <ISR_True> <TopPt_True>'
+if len(args) < 1:
+    print "Always tell me what samples to run over!"
+    print "For more help, run as python %s -h" % (sys.argv[0])
     sys.exit()
-
-samplesfile = sys.argv[1]
+samplesfile = args[0]
 
 datasets = open(samplesfile).readlines()
-
 
 names = {}
 names['exe'] = exe
 names['drestmp'] = drestmp
 names['anl'] = anl
 
-names['ISR'] = "" 
-names['Top_pT'] = ""
-if len(sys.argv) > 2:
-    names['ISR'] = sys.argv[2]
-if len(sys.argv) > 3:
-    names['ISR'] = sys.argv[2]
+names['ISR'] = "ISR_False" 
+names['TopPt'] = "TopPt_False"
+if option.ISR:
+    names['ISR'] = "ISR_True"
+if option.TopPt:
+    names['TopPt'] = "TopPt_True"
 
 # Total number of runs
 nrunstot = 0
