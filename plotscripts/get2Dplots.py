@@ -187,6 +187,15 @@ if __name__ == "__main__":
     make2Dplot("R2","minDeltaPhi",cut,f_data,outputdir,outfile,"data")        
     make2Dratioplot("R2","minDeltaPhi",cut,f_data,f_bg,outputdir,outfile)        
 
+    # Make 2D plots of mindeltaphiHat
+    cut = "0Lbg1uW0Ll"
+    make2Dplot("MR","minDeltaPhiHat",cut,f_bg,outputdir,outfile,"bg")        
+    make2Dplot("MR","minDeltaPhHati",cut,f_data,outputdir,outfile,"data")        
+    make2Dratioplot("MR","minDeltaPhiHat",cut,f_data,f_bg,outputdir,outfile)        
+    make2Dplot("R2","minDeltaPhiHat",cut,f_bg,outputdir,outfile,"bg")        
+    make2Dplot("R2","minDeltaPhiHat",cut,f_data,outputdir,outfile,"data")        
+    make2Dratioplot("R2","minDeltaPhiHat",cut,f_data,f_bg,outputdir,outfile)        
+
     # Make 2D plots of mT
     cut = "g1Mbg1W1Ll"
     make2Dplot("MR","mT",cut,f_bg,outputdir,outfile,"bg")        
