@@ -112,3 +112,27 @@ double GetTopPtScaleFactor(double toppt){ // toppt is generator top(antitop) pt
   double b = -0.00137;
   return exp(a+b*toppt);
 }
+
+Double_t* getFixedBinEdges(int nbins, double mini, double maxi)
+{
+  Double_t* bin_edges = new Double_t[nbins+1];
+  Double_t spacing = (maxi-mini)/nbins;
+  for (int i = 0; i != nbins; ++i) {
+    bin_edges[i] = mini + i*spacing;
+    //cout << "bin edge " << i << " : " << bin_edges[i] << endl;
+  }
+  bin_edges[nbins] = maxi;
+
+  return bin_edges;
+}
+
+Double_t* getVariableBinEdges(int num_entries, Double_t* tmp_array)
+{
+  Double_t* my_array = new Double_t[num_entries];
+  for (int i = 0; i != num_entries; ++i) {
+    my_array[i] = tmp_array[i];
+
+    //cout << "bin edge " << i << " : " << my_array[i] << endl;
+  }
+   return my_array;
+}
