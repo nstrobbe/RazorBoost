@@ -655,7 +655,6 @@ root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//QCD_HT-500To1000_TuneZ2star_8T
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_689.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_69.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_690.root
-root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_691.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_692.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_693.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//QCD_HT-500To1000_TuneZ2star_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_694.root

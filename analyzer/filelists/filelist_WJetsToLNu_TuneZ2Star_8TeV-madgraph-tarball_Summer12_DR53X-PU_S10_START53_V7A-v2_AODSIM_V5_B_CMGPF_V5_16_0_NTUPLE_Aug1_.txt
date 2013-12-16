@@ -241,7 +241,6 @@ root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//WJetsToLNu_TuneZ2Star_8TeV-mad
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_315.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_316.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_317.root
-root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_318.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_319.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_32.root
 root://eoscms//eos/cms/store/cmst3/group/tnm/CMG//WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1//ntuple_320.root
