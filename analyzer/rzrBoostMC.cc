@@ -32,6 +32,17 @@ int main(int argc, char** argv)
   }
   TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
   
+  // Get the pileup histogram:
+  TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/pileup_weights.root");
+  if (!fpileup){
+    fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/pileup_weights.root");
+  }
+  if (!fpileup){
+    cout << "Could not find pileup weights root file... Where did you put it??" << endl;
+    return 1;
+  }
+  TH1D* h_pileup = (TH1D*)fpileup->Get("pileup_weight");
+  
   // Get file list and histogram filename from command line
   commandLine cmdline;
   decodeCommandLine(argc, argv, cmdline);
@@ -95,6 +106,9 @@ int main(int argc, char** argv)
   string TopPt = "";
   if ( argc > 8 )
     TopPt = string(argv[8]);
+  string Pileup = "";
+  if ( argc > 9 )
+    Pileup = string(argv[9]);
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
@@ -108,6 +122,11 @@ int main(int argc, char** argv)
   if (sample == "TTJets" && TopPt == "TopPt_True"){
     doTopPtreweighting = true;
     cout << "Will do top pt reweighting" << endl;
+  }
+  bool doPileupReweighting = false;
+  if (sample != "Data" && Pileup == "Pileup_True"){
+    doPileupReweighting = true;
+    cout << "Will do pileup reweighting" << endl;
   }
 
   // Calculate the normalization factor for the event weights
@@ -162,6 +181,10 @@ int main(int argc, char** argv)
   TH1D* h_totalTopPTweight_nominal = new TH1D("h_totalTopPTweight_nominal", "h_totalTopPTweight_nominal", 1, 1, 2); // nominal ISR weight
   TH1D* h_totalTopPTweight_up = new TH1D("h_totalTopPTweight_up", "h_totalTopPTweight_up", 1, 1, 2); //  ISR up weight
   TH1D* h_totalTopPTweight_down = new TH1D("h_totalTopPTweight_down", "h_totalTopPTweight_down", 1, 1, 2); // ISR down weight
+
+  // Histograms for pileup reweighting
+  TH1D* h_TrueNumVertices = new TH1D("h_TrueNumVertices","h_TrueNumVertices",100,0,100);
+  TH1D* h_TrueNumVertices_reweighted = new TH1D("h_TrueNumVertices_reweighted","h_TrueNumVertices_reweighted",100,0,100);
 
   // W tagging plots
 
@@ -565,6 +588,7 @@ int main(int argc, char** argv)
   
   ofile.count("NoCuts", 0.0);
   ofile.count("Cleaning", 0.0);
+  ofile.count("Pileup", 0.0);
   ofile.count("HCAL_noise", 0.0);
   ofile.count("vertexg0", 0.0);
   ofile.count("njetge3", 0.0);
@@ -623,6 +647,7 @@ int main(int argc, char** argv)
  
   TTallhad->Fill("NoCuts", 0.0);
   TTallhad->Fill("Cleaning", 0.0);
+  TTallhad->Fill("Pileup", 0.0);
   TTallhad->Fill("HCAL_noise", 0.0);
   TTallhad->Fill("vertexg0", 0.0);
   TTallhad->Fill("njetge3", 0.0);
@@ -668,6 +693,7 @@ int main(int argc, char** argv)
 
   TTsemilep->Fill("NoCuts", 0.0);
   TTsemilep->Fill("Cleaning", 0.0);
+  TTsemilep->Fill("Pileup", 0.0);
   TTsemilep->Fill("HCAL_noise", 0.0);
   TTsemilep->Fill("vertexg0", 0.0);
   TTsemilep->Fill("njetge3", 0.0);
@@ -713,6 +739,7 @@ int main(int argc, char** argv)
 
   TTdilep->Fill("NoCuts", 0.0);
   TTdilep->Fill("Cleaning", 0.0);
+  TTdilep->Fill("Pileup", 0.0);
   TTdilep->Fill("HCAL_noise", 0.0);
   TTdilep->Fill("vertexg0", 0.0);
   TTdilep->Fill("njetge3", 0.0);
@@ -814,6 +841,19 @@ int main(int argc, char** argv)
 
       ofile.count("Cleaning", w);
 
+      // do pileup reweighting
+      double num_vertices = pileupsummaryinfo[0].getTrueNumInteractions;
+      h_TrueNumVertices->Fill(num_vertices,w);
+      // get the bin number in the pileup histogram
+      int pileup_bin = (int)ceil(num_vertices);
+      double w_pileup = 1.;
+      if(doPileupReweighting)
+	w_pileup = h_pileup->GetBinContent(pileup_bin);      
+      h_TrueNumVertices_reweighted->Fill(num_vertices,w*w_pileup);
+
+      w = w*w_pileup;
+
+      ofile.count("Pileup",w);
       // -------------------------
       // -- Trigger requirement --
       // -------------------------
