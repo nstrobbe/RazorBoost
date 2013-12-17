@@ -31,18 +31,7 @@ int main(int argc, char** argv)
     return 1;
   }
   TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
-  
-  // Get the pileup histogram:
-  TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/pileup_weights.root");
-  if (!fpileup){
-    fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/pileup_weights.root");
-  }
-  if (!fpileup){
-    cout << "Could not find pileup weights root file... Where did you put it??" << endl;
-    return 1;
-  }
-  TH1D* h_pileup = (TH1D*)fpileup->Get("pileup_weight");
-  
+    
   // Get file list and histogram filename from command line
   commandLine cmdline;
   decodeCommandLine(argc, argv, cmdline);
@@ -128,6 +117,21 @@ int main(int argc, char** argv)
     doPileupReweighting = true;
     cout << "Will do pileup reweighting" << endl;
   }
+
+  // Get the pileup histogram:
+  TString pileupname = "pileup_weights.root";
+  if (sample == "T1ttcc" || sample == "T2tt"){
+    pileupname = "pileup_weights_sig52X.root";
+  }
+  TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
+  if (!fpileup){
+    fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
+  }
+  if (!fpileup){
+    cout << "Could not find pileup weights root file... Where did you put it??" << endl;
+    return 1;
+  }
+  TH1D* h_pileup = (TH1D*)fpileup->Get("pileup_weight");
 
   // Calculate the normalization factor for the event weights
   // The original MC weight will be divided by this quantity
