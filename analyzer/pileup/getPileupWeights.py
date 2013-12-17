@@ -4,11 +4,17 @@ from ROOT import *
 
 gStyle.SetOptStat(0)
 gStyle.SetTextFont(42)
+
+MC = "mc"
+#MC = "sig52X"
     
 fdata = TFile.Open("data_pileup.root")
-fmc = TFile.Open("mc_pileup.root")
+fmc = TFile.Open(MC+"_pileup.root")
 
-fout = TFile.Open("pileup_weights.root","RECREATE")
+ext = ""
+if MC != "mc":
+    ext = "_"+MC
+fout = TFile.Open("pileup_weights"+ext+".root","RECREATE")
 fout.cd()
 
 # Pileup profile in data obtained by:
@@ -68,8 +74,12 @@ c.cd(4).SetLogy()
 hratio2.Draw("E2")
 hratio.Draw("HISTsame")
 c.cd()
-c.SaveAs("compare_pileup_profile.pdf")
-#c.SaveAs("compare_pileup_profile.root")
+
+ext = ""
+if MC == "sig52X":
+    ext = "_52X"
+c.SaveAs("compare_pileup_profile"+ext+".pdf")
+#c.SaveAs("compare_pileup_profile"+ext+".root")
 
 fout.Close()
 
