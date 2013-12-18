@@ -22,10 +22,9 @@ histo = anl+'_histograms.root'
 sample = '%(sample)s'
 ISR = '%(ISR)s'
 TopPt = '%(TopPt)s'
-Pileup = '%(Pileup)s'
 
 # Args:
-args = nmflisttmp+' '+xsect+' '+totweight+' '+lumi+' '+histo+' '+sample+' '+ISR+' '+TopPt+' '+Pileup
+args = nmflisttmp+' '+xsect+' '+totweight+' '+lumi+' '+histo+' '+sample+' '+ISR+' '+TopPt
 
 # Run
 os.system(exe+' '+args)

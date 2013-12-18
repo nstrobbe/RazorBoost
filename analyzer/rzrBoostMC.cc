@@ -31,7 +31,7 @@ int main(int argc, char** argv)
     return 1;
   }
   TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
-  
+    
   // Get file list and histogram filename from command line
   commandLine cmdline;
   decodeCommandLine(argc, argv, cmdline);
@@ -77,8 +77,6 @@ int main(int argc, char** argv)
 		ofile.count("MET", 0)
   */
   
-  outputFile ofile(cmdline.outputfilename);
-
   string fsample = cmdline.filelist;
   double xsect = cmdline.xsect;
   // ! totweight should contain the proper ISR weights if we want to do ISRreweighting !
@@ -95,6 +93,9 @@ int main(int argc, char** argv)
   string TopPt = "";
   if ( argc > 8 )
     TopPt = string(argv[8]);
+  string Pileup = "";
+  if ( argc > 9 )
+    Pileup = string(argv[9]);
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
@@ -109,6 +110,26 @@ int main(int argc, char** argv)
     doTopPtreweighting = true;
     cout << "Will do top pt reweighting" << endl;
   }
+  bool doPileupReweighting = false;
+  if (sample != "Data" && Pileup == "Pileup_True"){
+    doPileupReweighting = true;
+    cout << "Will do pileup reweighting" << endl;
+  }
+
+  // Get the pileup histogram:
+  TString pileupname = "pileup_weights.root";
+  if (sample == "T1ttcc" || sample == "T2tt"){
+    pileupname = "pileup_weights_sig52X.root";
+  }
+  TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
+  if (!fpileup){
+    fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
+  }
+  if (!fpileup){
+    cout << "Could not find pileup weights root file... Where did you put it??" << endl;
+    return 1;
+  }
+  TH1D* h_pileup = (TH1D*)fpileup->Get("pileup_weight");
 
   // Calculate the normalization factor for the event weights
   // The original MC weight will be divided by this quantity
@@ -121,6 +142,8 @@ int main(int argc, char** argv)
   cout << "xsect: " << xsect << endl;
   cout << "totweight: " << totweight << endl;
   cout << "weightnorm: " << weightnorm << endl;
+
+  outputFile ofile(cmdline.outputfilename);
 
   //---------------------------------------------------------------------------
   // Declare histograms
@@ -162,6 +185,10 @@ int main(int argc, char** argv)
   TH1D* h_totalTopPTweight_nominal = new TH1D("h_totalTopPTweight_nominal", "h_totalTopPTweight_nominal", 1, 1, 2); // nominal ISR weight
   TH1D* h_totalTopPTweight_up = new TH1D("h_totalTopPTweight_up", "h_totalTopPTweight_up", 1, 1, 2); //  ISR up weight
   TH1D* h_totalTopPTweight_down = new TH1D("h_totalTopPTweight_down", "h_totalTopPTweight_down", 1, 1, 2); // ISR down weight
+
+  // Histograms for pileup reweighting
+  TH1D* h_TrueNumVertices = new TH1D("h_TrueNumVertices","h_TrueNumVertices",100,0,100);
+  TH1D* h_TrueNumVertices_reweighted = new TH1D("h_TrueNumVertices_reweighted","h_TrueNumVertices_reweighted",100,0,100);
 
   // W tagging plots
 
@@ -353,7 +380,7 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_g1Mbg1W1LlmT100 = new TH1D("h_jet1pt_g1Mbg1W1LlmT100","h_jet1pt_g1Mbg1W1LlmT100",40,0,1000);
   TH1D * h_jet2pt_g1Mbg1W1LlmT100 = new TH1D("h_jet2pt_g1Mbg1W1LlmT100","h_jet2pt_g1Mbg1W1LlmT100",40,0,1000);
   TH1D * h_jet3pt_g1Mbg1W1LlmT100 = new TH1D("h_jet3pt_g1Mbg1W1LlmT100","h_jet3pt_g1Mbg1W1LlmT100",40,0,1000);
-  TH1D * h_leptonpt_g1Mbg1W1LlmT100 = new TH1D("h_leptonpt_g1Mbg1W1LlmT100","h_leptonpt_g1Mbg1W1LlmT100",20,0,500);
+  TH1D * h_leptonpt_g1Mbg1W1LlmT100 = new TH1D("h_leptonpt_g1Mbg1W1LlmT100","h_leptonpt_g1Mbg1W1LlmT100",50,0,500);
 
   // g1Mbg1W1LlmT ; TTj control region: >= 1 Mb; >= 1 W; 1 Ll; 30<mT<100
   TH1D * h_MR_g1Mbg1W1LlmT = new TH1D("h_MR_g1Mbg1W1LlmT", "h_MR_g1Mbg1W1LlmT", nbins_MR, bins_MR);
@@ -389,7 +416,7 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_0Lbg1Y1LlmT100 = new TH1D("h_jet1pt_0Lbg1Y1LlmT100","h_jet1pt_0Lbg1Y1LlmT100",40,0,1000);
   TH1D * h_jet2pt_0Lbg1Y1LlmT100 = new TH1D("h_jet2pt_0Lbg1Y1LlmT100","h_jet2pt_0Lbg1Y1LlmT100",40,0,1000);
   TH1D * h_jet3pt_0Lbg1Y1LlmT100 = new TH1D("h_jet3pt_0Lbg1Y1LlmT100","h_jet3pt_0Lbg1Y1LlmT100",40,0,1000);
-  TH1D * h_leptonpt_0Lbg1Y1LlmT100 = new TH1D("h_leptonpt_0Lbg1Y1LlmT100","h_leptonpt_0Lbg1Y1LlmT100",20,0,500);
+  TH1D * h_leptonpt_0Lbg1Y1LlmT100 = new TH1D("h_leptonpt_0Lbg1Y1LlmT100","h_leptonpt_0Lbg1Y1LlmT100",50,0,500);
 
   // 0Lbg1Y1LlmT ; Wj control region: == 0 Lb; >= 1 Y; 1 Ll; 30<mT<100
   TH1D * h_MR_0Lbg1Y1LlmT = new TH1D("h_MR_0Lbg1Y1LlmT", "h_MR_0Lbg1Y1LlmT", nbins_MR, bins_MR);
@@ -413,6 +440,8 @@ int main(int argc, char** argv)
   TH1D * h_MR_2mu = new TH1D("h_MR_2mu", "h_MR_2mu", nbins_MR, bins_MR);
   TH1D * h_R2_2mu = new TH1D("h_R2_2mu", "h_R2_2mu", nbins_R2, bins_R2);
   TH2D * h_MR_R2_2mu = new TH2D("h_MR_R2_2mu", "h_MR_R2_2mu", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D * h_lepton1pt_2mu = new TH1D("h_lepton1pt_2mu", "h_lepton1pt_2mu", 50, 0, 500);
+  TH1D * h_lepton2pt_2mu = new TH1D("h_lepton2pt_2mu", "h_lepton2pt_2mu", 50, 0, 500);
   
   TH1D * h_MR_2mu0el = new TH1D("h_MR_2mu0el", "h_MR_2mu0el", nbins_MR, bins_MR);
   TH1D * h_R2_2mu0el = new TH1D("h_R2_2mu0el", "h_R2_2mu0el", nbins_R2, bins_R2);
@@ -436,6 +465,8 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_0Lbg1Y2mu0el = new TH1D("h_jet1pt_0Lbg1Y2mu0el","h_jet1pt_0Lbg1Y2mu0el",40,0,1000);
   TH1D * h_jet2pt_0Lbg1Y2mu0el = new TH1D("h_jet2pt_0Lbg1Y2mu0el","h_jet2pt_0Lbg1Y2mu0el",40,0,1000);
   TH1D * h_jet3pt_0Lbg1Y2mu0el = new TH1D("h_jet3pt_0Lbg1Y2mu0el","h_jet3pt_0Lbg1Y2mu0el",40,0,1000);
+  TH1D * h_lepton1pt_0Lbg1Y2mu0el = new TH1D("h_lepton1pt_0Lbg1Y2mu0el", "h_lepton1pt_0Lbg1Y2mu0el", 50, 0, 500);
+  TH1D * h_lepton2pt_0Lbg1Y2mu0el = new TH1D("h_lepton2pt_0Lbg1Y2mu0el", "h_lepton2pt_0Lbg1Y2mu0el", 50, 0, 500);
 
   // Z with b Control region
   TH1D * h_MR_g1Mbg1Y2mu0el = new TH1D("h_MR_g1Mbg1Y2mu0el", "h_MR_g1Mbg1Y2mu0el", nbins_MR, bins_MR);
@@ -448,6 +479,8 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_g1Mbg1Y2mu0el = new TH1D("h_jet1pt_g1Mbg1Y2mu0el","h_jet1pt_g1Mbg1Y2mu0el",40,0,1000);
   TH1D * h_jet2pt_g1Mbg1Y2mu0el = new TH1D("h_jet2pt_g1Mbg1Y2mu0el","h_jet2pt_g1Mbg1Y2mu0el",40,0,1000);
   TH1D * h_jet3pt_g1Mbg1Y2mu0el = new TH1D("h_jet3pt_g1Mbg1Y2mu0el","h_jet3pt_g1Mbg1Y2mu0el",40,0,1000);
+  TH1D * h_lepton1pt_g1Mbg1Y2mu0el = new TH1D("h_lepton1pt_g1Mbg1Y2mu0el", "h_lepton1pt_g1Mbg1Y2mu0el", 50, 0, 500);
+  TH1D * h_lepton2pt_g1Mbg1Y2mu0el = new TH1D("h_lepton2pt_g1Mbg1Y2mu0el", "h_lepton2pt_g1Mbg1Y2mu0el", 50, 0, 500);
 
 
   // dielectron trajectory
@@ -462,6 +495,8 @@ int main(int argc, char** argv)
   TH1D * h_MR_2el = new TH1D("h_MR_2el", "h_MR_2el", nbins_MR, bins_MR);
   TH1D * h_R2_2el = new TH1D("h_R2_2el", "h_R2_2el", nbins_R2, bins_R2);
   TH2D * h_MR_R2_2el = new TH2D("h_MR_R2_2el", "h_MR_R2_2el", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D * h_lepton1pt_2el = new TH1D("h_lepton1pt_2el", "h_lepton1pt_2el", 50, 0, 500);
+  TH1D * h_lepton2pt_2el = new TH1D("h_lepton2pt_2el", "h_lepton2pt_2el", 50, 0, 500);
   
   TH1D * h_MR_2el0mu = new TH1D("h_MR_2el0mu", "h_MR_2el0mu", nbins_MR, bins_MR);
   TH1D * h_R2_2el0mu = new TH1D("h_R2_2el0mu", "h_R2_2el0mu", nbins_R2, bins_R2);
@@ -485,6 +520,8 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_0Lbg1Y2el0mu = new TH1D("h_jet1pt_0Lbg1Y2el0mu","h_jet1pt_0Lbg1Y2el0mu",40,0,1000);
   TH1D * h_jet2pt_0Lbg1Y2el0mu = new TH1D("h_jet2pt_0Lbg1Y2el0mu","h_jet2pt_0Lbg1Y2el0mu",40,0,1000);
   TH1D * h_jet3pt_0Lbg1Y2el0mu = new TH1D("h_jet3pt_0Lbg1Y2el0mu","h_jet3pt_0Lbg1Y2el0mu",40,0,1000);
+  TH1D * h_lepton1pt_0Lbg1Y2el0mu = new TH1D("h_lepton1pt_0Lbg1Y2el0mu", "h_lepton1pt_0Lbg1Y2el0mu", 50, 0, 500);
+  TH1D * h_lepton2pt_0Lbg1Y2el0mu = new TH1D("h_lepton2pt_0Lbg1Y2el0mu", "h_lepton2pt_0Lbg1Y2el0mu", 50, 0, 500);
 
   // Z with b Control Region
   TH1D * h_MR_g1Mbg1Y2el0mu = new TH1D("h_MR_g1Mbg1Y2el0mu", "h_MR_g1Mbg1Y2el0mu", nbins_MR, bins_MR);
@@ -497,6 +534,8 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_g1Mbg1Y2el0mu = new TH1D("h_jet1pt_g1Mbg1Y2el0mu","h_jet1pt_g1Mbg1Y2el0mu",40,0,1000);
   TH1D * h_jet2pt_g1Mbg1Y2el0mu = new TH1D("h_jet2pt_g1Mbg1Y2el0mu","h_jet2pt_g1Mbg1Y2el0mu",40,0,1000);
   TH1D * h_jet3pt_g1Mbg1Y2el0mu = new TH1D("h_jet3pt_g1Mbg1Y2el0mu","h_jet3pt_g1Mbg1Y2el0mu",40,0,1000);
+  TH1D * h_lepton1pt_g1Mbg1Y2el0mu = new TH1D("h_lepton1pt_g1Mbg1Y2el0mu", "h_lepton1pt_g1Mbg1Y2el0mu", 50, 0, 500);
+  TH1D * h_lepton2pt_g1Mbg1Y2el0mu = new TH1D("h_lepton2pt_g1Mbg1Y2el0mu", "h_lepton2pt_g1Mbg1Y2el0mu", 50, 0, 500);
 
   // dilepton trajectory
   TH1D * h_Zmass_2l = new TH1D("h_Zmass_2l", "h_Zmass_2l", 20, 50, 130);
@@ -510,6 +549,8 @@ int main(int argc, char** argv)
   TH1D * h_MR_2l = new TH1D("h_MR_2l", "h_MR_2l", nbins_MR, bins_MR);
   TH1D * h_R2_2l = new TH1D("h_R2_2l", "h_R2_2l", nbins_R2, bins_R2);
   TH2D * h_MR_R2_2l = new TH2D("h_MR_R2_2l", "h_MR_R2_2l", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D * h_lepton1pt_2l = new TH1D("h_lepton1pt_2l", "h_lepton1pt_2l", 50, 0, 500);
+  TH1D * h_lepton2pt_2l = new TH1D("h_lepton2pt_2l", "h_lepton2pt_2l", 50, 0, 500);
   
   TH1D * h_MR_2l0ol = new TH1D("h_MR_2l0ol", "h_MR_2l0ol", nbins_MR, bins_MR);
   TH1D * h_R2_2l0ol = new TH1D("h_R2_2l0ol", "h_R2_2l0ol", nbins_R2, bins_R2);
@@ -533,6 +574,8 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_0Lbg1Y2l0ol = new TH1D("h_jet1pt_0Lbg1Y2l0ol","h_jet1pt_0Lbg1Y2l0ol",40,0,1000);
   TH1D * h_jet2pt_0Lbg1Y2l0ol = new TH1D("h_jet2pt_0Lbg1Y2l0ol","h_jet2pt_0Lbg1Y2l0ol",40,0,1000);
   TH1D * h_jet3pt_0Lbg1Y2l0ol = new TH1D("h_jet3pt_0Lbg1Y2l0ol","h_jet3pt_0Lbg1Y2l0ol",40,0,1000);
+  TH1D * h_lepton1pt_0Lbg1Y2l0ol = new TH1D("h_lepton1pt_0Lbg1Y2l0ol", "h_lepton1pt_0Lbg1Y2l0ol", 50, 0, 500);
+  TH1D * h_lepton2pt_0Lbg1Y2l0ol = new TH1D("h_lepton2pt_0Lbg1Y2l0ol", "h_lepton2pt_0Lbg1Y2l0ol", 50, 0, 500);
 
   // Z with b Control region
   TH1D * h_MR_g1Mbg1Y2l0ol = new TH1D("h_MR_g1Mbg1Y2l0ol", "h_MR_g1Mbg1Y2l0ol", nbins_MR, bins_MR);
@@ -545,6 +588,8 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_g1Mbg1Y2l0ol = new TH1D("h_jet1pt_g1Mbg1Y2l0ol","h_jet1pt_g1Mbg1Y2l0ol",40,0,1000);
   TH1D * h_jet2pt_g1Mbg1Y2l0ol = new TH1D("h_jet2pt_g1Mbg1Y2l0ol","h_jet2pt_g1Mbg1Y2l0ol",40,0,1000);
   TH1D * h_jet3pt_g1Mbg1Y2l0ol = new TH1D("h_jet3pt_g1Mbg1Y2l0ol","h_jet3pt_g1Mbg1Y2l0ol",40,0,1000);
+  TH1D * h_lepton1pt_g1Mbg1Y2l0ol = new TH1D("h_lepton1pt_g1Mbg1Y2l0ol", "h_lepton1pt_g1Mbg1Y2l0ol", 50, 0, 500);
+  TH1D * h_lepton2pt_g1Mbg1Y2l0ol = new TH1D("h_lepton2pt_g1Mbg1Y2l0ol", "h_lepton2pt_g1Mbg1Y2l0ol", 50, 0, 500);
 
   // Gen level plots
   TH1D* h_gen_toppt = new TH1D("h_gen_toppt", "h_gen_toppt", 50, 0, 1000);
@@ -565,6 +610,7 @@ int main(int argc, char** argv)
   
   ofile.count("NoCuts", 0.0);
   ofile.count("Cleaning", 0.0);
+  ofile.count("Pileup", 0.0);
   ofile.count("HCAL_noise", 0.0);
   ofile.count("vertexg0", 0.0);
   ofile.count("njetge3", 0.0);
@@ -623,6 +669,7 @@ int main(int argc, char** argv)
  
   TTallhad->Fill("NoCuts", 0.0);
   TTallhad->Fill("Cleaning", 0.0);
+  TTallhad->Fill("Pileup", 0.0);
   TTallhad->Fill("HCAL_noise", 0.0);
   TTallhad->Fill("vertexg0", 0.0);
   TTallhad->Fill("njetge3", 0.0);
@@ -668,6 +715,7 @@ int main(int argc, char** argv)
 
   TTsemilep->Fill("NoCuts", 0.0);
   TTsemilep->Fill("Cleaning", 0.0);
+  TTsemilep->Fill("Pileup", 0.0);
   TTsemilep->Fill("HCAL_noise", 0.0);
   TTsemilep->Fill("vertexg0", 0.0);
   TTsemilep->Fill("njetge3", 0.0);
@@ -713,6 +761,7 @@ int main(int argc, char** argv)
 
   TTdilep->Fill("NoCuts", 0.0);
   TTdilep->Fill("Cleaning", 0.0);
+  TTdilep->Fill("Pileup", 0.0);
   TTdilep->Fill("HCAL_noise", 0.0);
   TTdilep->Fill("vertexg0", 0.0);
   TTdilep->Fill("njetge3", 0.0);
@@ -814,6 +863,19 @@ int main(int argc, char** argv)
 
       ofile.count("Cleaning", w);
 
+      // do pileup reweighting
+      double num_vertices = pileupsummaryinfo[0].getTrueNumInteractions;
+      h_TrueNumVertices->Fill(num_vertices,w);
+      // get the bin number in the pileup histogram
+      int pileup_bin = (int)ceil(num_vertices);
+      double w_pileup = 1.;
+      if(doPileupReweighting)
+	w_pileup = h_pileup->GetBinContent(pileup_bin);      
+      h_TrueNumVertices_reweighted->Fill(num_vertices,w*w_pileup);
+
+      w = w*w_pileup;
+
+      ofile.count("Pileup",w);
       // -------------------------
       // -- Trigger requirement --
       // -------------------------
@@ -2028,6 +2090,8 @@ int main(int argc, char** argv)
 	  h_MR_2mu->Fill(MR, w);
 	  h_R2_2mu->Fill(R2metmu, w);
 	  h_MR_R2_2mu->Fill(MR, R2metmu, w);
+	  h_lepton1pt_2mu->Fill(smuon[0].pt,w);
+	  h_lepton2pt_2mu->Fill(smuon[1].pt,w);
 	  if(isTTallhad)
 	    TTallhad->Fill("2mu", w);
 	  else if(isTTsemilep)
@@ -2039,6 +2103,8 @@ int main(int argc, char** argv)
 	  h_MR_2l->Fill(MR, w);
 	  h_R2_2l->Fill(R2metmu, w);
 	  h_MR_R2_2l->Fill(MR, R2metmu, w);
+	  h_lepton1pt_2l->Fill(smuon[0].pt,w);
+	  h_lepton2pt_2l->Fill(smuon[1].pt,w);
 	  if(isTTallhad)
 	    TTallhad->Fill("2l", w);
 	  else if(isTTsemilep)
@@ -2102,6 +2168,8 @@ int main(int argc, char** argv)
 		h_jet1pt_0Lbg1Y2mu0el->Fill(sjet[0].pt,w);
 		h_jet2pt_0Lbg1Y2mu0el->Fill(sjet[1].pt,w);
 		h_jet3pt_0Lbg1Y2mu0el->Fill(sjet[2].pt,w);
+		h_lepton1pt_0Lbg1Y2mu0el->Fill(smuon[0].pt,w);
+		h_lepton2pt_0Lbg1Y2mu0el->Fill(smuon[1].pt,w);
 		if(isTTallhad)
 		  TTallhad->Fill("0Lbg1Y2mu0el", w);
 		else if(isTTsemilep)
@@ -2118,6 +2186,8 @@ int main(int argc, char** argv)
 		h_jet1pt_0Lbg1Y2l0ol->Fill(sjet[0].pt,w);
 		h_jet2pt_0Lbg1Y2l0ol->Fill(sjet[1].pt,w);
 		h_jet3pt_0Lbg1Y2l0ol->Fill(sjet[2].pt,w);
+		h_lepton1pt_0Lbg1Y2l0ol->Fill(smuon[0].pt,w);
+		h_lepton2pt_0Lbg1Y2l0ol->Fill(smuon[1].pt,w);
 		if(isTTallhad)
 		  TTallhad->Fill("0Lbg1Y2l0ol", w);
 		else if(isTTsemilep)
@@ -2161,6 +2231,8 @@ int main(int argc, char** argv)
 		h_jet1pt_g1Mbg1Y2mu0el->Fill(sjet[0].pt,w);
 		h_jet2pt_g1Mbg1Y2mu0el->Fill(sjet[1].pt,w);
 		h_jet3pt_g1Mbg1Y2mu0el->Fill(sjet[2].pt,w);
+		h_lepton1pt_g1Mbg1Y2mu0el->Fill(smuon[0].pt,w);
+		h_lepton2pt_g1Mbg1Y2mu0el->Fill(smuon[1].pt,w);
 		if(isTTallhad)
 		  TTallhad->Fill("g1Mbg1Y2mu0el", w);
 		else if(isTTsemilep)
@@ -2178,6 +2250,8 @@ int main(int argc, char** argv)
 		h_jet1pt_g1Mbg1Y2l0ol->Fill(sjet[0].pt,w);
 		h_jet2pt_g1Mbg1Y2l0ol->Fill(sjet[1].pt,w);
 		h_jet3pt_g1Mbg1Y2l0ol->Fill(sjet[2].pt,w);
+		h_lepton1pt_g1Mbg1Y2l0ol->Fill(smuon[0].pt,w);
+		h_lepton2pt_g1Mbg1Y2l0ol->Fill(smuon[1].pt,w);
 		if(isTTallhad)
 		  TTallhad->Fill("g1Mbg1Y2l0ol", w);
 		else if(isTTsemilep)
@@ -2235,6 +2309,8 @@ int main(int argc, char** argv)
 	  h_MR_2el->Fill(MR, w);
 	  h_R2_2el->Fill(R2metel, w);
 	  h_MR_R2_2el->Fill(MR, R2metel, w);
+	  h_lepton1pt_2el->Fill(selectron[0].pt,w);
+	  h_lepton2pt_2el->Fill(selectron[1].pt,w);
 	  if(isTTallhad)
 	    TTallhad->Fill("2el", w);
 	  else if(isTTsemilep)
@@ -2306,6 +2382,8 @@ int main(int argc, char** argv)
 		h_jet1pt_0Lbg1Y2el0mu->Fill(sjet[0].pt,w);
 		h_jet2pt_0Lbg1Y2el0mu->Fill(sjet[1].pt,w);
 		h_jet3pt_0Lbg1Y2el0mu->Fill(sjet[2].pt,w);
+		h_lepton1pt_0Lbg1Y2el0mu->Fill(selectron[0].pt,w);
+		h_lepton2pt_0Lbg1Y2el0mu->Fill(selectron[1].pt,w);
 		if(isTTallhad)
 		  TTallhad->Fill("0Lbg1Y2el0mu", w);
 		else if(isTTsemilep)
@@ -2322,6 +2400,8 @@ int main(int argc, char** argv)
 		h_jet1pt_0Lbg1Y2l0ol->Fill(sjet[0].pt,w);
 		h_jet2pt_0Lbg1Y2l0ol->Fill(sjet[1].pt,w);
 		h_jet3pt_0Lbg1Y2l0ol->Fill(sjet[2].pt,w);
+		h_lepton1pt_0Lbg1Y2l0ol->Fill(selectron[0].pt,w);
+		h_lepton2pt_0Lbg1Y2l0ol->Fill(selectron[1].pt,w);
 		if(isTTallhad)
 		  TTallhad->Fill("0Lbg1Y2l0ol", w);
 		else if(isTTsemilep)
@@ -2365,6 +2445,8 @@ int main(int argc, char** argv)
 		h_jet1pt_g1Mbg1Y2el0mu->Fill(sjet[0].pt,w);
 		h_jet2pt_g1Mbg1Y2el0mu->Fill(sjet[1].pt,w);
 		h_jet3pt_g1Mbg1Y2el0mu->Fill(sjet[2].pt,w);
+		h_lepton1pt_g1Mbg1Y2el0mu->Fill(selectron[0].pt,w);
+		h_lepton2pt_g1Mbg1Y2el0mu->Fill(selectron[1].pt,w);
 		if(isTTallhad)
 		  TTallhad->Fill("g1Mbg1Y2el0mu", w);
 		else if(isTTsemilep)
@@ -2382,6 +2464,8 @@ int main(int argc, char** argv)
 		h_jet1pt_g1Mbg1Y2l0ol->Fill(sjet[0].pt,w);
 		h_jet2pt_g1Mbg1Y2l0ol->Fill(sjet[1].pt,w);
 		h_jet3pt_g1Mbg1Y2l0ol->Fill(sjet[2].pt,w);
+		h_lepton1pt_g1Mbg1Y2l0ol->Fill(selectron[0].pt,w);
+		h_lepton2pt_g1Mbg1Y2l0ol->Fill(selectron[1].pt,w);
 		if(isTTallhad)
 		  TTallhad->Fill("g1Mbg1Y2l0ol", w);
 		else if(isTTsemilep)
