@@ -635,6 +635,10 @@ int main(int argc, char** argv)
   ofile.count("g1Mbg1W1Ll", 0.0);
   ofile.count("g1Mbg1W1LlmT100", 0.0);
   ofile.count("g1Mbg1W1LlmT", 0.0);
+  ofile.count("0Lb1Ll", 0.0);
+  ofile.count("0Lbg1Y1Ll", 0.0);
+  ofile.count("0Lbg1Y1LlmT100", 0.0);
+  ofile.count("0Lbg1Y1LlmT", 0.0);
 
   ofile.count("2munoZmass", 0.0);
   ofile.count("2mu", 0.0);
@@ -692,6 +696,10 @@ int main(int argc, char** argv)
   TTallhad->Fill("g1Mbg1W1Ll", 0.0);
   TTallhad->Fill("g1Mbg1W1LlmT100", 0.0);
   TTallhad->Fill("g1Mbg1W1LlmT", 0.0);
+  TTallhad->Fill("0Lb1Ll", 0.0);
+  TTallhad->Fill("0Lbg1Y1Ll", 0.0);
+  TTallhad->Fill("0Lbg1Y1LlmT100", 0.0);
+  TTallhad->Fill("0Lbg1Y1LlmT", 0.0);
   TTallhad->Fill("2munoZmass", 0.0);
   TTallhad->Fill("2mu", 0.0);
   TTallhad->Fill("2mu0el", 0.0);
@@ -738,6 +746,10 @@ int main(int argc, char** argv)
   TTsemilep->Fill("g1Mbg1W1Ll", 0.0);
   TTsemilep->Fill("g1Mbg1W1LlmT100", 0.0);
   TTsemilep->Fill("g1Mbg1W1LlmT", 0.0);
+  TTsemilep->Fill("0Lb1Ll", 0.0);
+  TTsemilep->Fill("0Lbg1Y1Ll", 0.0);
+  TTsemilep->Fill("0Lbg1Y1LlmT100", 0.0);
+  TTsemilep->Fill("0Lbg1Y1LlmT", 0.0);
   TTsemilep->Fill("2munoZmass", 0.0);
   TTsemilep->Fill("2mu", 0.0);
   TTsemilep->Fill("2mu0el", 0.0);
@@ -784,6 +796,10 @@ int main(int argc, char** argv)
   TTdilep->Fill("g1Mbg1W1Ll", 0.0);
   TTdilep->Fill("g1Mbg1W1LlmT100", 0.0);
   TTdilep->Fill("g1Mbg1W1LlmT", 0.0);
+  TTdilep->Fill("0Lb1Ll", 0.0);
+  TTdilep->Fill("0Lbg1Y1Ll", 0.0);
+  TTdilep->Fill("0Lbg1Y1LlmT100", 0.0);
+  TTdilep->Fill("0Lbg1Y1LlmT", 0.0);
   TTdilep->Fill("2munoZmass", 0.0);
   TTdilep->Fill("2mu", 0.0);
   TTdilep->Fill("2mu0el", 0.0);
