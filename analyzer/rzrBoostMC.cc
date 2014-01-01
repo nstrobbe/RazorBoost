@@ -707,12 +707,14 @@ int main(int argc, char** argv)
   TTallhad->Fill("g1Mb2mu0el", 0.0);
   TTallhad->Fill("0Lbg1Y2mu0el", 0.0);
   TTallhad->Fill("g1Mbg1Y2mu0el", 0.0);
+  TTallhad->Fill("2elnoZmass", 0.0);
   TTallhad->Fill("2el", 0.0);
   TTallhad->Fill("2el0mu", 0.0);
   TTallhad->Fill("0Lb2el0mu", 0.0);
   TTallhad->Fill("g1Mb2el0mu", 0.0);
   TTallhad->Fill("0Lbg1Y2el0mu", 0.0);
   TTallhad->Fill("g1Mbg1Y2el0mu", 0.0);
+  TTallhad->Fill("2lnoZmass", 0.0);
   TTallhad->Fill("2l", 0.0);
   TTallhad->Fill("2l0ol", 0.0);
   TTallhad->Fill("0Lb2l0ol", 0.0);
@@ -757,12 +759,14 @@ int main(int argc, char** argv)
   TTsemilep->Fill("g1Mb2mu0el", 0.0);
   TTsemilep->Fill("0Lbg1Y2mu0el", 0.0);
   TTsemilep->Fill("g1Mbg1Y2mu0el", 0.0);
+  TTsemilep->Fill("2elnoZmass", 0.0);
   TTsemilep->Fill("2el", 0.0);
   TTsemilep->Fill("2el0mu", 0.0);
   TTsemilep->Fill("0Lb2el0mu", 0.0);
   TTsemilep->Fill("g1Mb2el0mu", 0.0);
   TTsemilep->Fill("0Lbg1Y2el0mu", 0.0);
   TTsemilep->Fill("g1Mbg1Y2el0mu", 0.0);
+  TTsemilep->Fill("2lnoZmass", 0.0);
   TTsemilep->Fill("2l", 0.0);
   TTsemilep->Fill("2l0ol", 0.0);
   TTsemilep->Fill("0Lb2l0ol", 0.0);
@@ -807,12 +811,14 @@ int main(int argc, char** argv)
   TTdilep->Fill("g1Mb2mu0el", 0.0);
   TTdilep->Fill("0Lbg1Y2mu0el", 0.0);
   TTdilep->Fill("g1Mbg1Y2mu0el", 0.0);
+  TTdilep->Fill("2elnoZmass", 0.0);
   TTdilep->Fill("2el", 0.0);
   TTdilep->Fill("2el0mu", 0.0);
   TTdilep->Fill("0Lb2el0mu", 0.0);
   TTdilep->Fill("g1Mb2el0mu", 0.0);
   TTdilep->Fill("0Lbg1Y2el0mu", 0.0);
   TTdilep->Fill("g1Mbg1Y2el0mu", 0.0);
+  TTdilep->Fill("2lnoZmass", 0.0);
   TTdilep->Fill("2l", 0.0);
   TTdilep->Fill("2l0ol", 0.0);
   TTdilep->Fill("0Lb2l0ol", 0.0);
@@ -2344,7 +2350,7 @@ int main(int argc, char** argv)
 	  else if(isTTdilep)
 	    TTdilep->Fill("2l", w);
 	  
-	  if (nlooseelectrons == 0){
+	  if (nloosemuons == 0){
 	    ofile.count("2el0mu",w);
 	    h_MR_2el0mu->Fill(MR, w);
 	    h_R2_2el0mu->Fill(R2metel, w);
