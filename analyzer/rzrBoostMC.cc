@@ -190,6 +190,9 @@ int main(int argc, char** argv)
   TH1D* h_TrueNumVertices = new TH1D("h_TrueNumVertices","h_TrueNumVertices",100,0,100);
   TH1D* h_TrueNumVertices_reweighted = new TH1D("h_TrueNumVertices_reweighted","h_TrueNumVertices_reweighted",100,0,100);
 
+  TH1D* h_PV = new TH1D("h_PV","h_PV",50,0,50);
+  TH1D* h_PV_reweighted = new TH1D("h_PV_reweighted","h_PV_reweighted",50,0,50);
+
   // W tagging plots
 
   TH2D* h_jmass_jpt = new TH2D("h_jmass_jpt", "h_jmass_jpt", 20, 0, 350, 20, 0, 1400);
@@ -895,6 +898,7 @@ int main(int argc, char** argv)
 	w_pileup = h_pileup->GetBinContent(pileup_bin);      
       h_TrueNumVertices_reweighted->Fill(num_vertices,w*w_pileup);
 
+      double w_old = w;
       w = w*w_pileup;
 
       ofile.count("Pileup",w);
@@ -1217,6 +1221,9 @@ int main(int argc, char** argv)
 	if (!(fabs(vertex[i].position_Rho) < 2) ) continue;
 	svertex.push_back(vertex[i]);
       }
+
+      h_PV->Fill(svertex.size(),w_old);
+      h_PV_reweighted->Fill(svertex.size(),w);
 
       // jets - selected:
       // From https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetID
