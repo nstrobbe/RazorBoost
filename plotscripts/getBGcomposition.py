@@ -17,6 +17,7 @@ def printCut(cut,info,signame="T1ttcc",option="Counts"):
     DYhad = 0
     sig = 0
     for sample,t in info.iteritems():
+        print sample, t, cut
         c = t[0][cut]
         w = t[1]
         effxs = c 
@@ -38,7 +39,7 @@ def printCut(cut,info,signame="T1ttcc",option="Counts"):
             top = top + effxs
         if "_ZJetsToNuNu_" in sample:
             zjets = zjets + effxs
-        if "_DYJets" in sample: 
+        if "_DYJetsToLL_PtZ" in sample: 
             zll = zll + effxs
         if "_WZZ_" in sample or "_WWZ" in sample or "_WWW_" in sample or "_WWGJets_" in sample or "_ZZZ" in sample:
             triboson = triboson + effxs
@@ -105,9 +106,13 @@ Cut & QCD & TTJets & WJets & VV & T & Zinv & Zll & VVV & TTX & Wbb & DYhad & Tot
 def allcuts():
     cuts = ["NoCuts","Cleaning","HCAL_noise","vertexg0","njetge3","HLT","jet1ptg200",
             "SIG","neleeq0","nmueq0","trackIso",
-            "g1Mb0Ll","g1Mbg1W0Ll","0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1W0Ll",
+            "g1Mb0Ll","g1Mbg1W0Ll",
+            "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5","0Lbg1W0Ll",
             "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100","g1Mbg1W1LlmT",
-            "2mu","2mu0el","0Lb2mu0el","0Lbg1Y2mu0el","g1Mb2mu0el","g1Mbg1Y2mu0el"
+            "0Lbg1Y1Ll","0Lbg1Y1LlmT100","0Lbg1Y1LlmT",
+            "2munoZmass","2mu","2mu0el","0Lb2mu0el","0Lbg1Y2mu0el","g1Mb2mu0el","g1Mbg1Y2mu0el",
+            "2elnoZmass","2el","2el0mu","0Lb2el0mu","0Lbg1Y2el0mu","g1Mb2el0mu","g1Mbg1Y2el0mu",
+            "2lnoZmass","2l","2l0ol","0Lb2l0ol","0Lbg1Y2l0ol","g1Mb2l0ol","g1Mbg1Y2l0ol",
             ]
     return cuts
 
@@ -130,7 +135,7 @@ if __name__ == '__main__':
     intlumi = 19.789
 
     # input information
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131125"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131219"
     analyzer = "rzrBoostMC"
     signame = "T1ttcc_325_300"
     sigxs = 0.0243547

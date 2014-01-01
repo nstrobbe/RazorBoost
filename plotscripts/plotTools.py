@@ -40,13 +40,14 @@ def ConstructHDict(h, name="name", color=rt.kBlue, title="title", appear_in_rati
 # ---------------------------------------------- #
 # -- Constructor for legend dictionary        -- #
 # ---------------------------------------------- # 
-def ConstructLDict(xmin,xmax,ymin,ymax,title=""):
+def ConstructLDict(xmin,xmax,ymin,ymax,title="",ncolumns=1):
     legdict = {}
     legdict["xmin"] = xmin
     legdict["ymin"] = ymin
     legdict["xmax"] = xmax
     legdict["ymax"] = ymax
     legdict["title"] = title
+    legdict["ncolumns"] = ncolumns
     return legdict
 
 # ---------------------------------------------- #
@@ -87,9 +88,9 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
     legend = rt.TLegend(0.5,0.5,0.87,0.87,"")
     if legdict != 0:
         legend = rt.TLegend(legdict["xmin"],legdict["ymin"],legdict["xmax"],legdict["ymax"],legdict["title"])
+        legend.SetNColumns(legdict["ncolumns"])
     legend.SetFillColor(0)
     legend.SetBorderSize(0)
-
     # Get histograms from a list of dictionaries, and plot them 
     print "Getting all histograms"
 
@@ -232,9 +233,10 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
     legend = rt.TLegend(0.67,0.5,0.87,0.87,"")
     if legdict != 0:
         legend = rt.TLegend(legdict["xmin"],legdict["ymin"],legdict["xmax"],legdict["ymax"],legdict["title"])
+        legend.SetNColumns(legdict["ncolumns"])
     legend.SetFillColor(0)
     legend.SetBorderSize(0)
-
+    
     # Get histograms from a list of dictionaries, and plot them 
     print "Getting all histograms"
 
@@ -418,6 +420,7 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     legend = rt.TLegend(0.63,0.4,0.87,0.8,"")
     if legdict != 0:
         legend = rt.TLegend(legdict["xmin"],legdict["ymin"],legdict["xmax"],legdict["ymax"],legdict["title"])
+        legend.SetNColumns(legdict["ncolumns"])
     legend.SetFillColor(0)
     legend.SetBorderSize(0)
     legend.AddEntry(hdata," data ("+ str(intlumi) + "/fb)","epl")
@@ -447,6 +450,7 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     hdata.GetYaxis().SetLabelSize(0.05)
     hdata.SetMaximum(2.*maxi)
     if logscale:
+        hdata.SetMaximum(5.*maxi)
         hdata.SetMinimum(0.007)
     hdata.Draw("EP")
     mc.Draw("same")

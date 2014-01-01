@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20131217"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131217/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20131219"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131219/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -25,10 +25,10 @@ if __name__ == '__main__':
 
     # define all the datasets we want to plot, and their colors
     # backgrounds
-    #mc_datasets = ["QCD","TTJets","WJetsToLNu","Wbb","Top","TTX","ZJetsToNuNu","DYJetsToLL_PtZ","DYToBB","DYToCC","VV","VVV"]
-    #mc_colors   = [rt.kMagenta,rt.kRed,rt.kGreen+1,rt.kGreen+3,rt.kCyan,rt.kCyan+2,rt.kOrange,rt.kOrange+2,rt.kOrange+7,rt.kOrange+9,rt.kBlue+1,rt.kBlue-3]
-    mc_datasets = ["QCD","TTJets","WJetsToLNu","Top","TTX","ZJetsToNuNu","DYJetsToLL_PtZ","VV","VVV"]
-    mc_colors   = [rt.kMagenta,rt.kRed,rt.kGreen+1,rt.kCyan,rt.kCyan+2,rt.kOrange,rt.kOrange+2,rt.kBlue+1,rt.kBlue-3]
+    mc_datasets = ["QCD","TTJets","WJetsToLNu","Wbb","Top","TTX","ZJetsToNuNu","DYJetsToLL_PtZ","DYToBB","DYToCC","VV","VVV"]
+    mc_colors   = [rt.kMagenta,rt.kRed,rt.kGreen+1,rt.kGreen+3,rt.kCyan,rt.kCyan+2,rt.kOrange,rt.kOrange+2,rt.kOrange+7,rt.kOrange+9,rt.kBlue+1,rt.kBlue-3]
+    #mc_datasets = ["QCD","TTJets","WJetsToLNu","Top","TTX","ZJetsToNuNu","DYJetsToLL_PtZ","VV","VVV"]
+    #mc_colors   = [rt.kMagenta,rt.kRed,rt.kGreen+1,rt.kCyan,rt.kCyan+2,rt.kOrange,rt.kOrange+2,rt.kBlue+1,rt.kBlue-3]
     flist = []
     for d in mc_datasets:
         f = TFile.Open(inputdir+analyzer+"_"+d+".root")
@@ -56,6 +56,8 @@ if __name__ == '__main__':
             "2lnoZmass","2l","2l0ol","0Lb2l0ol","0Lbg1Y2l0ol","g1Mb2l0ol","g1Mbg1Y2l0ol",
             ]
 
+    legd = plotTools.ConstructLDict(0.6,0.87,0.5,0.8,ncolumns=2)
+
     for cut in cuts:
         for var in vars:
             hname = "h_%s_%s" % (var,cut)
@@ -75,20 +77,20 @@ if __name__ == '__main__':
             hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
 
             # now make the actual plot
-            plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
+            plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                                  cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="No")
 
             # scale according to bin width; need to adjust y axis title according to variable
             if var == "MR":
                 hdict_data2 = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events/(100 GeV)",markerstyle=20)
-                plotTools.PlotDataMC(hlist,hdict_data2,hsiglist,outputdir=outputdir, outfile=outfile,
+                plotTools.PlotDataMC(hlist,hdict_data2,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                                      cname="DataMC_%s_%s_width"%(var,cut), plotinfo="Selection %s"%(cut),
                                      ratiotitle="Data/MC", logscale=True, scale="Width", scalefactor=100)
             else:
                 hdict_data2 = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events/(0.01)",markerstyle=20)
                 
-                plotTools.PlotDataMC(hlist,hdict_data2,hsiglist,outputdir=outputdir, outfile=outfile,
+                plotTools.PlotDataMC(hlist,hdict_data2,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                                      cname="DataMC_%s_%s_width"%(var,cut), plotinfo="Selection %s"%(cut),
                                      ratiotitle="Data/MC", logscale=True, scale="Width", scalefactor=0.01)
 
@@ -132,7 +134,7 @@ if __name__ == '__main__':
 
         hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
 
-        plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
+        plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                              cname="DataMC_"+hname.replace("h_",""), plotinfo="Selection 0Lbg1uW0Ll",
                              ratiotitle="Data/MC", logscale=True, scale="No")
 
@@ -166,7 +168,7 @@ if __name__ == '__main__':
             hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
 
             # now make the actual plot
-            plotTools.PlotDataMC(hlist,hdict_data,hsiglist,outputdir=outputdir, outfile=outfile,
+            plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                                  cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="No")
 
