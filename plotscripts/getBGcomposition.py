@@ -17,7 +17,7 @@ def printCut(cut,info,signame="T1ttcc",option="Counts"):
     DYhad = 0
     sig = 0
     for sample,t in info.iteritems():
-        print sample, t, cut
+        #print sample, t, cut
         c = t[0][cut]
         w = t[1]
         effxs = c 
@@ -52,15 +52,16 @@ def printCut(cut,info,signame="T1ttcc",option="Counts"):
         if signame in sample:
             sig = sig + effxs
     total = ttj + wj + qcd + diboson + top + zjets + zll + triboson + ttX + Wbb + DYhad
-
     if option == "Counts":
         print "Cut %s \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX,Wbb,DYhad,sig)
         row = "%s & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g \\\\ \n" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX,Wbb,DYhad,total,sig) 
         return row.replace("%","\%")
     
     elif option == "Percentage":
+        if total == 0:
+            total = 1
         print "Cut %s \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f \t %.2f" % (cut,qcd*100./total,ttj*100./total,wj*100./total,diboson*100./total,top*100./total,zjets*100./total,zll*100./total,triboson*100./total,ttX*100./total,Wbb*100./total,DYhad*100./total)
-        row = " & {0:.1%} & {1:.1%} & {2:.1%} & {3:.1%} & {4:.1%} & {5:.1%} & {6:.1%} & {7:.1%} & {8:.1%} & {9:.1%} & {10:.1%} \\\\ \n".format(qcd/total,ttj/total,wj/total,diboson/total,top/total,zjets/total,zll/total,triboson/total,ttX/total,Wbb*100./total,DYhad*100./total )
+        row = " & {0:.1%} & {1:.1%} & {2:.1%} & {3:.1%} & {4:.1%} & {5:.1%} & {6:.1%} & {7:.1%} & {8:.1%} & {9:.1%} & {10:.1%} \\\\ \n".format(qcd/total,ttj/total,wj/total,diboson/total,top/total,zjets/total,zll/total,triboson/total,ttX/total,Wbb/total,DYhad/total )
         return row.replace("%","\%")
 
     
@@ -109,7 +110,7 @@ def allcuts():
             "g1Mb0Ll","g1Mbg1W0Ll",
             "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5","0Lbg1W0Ll",
             "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100","g1Mbg1W1LlmT",
-            "0Lbg1Y1Ll","0Lbg1Y1LlmT100","0Lbg1Y1LlmT",
+            "0Lb1Ll","0Lbg1Y1Ll","0Lbg1Y1LlmT100","0Lbg1Y1LlmT",
             "2munoZmass","2mu","2mu0el","0Lb2mu0el","0Lbg1Y2mu0el","g1Mb2mu0el","g1Mbg1Y2mu0el",
             "2elnoZmass","2el","2el0mu","0Lb2el0mu","0Lbg1Y2el0mu","g1Mb2el0mu","g1Mbg1Y2el0mu",
             "2lnoZmass","2l","2l0ol","0Lb2l0ol","0Lbg1Y2l0ol","g1Mb2l0ol","g1Mbg1Y2l0ol",
@@ -135,7 +136,7 @@ if __name__ == '__main__':
     intlumi = 19.789
 
     # input information
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131219"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101"
     analyzer = "rzrBoostMC"
     signame = "T1ttcc_325_300"
     sigxs = 0.0243547
