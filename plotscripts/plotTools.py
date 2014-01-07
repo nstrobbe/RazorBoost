@@ -95,6 +95,7 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
     print "Getting all histograms"
 
     first = 0 # to keep track whether this is the first histogram we're plotting
+    maxi = 0
     for hdict in hdictlist:
         h = hdict["histogram"] # Get the histogram
         h.Sumw2() # need to put this otherwise errors in ratio plot are wrong
@@ -112,7 +113,15 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
             h.GetYaxis().SetTitle("A.U.")
         else:
             h.GetYaxis().SetTitle("Events")
+        if h.GetMaximum() > maxi:
+            maxi = h.GetMaximum()
 
+    for hdict in hdictlist:
+        h = hdict["histogram"] # Get the histogram again
+        if logscale:
+            h.SetMaximum(maxi*5)
+        else:
+            h.SetMaximum(maxi*1.2)
         h.GetYaxis().SetTitleSize(0.055)
         h.GetYaxis().SetTitleOffset(0.8)
         h.GetYaxis().SetLabelSize(0.05)
@@ -241,6 +250,7 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
     print "Getting all histograms"
 
     first = 0 # to keep track whether this is the first histogram we're plotting
+    maxi = 0
     for hdict in hdictlist:
         h = hdict["histogram"] # Get the histogram
         h.Sumw2() # need to put this otherwise errors in ratio plot are wrong
@@ -254,7 +264,15 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
             h.GetYaxis().SetTitle("A.U.")
         else:
             h.GetYaxis().SetTitle("Events")
+        if h.GetMaximum() > maxi:
+            maxi = h.GetMaximum()
 
+    for hdict in hdictlist:
+        h = hdict["histogram"] # Get the histogram again
+        if logscale:
+            h.SetMaximum(maxi*5)
+        else:
+            h.SetMaximum(maxi*1.2)
         h.GetXaxis().SetTitle(hdict["xtitle"])
         h.GetXaxis().SetTitleSize(0.05)
         h.GetXaxis().SetTitleOffset(1.1)
