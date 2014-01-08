@@ -2390,7 +2390,7 @@ int main(int argc, char** argv)
 		TTsemilep->Fill("0Lb2el0mu", w);
 	      else if(isTTdilep)
 		TTdilep->Fill("0Lb2el0mu", w);
-	      ofile.count("0Lb2el0mu",w);
+	      ofile.count("0Lb2l0ol",w);
 	      h_MR_0Lb2l0ol->Fill(MR, w);
 	      h_R2_0Lb2l0ol->Fill(R2metel, w);
 	      h_MR_R2_0Lb2l0ol->Fill(MR, R2metel, w);
