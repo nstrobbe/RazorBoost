@@ -16,6 +16,9 @@ if __name__ == '__main__':
     outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140101"
     inputfile_TTJ = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_TTJets.root"
     inputfile_QCD = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_QCD.root"
+    inputfile_WJets = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_WJetsToLNu.root"
+    inputfile_DYJets = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_DYJetsToLL_PtZ.root"
+    inputfile_ZJetsToNuNu = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_ZJetsToNuNu.root"
     
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
@@ -23,6 +26,9 @@ if __name__ == '__main__':
     outfile = TFile.Open(outputdir+"/shapeplots2.root","RECREATE")
     infile_TTJ = TFile.Open(inputfile_TTJ)
     infile_QCD = TFile.Open(inputfile_QCD)
+    infile_WJets = TFile.Open(inputfile_WJets)
+    infile_DYJets = TFile.Open(inputfile_DYJets)
+    infile_Zinv = TFile.Open(inputfile_ZJetsToNuNu)
 
     # Integrated luminosity in fb-1s
     intlumi = 19.789 # ABCD
@@ -98,6 +104,79 @@ if __name__ == '__main__':
         rtitle = "#frac{QCD}{SIG}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
 
+    # build hdictlist for Wjets:
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                             name="SIGNAL region", color=rt.kBlack,
+                                             title="Shape comparison for WJets in the Signal and various WJets Control regions",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_WJets_mt100 = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_0Lbg1Y1LlmT100"),
+                                             name="WJets CR, mT < 100", color=rt.kGreen+1,
+                                             title="Shape comparison for WJets in the Signal and various WJets Control regions",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdict_WJets_mt = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_0Lbg1Y1LlmT"),
+                                             name="WJets CR, 30 < mT < 100", color=rt.kGreen+2,
+                                             title="Shape comparison for WJets in the Signal and various WJets Control regions",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_SIG,hdict_WJets_mt100,hdict_WJets_mt]
+        canvasname = var+"_comparison_WJets"
+        rtitle = "#frac{WJets}{SIG}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    leps = ["2el0mu","2mu0el","2l0ol"]
+    # build hdictlist for Zjets 0b:
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_DYJets.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                             name="SIGNAL region", color=rt.kBlack,
+                                             title="Shape comparison for ZJets in the Signal and various ZJets Control regions",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdictlist=[hdict_SIG]
+        for i,lep in enumerate(leps):
+            hdict_ZJets = plotTools.ConstructHDict(infile_DYJets.Get("h_"+var+"_0Lbg1Y"+lep),
+                                                   name="ZJets CR, 0b, "+lep, color=rt.kOrange+2*i,
+                                                   title="Shape comparison for ZJets in the Signal and various ZJets Control regions",
+                                                   appear_in_ratio="Yes", xtitle=var)
+            hdictlist.append(hdict_ZJets)
+        canvasname = var+"_comparison_ZJets0b"
+        rtitle = "#frac{ZJets}{SIG}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    # build hdictlist for Zjets g1b:
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_DYJets.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                             name="SIGNAL region", color=rt.kBlack,
+                                             title="Shape comparison for ZJets in the Signal and various ZJets Control regions",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdictlist=[hdict_SIG]
+        for i,lep in enumerate(leps):
+            hdict_ZJets = plotTools.ConstructHDict(infile_DYJets.Get("h_"+var+"_g1Mbg1Y"+lep),
+                                                   name="ZJets CR, >= 1b, "+lep, color=rt.kOrange+2*i,
+                                                   title="Shape comparison for ZJets in the Signal and various ZJets Control regions",
+                                                   appear_in_ratio="Yes", xtitle=var)
+            hdictlist.append(hdict_ZJets)
+        canvasname = var+"_comparison_ZJets1b"
+        rtitle = "#frac{ZJets}{SIG}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    # build hdictlist for Wlnu vs Zinv in QCD CR:
+    for var in vars:
+        hdict_W = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_0Lbg1uW0Ll_mdPhi0p3"),
+                                           name="WJetsToLNu", color=rt.kGreen+2,
+                                           title="Shape comparison in the QCD control region",
+                                           appear_in_ratio="Ref", xtitle=var)
+        hdict_Zinv = plotTools.ConstructHDict(infile_Zinv.Get("h_"+var+"_0Lbg1uW0Ll_mdPhi0p3"),
+                                               name="ZJetsToNuNu", color=rt.kOrange,
+                                               title="Shape comparison in the QCD Control region",
+                                               appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_Zinv,hdict_W]
+        canvasname = var+"_comparison_W_Zinv_QCD"
+        rtitle = "#frac{Znunu}{Wlnu}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
 
     outfile.Close()
     infile_TTJ.Close()
+    infile_QCD.Close()
+    infile_WJets.Close()
+    infile_DYJets.Close()
+    infile_Zinv.Close()
