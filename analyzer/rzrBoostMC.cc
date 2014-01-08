@@ -215,14 +215,14 @@ int main(int argc, char** argv)
   TH1D* h_nb_Cleaning = new TH1D("h_nb_Cleaning", "h_nb_Cleaning", 5, 0, 5);
   TH2D* h_nW_nb_Cleaning = new TH2D("h_nW_nb_Cleaning", "h_nW_nb_Cleaning", 5, 0, 5, 5, 0, 5);
   TH1D* h_nWAK5_Cleaning = new TH1D("h_nWAK5_Cleaning", "h_nWAK5_Cleaning", 5, 0, 5);
-  TH2D* h_met_R2_Cleaning = new TH2D("h_met_R2_Cleaning", "h_met_R2_Cleaning", 50, 0, 1000, 25, 0, 1);
-  TH1D* h_met_Cleaning = new TH1D("h_met_Cleaning", "h_met_Cleaning", 50, 0, 1000);
-  TH2D* h_metmu_R2metmu_Cleaning = new TH2D("h_metmu_R2metmu_Cleaning", "h_metmu_R2metmu_Cleaning", 50, 0, 1000, 25, 0, 1);
-  TH1D* h_metmu_Cleaning = new TH1D("h_metmu_Cleaning", "h_metmu_Cleaning", 50, 0, 1000);
-  TH2D* h_metel_R2metel_Cleaning = new TH2D("h_metel_R2metel_Cleaning", "h_metel_R2metel_Cleaning", 50, 0, 1000, 25, 0, 1);
-  TH1D* h_metel_Cleaning = new TH1D("h_metel_Cleaning", "h_metel_Cleaning", 50, 0, 1000);
+  TH2D* h_met_R2_Cleaning = new TH2D("h_met_R2_Cleaning", "h_met_R2_Cleaning", 20, 0, 1000, 25, 0, 1);
+  TH1D* h_met_Cleaning = new TH1D("h_met_Cleaning", "h_met_Cleaning", 20, 0, 1000);
+  TH2D* h_metmu_R2metmu_Cleaning = new TH2D("h_metmu_R2metmu_Cleaning", "h_metmu_R2metmu_Cleaning", 20, 0, 1000, 25, 0, 1);
+  TH1D* h_metmu_Cleaning = new TH1D("h_metmu_Cleaning", "h_metmu_Cleaning", 20, 0, 1000);
+  TH2D* h_metel_R2metel_Cleaning = new TH2D("h_metel_R2metel_Cleaning", "h_metel_R2metel_Cleaning", 20, 0, 1000, 25, 0, 1);
+  TH1D* h_metel_Cleaning = new TH1D("h_metel_Cleaning", "h_metel_Cleaning", 20, 0, 1000);
 
-  TH1D* h_j1pt_Cleaning = new TH1D("h_j1pt_Cleaning", "h_j1pt_Cleaning", 50, 0, 1000);
+  TH1D* h_j1pt_Cleaning = new TH1D("h_j1pt_Cleaning", "h_j1pt_Cleaning", 20, 0, 1000);
   TH1D* h_nj_Cleaning = new TH1D("h_nj_Cleaning", "h_nj_Cleaning", 20, 0, 20);
 
   TH1D* h_nW_jet1ptg200 = new TH1D("h_nW_jet1ptg200", "h_nW_jet1ptg200", 5, 0, 5);
@@ -291,10 +291,10 @@ int main(int argc, char** argv)
 
   TH1D * h_njets_g1Mbg1W0Ll = new TH1D("h_njets_g1Mbg1W0Ll","h_njets_g1Mbg1W0Ll",15,0,15);
   TH1D * h_nbjets_g1Mbg1W0Ll = new TH1D("h_nbjets_g1Mbg1W0Ll","h_nbjets_g1Mbg1W0Ll",6,0,6);
-  TH1D * h_met_g1Mbg1W0Ll = new TH1D("h_met_g1Mbg1W0Ll","h_met_g1Mbg1W0Ll",40,0,1000);
-  TH1D * h_jet1pt_g1Mbg1W0Ll = new TH1D("h_jet1pt_g1Mbg1W0Ll","h_jet1pt_g1Mbg1W0Ll",40,0,1000);
-  TH1D * h_jet2pt_g1Mbg1W0Ll = new TH1D("h_jet2pt_g1Mbg1W0Ll","h_jet2pt_g1Mbg1W0Ll",40,0,1000);
-  TH1D * h_jet3pt_g1Mbg1W0Ll = new TH1D("h_jet3pt_g1Mbg1W0Ll","h_jet3pt_g1Mbg1W0Ll",40,0,1000);
+  TH1D * h_met_g1Mbg1W0Ll = new TH1D("h_met_g1Mbg1W0Ll","h_met_g1Mbg1W0Ll",20,0,1000);
+  TH1D * h_jet1pt_g1Mbg1W0Ll = new TH1D("h_jet1pt_g1Mbg1W0Ll","h_jet1pt_g1Mbg1W0Ll",20,0,1000);
+  TH1D * h_jet2pt_g1Mbg1W0Ll = new TH1D("h_jet2pt_g1Mbg1W0Ll","h_jet2pt_g1Mbg1W0Ll",20,0,1000);
+  TH1D * h_jet3pt_g1Mbg1W0Ll = new TH1D("h_jet3pt_g1Mbg1W0Ll","h_jet3pt_g1Mbg1W0Ll",20,0,1000);
 
   // 0Lb 0Ll
   TH1D * h_MR_0Lb0Ll = new TH1D("h_MR_0Lb0Ll", "h_MR_0Lb0Ll", nbins_MR, bins_MR);
@@ -320,10 +320,10 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhi0p3 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhi0p3", "h_MR_R2_0Lbg1uW0Ll_mdPhi0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D * h_njets_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_njets_0Lbg1uW0Ll_mdPhi0p3","h_njets_0Lbg1uW0Ll_mdPhi0p3",15,0,15);
-  TH1D * h_met_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_met_0Lbg1uW0Ll_mdPhi0p3","h_met_0Lbg1uW0Ll_mdPhi0p3",40,0,1000);
-  TH1D * h_jet1pt_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_jet1pt_0Lbg1uW0Ll_mdPhi0p3","h_jet1pt_0Lbg1uW0Ll_mdPhi0p3",40,0,1000);
-  TH1D * h_jet2pt_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_jet2pt_0Lbg1uW0Ll_mdPhi0p3","h_jet2pt_0Lbg1uW0Ll_mdPhi0p3",40,0,1000);
-  TH1D * h_jet3pt_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_jet3pt_0Lbg1uW0Ll_mdPhi0p3","h_jet3pt_0Lbg1uW0Ll_mdPhi0p3",40,0,1000);
+  TH1D * h_met_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_met_0Lbg1uW0Ll_mdPhi0p3","h_met_0Lbg1uW0Ll_mdPhi0p3",20,0,1000);
+  TH1D * h_jet1pt_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_jet1pt_0Lbg1uW0Ll_mdPhi0p3","h_jet1pt_0Lbg1uW0Ll_mdPhi0p3",20,0,1000);
+  TH1D * h_jet2pt_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_jet2pt_0Lbg1uW0Ll_mdPhi0p3","h_jet2pt_0Lbg1uW0Ll_mdPhi0p3",20,0,1000);
+  TH1D * h_jet3pt_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_jet3pt_0Lbg1uW0Ll_mdPhi0p3","h_jet3pt_0Lbg1uW0Ll_mdPhi0p3",20,0,1000);
 
   // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhiHat < 4 (RA2b value)
   TH1D * h_MR_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhiHat4", "h_MR_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR);
@@ -331,10 +331,10 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", "h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D * h_njets_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_njets_0Lbg1uW0Ll_mdPhiHat4","h_njets_0Lbg1uW0Ll_mdPhiHat4",15,0,15);
-  TH1D * h_met_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_met_0Lbg1uW0Ll_mdPhiHat4","h_met_0Lbg1uW0Ll_mdPhiHat4",40,0,1000);
-  TH1D * h_jet1pt_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_jet1pt_0Lbg1uW0Ll_mdPhiHat4","h_jet1pt_0Lbg1uW0Ll_mdPhiHat4",40,0,1000);
-  TH1D * h_jet2pt_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_jet2pt_0Lbg1uW0Ll_mdPhiHat4","h_jet2pt_0Lbg1uW0Ll_mdPhiHat4",40,0,1000);
-  TH1D * h_jet3pt_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_jet3pt_0Lbg1uW0Ll_mdPhiHat4","h_jet3pt_0Lbg1uW0Ll_mdPhiHat4",40,0,1000);
+  TH1D * h_met_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_met_0Lbg1uW0Ll_mdPhiHat4","h_met_0Lbg1uW0Ll_mdPhiHat4",20,0,1000);
+  TH1D * h_jet1pt_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_jet1pt_0Lbg1uW0Ll_mdPhiHat4","h_jet1pt_0Lbg1uW0Ll_mdPhiHat4",20,0,1000);
+  TH1D * h_jet2pt_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_jet2pt_0Lbg1uW0Ll_mdPhiHat4","h_jet2pt_0Lbg1uW0Ll_mdPhiHat4",20,0,1000);
+  TH1D * h_jet3pt_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_jet3pt_0Lbg1uW0Ll_mdPhiHat4","h_jet3pt_0Lbg1uW0Ll_mdPhiHat4",20,0,1000);
 
   // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhiHat < 5
   TH1D * h_MR_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhiHat5", "h_MR_0Lbg1uW0Ll_mdPhiHat5", nbins_MR, bins_MR);
@@ -342,10 +342,10 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhiHat5 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhiHat5", "h_MR_R2_0Lbg1uW0Ll_mdPhiHat5", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D * h_njets_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_njets_0Lbg1uW0Ll_mdPhiHat5","h_njets_0Lbg1uW0Ll_mdPhiHat5",15,0,15);
-  TH1D * h_met_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_met_0Lbg1uW0Ll_mdPhiHat5","h_met_0Lbg1uW0Ll_mdPhiHat5",40,0,1000);
-  TH1D * h_jet1pt_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_jet1pt_0Lbg1uW0Ll_mdPhiHat5","h_jet1pt_0Lbg1uW0Ll_mdPhiHat5",40,0,1000);
-  TH1D * h_jet2pt_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_jet2pt_0Lbg1uW0Ll_mdPhiHat5","h_jet2pt_0Lbg1uW0Ll_mdPhiHat5",40,0,1000);
-  TH1D * h_jet3pt_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_jet3pt_0Lbg1uW0Ll_mdPhiHat5","h_jet3pt_0Lbg1uW0Ll_mdPhiHat5",40,0,1000);
+  TH1D * h_met_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_met_0Lbg1uW0Ll_mdPhiHat5","h_met_0Lbg1uW0Ll_mdPhiHat5",20,0,1000);
+  TH1D * h_jet1pt_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_jet1pt_0Lbg1uW0Ll_mdPhiHat5","h_jet1pt_0Lbg1uW0Ll_mdPhiHat5",20,0,1000);
+  TH1D * h_jet2pt_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_jet2pt_0Lbg1uW0Ll_mdPhiHat5","h_jet2pt_0Lbg1uW0Ll_mdPhiHat5",20,0,1000);
+  TH1D * h_jet3pt_0Lbg1uW0Ll_mdPhiHat5 = new TH1D("h_jet3pt_0Lbg1uW0Ll_mdPhiHat5","h_jet3pt_0Lbg1uW0Ll_mdPhiHat5",20,0,1000);
 
   // QCD control region: 0 Lb; >= 1 W; 0 Ll
   TH1D * h_MR_0Lbg1W0Ll = new TH1D("h_MR_0Lbg1W0Ll", "h_MR_0Lbg1W0Ll", nbins_MR, bins_MR);
@@ -379,11 +379,11 @@ int main(int argc, char** argv)
 
   TH1D * h_njets_g1Mbg1W1LlmT100 = new TH1D("h_njets_g1Mbg1W1LlmT100","h_njets_g1Mbg1W1LlmT100",15,0,15);
   TH1D * h_nbjets_g1Mbg1W1LlmT100 = new TH1D("h_nbjets_g1Mbg1W1LlmT100","h_nbjets_g1Mbg1W1LlmT100",6,0,6);
-  TH1D * h_met_g1Mbg1W1LlmT100 = new TH1D("h_met_g1Mbg1W1LlmT100","h_met_g1Mbg1W1LlmT100",40,0,1000);
-  TH1D * h_jet1pt_g1Mbg1W1LlmT100 = new TH1D("h_jet1pt_g1Mbg1W1LlmT100","h_jet1pt_g1Mbg1W1LlmT100",40,0,1000);
-  TH1D * h_jet2pt_g1Mbg1W1LlmT100 = new TH1D("h_jet2pt_g1Mbg1W1LlmT100","h_jet2pt_g1Mbg1W1LlmT100",40,0,1000);
-  TH1D * h_jet3pt_g1Mbg1W1LlmT100 = new TH1D("h_jet3pt_g1Mbg1W1LlmT100","h_jet3pt_g1Mbg1W1LlmT100",40,0,1000);
-  TH1D * h_leptonpt_g1Mbg1W1LlmT100 = new TH1D("h_leptonpt_g1Mbg1W1LlmT100","h_leptonpt_g1Mbg1W1LlmT100",50,0,500);
+  TH1D * h_met_g1Mbg1W1LlmT100 = new TH1D("h_met_g1Mbg1W1LlmT100","h_met_g1Mbg1W1LlmT100",20,0,1000);
+  TH1D * h_jet1pt_g1Mbg1W1LlmT100 = new TH1D("h_jet1pt_g1Mbg1W1LlmT100","h_jet1pt_g1Mbg1W1LlmT100",20,0,1000);
+  TH1D * h_jet2pt_g1Mbg1W1LlmT100 = new TH1D("h_jet2pt_g1Mbg1W1LlmT100","h_jet2pt_g1Mbg1W1LlmT100",20,0,1000);
+  TH1D * h_jet3pt_g1Mbg1W1LlmT100 = new TH1D("h_jet3pt_g1Mbg1W1LlmT100","h_jet3pt_g1Mbg1W1LlmT100",20,0,1000);
+  TH1D * h_leptonpt_g1Mbg1W1LlmT100 = new TH1D("h_leptonpt_g1Mbg1W1LlmT100","h_leptonpt_g1Mbg1W1LlmT100",25,0,500);
 
   // g1Mbg1W1LlmT ; TTj control region: >= 1 Mb; >= 1 W; 1 Ll; 30<mT<100
   TH1D * h_MR_g1Mbg1W1LlmT = new TH1D("h_MR_g1Mbg1W1LlmT", "h_MR_g1Mbg1W1LlmT", nbins_MR, bins_MR);
@@ -415,11 +415,11 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_0Lbg1Y1LlmT100 = new TH2D("h_MR_R2_0Lbg1Y1LlmT100", "h_MR_R2_0Lbg1Y1LlmT100", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D * h_njets_0Lbg1Y1LlmT100 = new TH1D("h_njets_0Lbg1Y1LlmT100","h_njets_0Lbg1Y1LlmT100",15,0,15);
-  TH1D * h_met_0Lbg1Y1LlmT100 = new TH1D("h_met_0Lbg1Y1LlmT100","h_met_0Lbg1Y1LlmT100",40,0,1000);
-  TH1D * h_jet1pt_0Lbg1Y1LlmT100 = new TH1D("h_jet1pt_0Lbg1Y1LlmT100","h_jet1pt_0Lbg1Y1LlmT100",40,0,1000);
-  TH1D * h_jet2pt_0Lbg1Y1LlmT100 = new TH1D("h_jet2pt_0Lbg1Y1LlmT100","h_jet2pt_0Lbg1Y1LlmT100",40,0,1000);
-  TH1D * h_jet3pt_0Lbg1Y1LlmT100 = new TH1D("h_jet3pt_0Lbg1Y1LlmT100","h_jet3pt_0Lbg1Y1LlmT100",40,0,1000);
-  TH1D * h_leptonpt_0Lbg1Y1LlmT100 = new TH1D("h_leptonpt_0Lbg1Y1LlmT100","h_leptonpt_0Lbg1Y1LlmT100",50,0,500);
+  TH1D * h_met_0Lbg1Y1LlmT100 = new TH1D("h_met_0Lbg1Y1LlmT100","h_met_0Lbg1Y1LlmT100",20,0,1000);
+  TH1D * h_jet1pt_0Lbg1Y1LlmT100 = new TH1D("h_jet1pt_0Lbg1Y1LlmT100","h_jet1pt_0Lbg1Y1LlmT100",20,0,1000);
+  TH1D * h_jet2pt_0Lbg1Y1LlmT100 = new TH1D("h_jet2pt_0Lbg1Y1LlmT100","h_jet2pt_0Lbg1Y1LlmT100",20,0,1000);
+  TH1D * h_jet3pt_0Lbg1Y1LlmT100 = new TH1D("h_jet3pt_0Lbg1Y1LlmT100","h_jet3pt_0Lbg1Y1LlmT100",20,0,1000);
+  TH1D * h_leptonpt_0Lbg1Y1LlmT100 = new TH1D("h_leptonpt_0Lbg1Y1LlmT100","h_leptonpt_0Lbg1Y1LlmT100",25,0,500);
 
   // 0Lbg1Y1LlmT ; Wj control region: == 0 Lb; >= 1 Y; 1 Ll; 30<mT<100
   TH1D * h_MR_0Lbg1Y1LlmT = new TH1D("h_MR_0Lbg1Y1LlmT", "h_MR_0Lbg1Y1LlmT", nbins_MR, bins_MR);
@@ -443,8 +443,8 @@ int main(int argc, char** argv)
   TH1D * h_MR_2mu = new TH1D("h_MR_2mu", "h_MR_2mu", nbins_MR, bins_MR);
   TH1D * h_R2_2mu = new TH1D("h_R2_2mu", "h_R2_2mu", nbins_R2, bins_R2);
   TH2D * h_MR_R2_2mu = new TH2D("h_MR_R2_2mu", "h_MR_R2_2mu", nbins_MR, bins_MR, nbins_R2, bins_R2);
-  TH1D * h_lepton1pt_2mu = new TH1D("h_lepton1pt_2mu", "h_lepton1pt_2mu", 50, 0, 500);
-  TH1D * h_lepton2pt_2mu = new TH1D("h_lepton2pt_2mu", "h_lepton2pt_2mu", 50, 0, 500);
+  TH1D * h_lepton1pt_2mu = new TH1D("h_lepton1pt_2mu", "h_lepton1pt_2mu", 25, 0, 500);
+  TH1D * h_lepton2pt_2mu = new TH1D("h_lepton2pt_2mu", "h_lepton2pt_2mu", 25, 0, 500);
   
   TH1D * h_MR_2mu0el = new TH1D("h_MR_2mu0el", "h_MR_2mu0el", nbins_MR, bins_MR);
   TH1D * h_R2_2mu0el = new TH1D("h_R2_2mu0el", "h_R2_2mu0el", nbins_R2, bins_R2);
@@ -464,12 +464,12 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_0Lbg1Y2mu0el = new TH2D("h_MR_R2_0Lbg1Y2mu0el", "h_MR_R2_0Lbg1Y2mu0el", nbins_MR, bins_MR, nbins_R2, bins_R2);
   
   TH1D * h_njets_0Lbg1Y2mu0el = new TH1D("h_njets_0Lbg1Y2mu0el","h_njets_0Lbg1Y2mu0el",15,0,15);
-  TH1D * h_met_0Lbg1Y2mu0el = new TH1D("h_met_0Lbg1Y2mu0el","h_met_0Lbg1Y2mu0el",40,0,1000);
-  TH1D * h_jet1pt_0Lbg1Y2mu0el = new TH1D("h_jet1pt_0Lbg1Y2mu0el","h_jet1pt_0Lbg1Y2mu0el",40,0,1000);
-  TH1D * h_jet2pt_0Lbg1Y2mu0el = new TH1D("h_jet2pt_0Lbg1Y2mu0el","h_jet2pt_0Lbg1Y2mu0el",40,0,1000);
-  TH1D * h_jet3pt_0Lbg1Y2mu0el = new TH1D("h_jet3pt_0Lbg1Y2mu0el","h_jet3pt_0Lbg1Y2mu0el",40,0,1000);
-  TH1D * h_lepton1pt_0Lbg1Y2mu0el = new TH1D("h_lepton1pt_0Lbg1Y2mu0el", "h_lepton1pt_0Lbg1Y2mu0el", 50, 0, 500);
-  TH1D * h_lepton2pt_0Lbg1Y2mu0el = new TH1D("h_lepton2pt_0Lbg1Y2mu0el", "h_lepton2pt_0Lbg1Y2mu0el", 50, 0, 500);
+  TH1D * h_met_0Lbg1Y2mu0el = new TH1D("h_met_0Lbg1Y2mu0el","h_met_0Lbg1Y2mu0el",20,0,1000);
+  TH1D * h_jet1pt_0Lbg1Y2mu0el = new TH1D("h_jet1pt_0Lbg1Y2mu0el","h_jet1pt_0Lbg1Y2mu0el",20,0,1000);
+  TH1D * h_jet2pt_0Lbg1Y2mu0el = new TH1D("h_jet2pt_0Lbg1Y2mu0el","h_jet2pt_0Lbg1Y2mu0el",20,0,1000);
+  TH1D * h_jet3pt_0Lbg1Y2mu0el = new TH1D("h_jet3pt_0Lbg1Y2mu0el","h_jet3pt_0Lbg1Y2mu0el",20,0,1000);
+  TH1D * h_lepton1pt_0Lbg1Y2mu0el = new TH1D("h_lepton1pt_0Lbg1Y2mu0el", "h_lepton1pt_0Lbg1Y2mu0el", 25, 0, 500);
+  TH1D * h_lepton2pt_0Lbg1Y2mu0el = new TH1D("h_lepton2pt_0Lbg1Y2mu0el", "h_lepton2pt_0Lbg1Y2mu0el", 25, 0, 500);
 
   // Z with b Control region
   TH1D * h_MR_g1Mbg1Y2mu0el = new TH1D("h_MR_g1Mbg1Y2mu0el", "h_MR_g1Mbg1Y2mu0el", nbins_MR, bins_MR);
@@ -478,12 +478,12 @@ int main(int argc, char** argv)
 
   TH1D * h_njets_g1Mbg1Y2mu0el = new TH1D("h_njets_g1Mbg1Y2mu0el","h_njets_g1Mbg1Y2mu0el",15,0,15);
   TH1D * h_nbjets_g1Mbg1Y2mu0el = new TH1D("h_nbjets_g1Mbg1Y2mu0el","h_nbjets_g1Mbg1Y2mu0el",6,0,6);
-  TH1D * h_met_g1Mbg1Y2mu0el = new TH1D("h_met_g1Mbg1Y2mu0el","h_met_g1Mbg1Y2mu0el",40,0,1000);
-  TH1D * h_jet1pt_g1Mbg1Y2mu0el = new TH1D("h_jet1pt_g1Mbg1Y2mu0el","h_jet1pt_g1Mbg1Y2mu0el",40,0,1000);
-  TH1D * h_jet2pt_g1Mbg1Y2mu0el = new TH1D("h_jet2pt_g1Mbg1Y2mu0el","h_jet2pt_g1Mbg1Y2mu0el",40,0,1000);
-  TH1D * h_jet3pt_g1Mbg1Y2mu0el = new TH1D("h_jet3pt_g1Mbg1Y2mu0el","h_jet3pt_g1Mbg1Y2mu0el",40,0,1000);
-  TH1D * h_lepton1pt_g1Mbg1Y2mu0el = new TH1D("h_lepton1pt_g1Mbg1Y2mu0el", "h_lepton1pt_g1Mbg1Y2mu0el", 50, 0, 500);
-  TH1D * h_lepton2pt_g1Mbg1Y2mu0el = new TH1D("h_lepton2pt_g1Mbg1Y2mu0el", "h_lepton2pt_g1Mbg1Y2mu0el", 50, 0, 500);
+  TH1D * h_met_g1Mbg1Y2mu0el = new TH1D("h_met_g1Mbg1Y2mu0el","h_met_g1Mbg1Y2mu0el",20,0,1000);
+  TH1D * h_jet1pt_g1Mbg1Y2mu0el = new TH1D("h_jet1pt_g1Mbg1Y2mu0el","h_jet1pt_g1Mbg1Y2mu0el",20,0,1000);
+  TH1D * h_jet2pt_g1Mbg1Y2mu0el = new TH1D("h_jet2pt_g1Mbg1Y2mu0el","h_jet2pt_g1Mbg1Y2mu0el",20,0,1000);
+  TH1D * h_jet3pt_g1Mbg1Y2mu0el = new TH1D("h_jet3pt_g1Mbg1Y2mu0el","h_jet3pt_g1Mbg1Y2mu0el",20,0,1000);
+  TH1D * h_lepton1pt_g1Mbg1Y2mu0el = new TH1D("h_lepton1pt_g1Mbg1Y2mu0el", "h_lepton1pt_g1Mbg1Y2mu0el", 25, 0, 500);
+  TH1D * h_lepton2pt_g1Mbg1Y2mu0el = new TH1D("h_lepton2pt_g1Mbg1Y2mu0el", "h_lepton2pt_g1Mbg1Y2mu0el", 25, 0, 500);
 
 
   // dielectron trajectory
@@ -498,8 +498,8 @@ int main(int argc, char** argv)
   TH1D * h_MR_2el = new TH1D("h_MR_2el", "h_MR_2el", nbins_MR, bins_MR);
   TH1D * h_R2_2el = new TH1D("h_R2_2el", "h_R2_2el", nbins_R2, bins_R2);
   TH2D * h_MR_R2_2el = new TH2D("h_MR_R2_2el", "h_MR_R2_2el", nbins_MR, bins_MR, nbins_R2, bins_R2);
-  TH1D * h_lepton1pt_2el = new TH1D("h_lepton1pt_2el", "h_lepton1pt_2el", 50, 0, 500);
-  TH1D * h_lepton2pt_2el = new TH1D("h_lepton2pt_2el", "h_lepton2pt_2el", 50, 0, 500);
+  TH1D * h_lepton1pt_2el = new TH1D("h_lepton1pt_2el", "h_lepton1pt_2el", 25, 0, 500);
+  TH1D * h_lepton2pt_2el = new TH1D("h_lepton2pt_2el", "h_lepton2pt_2el", 25, 0, 500);
   
   TH1D * h_MR_2el0mu = new TH1D("h_MR_2el0mu", "h_MR_2el0mu", nbins_MR, bins_MR);
   TH1D * h_R2_2el0mu = new TH1D("h_R2_2el0mu", "h_R2_2el0mu", nbins_R2, bins_R2);
@@ -519,12 +519,12 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_0Lbg1Y2el0mu = new TH2D("h_MR_R2_0Lbg1Y2el0mu", "h_MR_R2_0Lbg1Y2el0mu", nbins_MR, bins_MR, nbins_R2, bins_R2);
   
   TH1D * h_njets_0Lbg1Y2el0mu = new TH1D("h_njets_0Lbg1Y2el0mu","h_njets_0Lbg1Y2el0mu",15,0,15);
-  TH1D * h_met_0Lbg1Y2el0mu = new TH1D("h_met_0Lbg1Y2el0mu","h_met_0Lbg1Y2el0mu",40,0,1000);
-  TH1D * h_jet1pt_0Lbg1Y2el0mu = new TH1D("h_jet1pt_0Lbg1Y2el0mu","h_jet1pt_0Lbg1Y2el0mu",40,0,1000);
-  TH1D * h_jet2pt_0Lbg1Y2el0mu = new TH1D("h_jet2pt_0Lbg1Y2el0mu","h_jet2pt_0Lbg1Y2el0mu",40,0,1000);
-  TH1D * h_jet3pt_0Lbg1Y2el0mu = new TH1D("h_jet3pt_0Lbg1Y2el0mu","h_jet3pt_0Lbg1Y2el0mu",40,0,1000);
-  TH1D * h_lepton1pt_0Lbg1Y2el0mu = new TH1D("h_lepton1pt_0Lbg1Y2el0mu", "h_lepton1pt_0Lbg1Y2el0mu", 50, 0, 500);
-  TH1D * h_lepton2pt_0Lbg1Y2el0mu = new TH1D("h_lepton2pt_0Lbg1Y2el0mu", "h_lepton2pt_0Lbg1Y2el0mu", 50, 0, 500);
+  TH1D * h_met_0Lbg1Y2el0mu = new TH1D("h_met_0Lbg1Y2el0mu","h_met_0Lbg1Y2el0mu",20,0,1000);
+  TH1D * h_jet1pt_0Lbg1Y2el0mu = new TH1D("h_jet1pt_0Lbg1Y2el0mu","h_jet1pt_0Lbg1Y2el0mu",20,0,1000);
+  TH1D * h_jet2pt_0Lbg1Y2el0mu = new TH1D("h_jet2pt_0Lbg1Y2el0mu","h_jet2pt_0Lbg1Y2el0mu",20,0,1000);
+  TH1D * h_jet3pt_0Lbg1Y2el0mu = new TH1D("h_jet3pt_0Lbg1Y2el0mu","h_jet3pt_0Lbg1Y2el0mu",20,0,1000);
+  TH1D * h_lepton1pt_0Lbg1Y2el0mu = new TH1D("h_lepton1pt_0Lbg1Y2el0mu", "h_lepton1pt_0Lbg1Y2el0mu", 25, 0, 500);
+  TH1D * h_lepton2pt_0Lbg1Y2el0mu = new TH1D("h_lepton2pt_0Lbg1Y2el0mu", "h_lepton2pt_0Lbg1Y2el0mu", 25, 0, 500);
 
   // Z with b Control Region
   TH1D * h_MR_g1Mbg1Y2el0mu = new TH1D("h_MR_g1Mbg1Y2el0mu", "h_MR_g1Mbg1Y2el0mu", nbins_MR, bins_MR);
@@ -533,12 +533,12 @@ int main(int argc, char** argv)
 
   TH1D * h_njets_g1Mbg1Y2el0mu = new TH1D("h_njets_g1Mbg1Y2el0mu","h_njets_g1Mbg1Y2el0mu",15,0,15);
   TH1D * h_nbjets_g1Mbg1Y2el0mu = new TH1D("h_nbjets_g1Mbg1Y2el0mu","h_nbjets_g1Mbg1Y2el0mu",6,0,6);
-  TH1D * h_met_g1Mbg1Y2el0mu = new TH1D("h_met_g1Mbg1Y2el0mu","h_met_g1Mbg1Y2el0mu",40,0,1000);
-  TH1D * h_jet1pt_g1Mbg1Y2el0mu = new TH1D("h_jet1pt_g1Mbg1Y2el0mu","h_jet1pt_g1Mbg1Y2el0mu",40,0,1000);
-  TH1D * h_jet2pt_g1Mbg1Y2el0mu = new TH1D("h_jet2pt_g1Mbg1Y2el0mu","h_jet2pt_g1Mbg1Y2el0mu",40,0,1000);
-  TH1D * h_jet3pt_g1Mbg1Y2el0mu = new TH1D("h_jet3pt_g1Mbg1Y2el0mu","h_jet3pt_g1Mbg1Y2el0mu",40,0,1000);
-  TH1D * h_lepton1pt_g1Mbg1Y2el0mu = new TH1D("h_lepton1pt_g1Mbg1Y2el0mu", "h_lepton1pt_g1Mbg1Y2el0mu", 50, 0, 500);
-  TH1D * h_lepton2pt_g1Mbg1Y2el0mu = new TH1D("h_lepton2pt_g1Mbg1Y2el0mu", "h_lepton2pt_g1Mbg1Y2el0mu", 50, 0, 500);
+  TH1D * h_met_g1Mbg1Y2el0mu = new TH1D("h_met_g1Mbg1Y2el0mu","h_met_g1Mbg1Y2el0mu",20,0,1000);
+  TH1D * h_jet1pt_g1Mbg1Y2el0mu = new TH1D("h_jet1pt_g1Mbg1Y2el0mu","h_jet1pt_g1Mbg1Y2el0mu",20,0,1000);
+  TH1D * h_jet2pt_g1Mbg1Y2el0mu = new TH1D("h_jet2pt_g1Mbg1Y2el0mu","h_jet2pt_g1Mbg1Y2el0mu",20,0,1000);
+  TH1D * h_jet3pt_g1Mbg1Y2el0mu = new TH1D("h_jet3pt_g1Mbg1Y2el0mu","h_jet3pt_g1Mbg1Y2el0mu",20,0,1000);
+  TH1D * h_lepton1pt_g1Mbg1Y2el0mu = new TH1D("h_lepton1pt_g1Mbg1Y2el0mu", "h_lepton1pt_g1Mbg1Y2el0mu", 25, 0, 500);
+  TH1D * h_lepton2pt_g1Mbg1Y2el0mu = new TH1D("h_lepton2pt_g1Mbg1Y2el0mu", "h_lepton2pt_g1Mbg1Y2el0mu", 25, 0, 500);
 
   // dilepton trajectory
   TH1D * h_Zmass_2l = new TH1D("h_Zmass_2l", "h_Zmass_2l", 20, 50, 130);
@@ -552,8 +552,8 @@ int main(int argc, char** argv)
   TH1D * h_MR_2l = new TH1D("h_MR_2l", "h_MR_2l", nbins_MR, bins_MR);
   TH1D * h_R2_2l = new TH1D("h_R2_2l", "h_R2_2l", nbins_R2, bins_R2);
   TH2D * h_MR_R2_2l = new TH2D("h_MR_R2_2l", "h_MR_R2_2l", nbins_MR, bins_MR, nbins_R2, bins_R2);
-  TH1D * h_lepton1pt_2l = new TH1D("h_lepton1pt_2l", "h_lepton1pt_2l", 50, 0, 500);
-  TH1D * h_lepton2pt_2l = new TH1D("h_lepton2pt_2l", "h_lepton2pt_2l", 50, 0, 500);
+  TH1D * h_lepton1pt_2l = new TH1D("h_lepton1pt_2l", "h_lepton1pt_2l", 25, 0, 500);
+  TH1D * h_lepton2pt_2l = new TH1D("h_lepton2pt_2l", "h_lepton2pt_2l", 25, 0, 500);
   
   TH1D * h_MR_2l0ol = new TH1D("h_MR_2l0ol", "h_MR_2l0ol", nbins_MR, bins_MR);
   TH1D * h_R2_2l0ol = new TH1D("h_R2_2l0ol", "h_R2_2l0ol", nbins_R2, bins_R2);
@@ -573,12 +573,12 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_0Lbg1Y2l0ol = new TH2D("h_MR_R2_0Lbg1Y2l0ol", "h_MR_R2_0Lbg1Y2l0ol", nbins_MR, bins_MR, nbins_R2, bins_R2);
   
   TH1D * h_njets_0Lbg1Y2l0ol = new TH1D("h_njets_0Lbg1Y2l0ol","h_njets_0Lbg1Y2l0ol",15,0,15);
-  TH1D * h_met_0Lbg1Y2l0ol = new TH1D("h_met_0Lbg1Y2l0ol","h_met_0Lbg1Y2l0ol",40,0,1000);
-  TH1D * h_jet1pt_0Lbg1Y2l0ol = new TH1D("h_jet1pt_0Lbg1Y2l0ol","h_jet1pt_0Lbg1Y2l0ol",40,0,1000);
-  TH1D * h_jet2pt_0Lbg1Y2l0ol = new TH1D("h_jet2pt_0Lbg1Y2l0ol","h_jet2pt_0Lbg1Y2l0ol",40,0,1000);
-  TH1D * h_jet3pt_0Lbg1Y2l0ol = new TH1D("h_jet3pt_0Lbg1Y2l0ol","h_jet3pt_0Lbg1Y2l0ol",40,0,1000);
-  TH1D * h_lepton1pt_0Lbg1Y2l0ol = new TH1D("h_lepton1pt_0Lbg1Y2l0ol", "h_lepton1pt_0Lbg1Y2l0ol", 50, 0, 500);
-  TH1D * h_lepton2pt_0Lbg1Y2l0ol = new TH1D("h_lepton2pt_0Lbg1Y2l0ol", "h_lepton2pt_0Lbg1Y2l0ol", 50, 0, 500);
+  TH1D * h_met_0Lbg1Y2l0ol = new TH1D("h_met_0Lbg1Y2l0ol","h_met_0Lbg1Y2l0ol",20,0,1000);
+  TH1D * h_jet1pt_0Lbg1Y2l0ol = new TH1D("h_jet1pt_0Lbg1Y2l0ol","h_jet1pt_0Lbg1Y2l0ol",20,0,1000);
+  TH1D * h_jet2pt_0Lbg1Y2l0ol = new TH1D("h_jet2pt_0Lbg1Y2l0ol","h_jet2pt_0Lbg1Y2l0ol",20,0,1000);
+  TH1D * h_jet3pt_0Lbg1Y2l0ol = new TH1D("h_jet3pt_0Lbg1Y2l0ol","h_jet3pt_0Lbg1Y2l0ol",20,0,1000);
+  TH1D * h_lepton1pt_0Lbg1Y2l0ol = new TH1D("h_lepton1pt_0Lbg1Y2l0ol", "h_lepton1pt_0Lbg1Y2l0ol", 25, 0, 500);
+  TH1D * h_lepton2pt_0Lbg1Y2l0ol = new TH1D("h_lepton2pt_0Lbg1Y2l0ol", "h_lepton2pt_0Lbg1Y2l0ol", 25, 0, 500);
 
   // Z with b Control region
   TH1D * h_MR_g1Mbg1Y2l0ol = new TH1D("h_MR_g1Mbg1Y2l0ol", "h_MR_g1Mbg1Y2l0ol", nbins_MR, bins_MR);
@@ -587,12 +587,12 @@ int main(int argc, char** argv)
 
   TH1D * h_njets_g1Mbg1Y2l0ol = new TH1D("h_njets_g1Mbg1Y2l0ol","h_njets_g1Mbg1Y2l0ol",15,0,15);
   TH1D * h_nbjets_g1Mbg1Y2l0ol = new TH1D("h_nbjets_g1Mbg1Y2l0ol","h_nbjets_g1Mbg1Y2l0ol",6,0,6);
-  TH1D * h_met_g1Mbg1Y2l0ol = new TH1D("h_met_g1Mbg1Y2l0ol","h_met_g1Mbg1Y2l0ol",40,0,1000);
-  TH1D * h_jet1pt_g1Mbg1Y2l0ol = new TH1D("h_jet1pt_g1Mbg1Y2l0ol","h_jet1pt_g1Mbg1Y2l0ol",40,0,1000);
-  TH1D * h_jet2pt_g1Mbg1Y2l0ol = new TH1D("h_jet2pt_g1Mbg1Y2l0ol","h_jet2pt_g1Mbg1Y2l0ol",40,0,1000);
-  TH1D * h_jet3pt_g1Mbg1Y2l0ol = new TH1D("h_jet3pt_g1Mbg1Y2l0ol","h_jet3pt_g1Mbg1Y2l0ol",40,0,1000);
-  TH1D * h_lepton1pt_g1Mbg1Y2l0ol = new TH1D("h_lepton1pt_g1Mbg1Y2l0ol", "h_lepton1pt_g1Mbg1Y2l0ol", 50, 0, 500);
-  TH1D * h_lepton2pt_g1Mbg1Y2l0ol = new TH1D("h_lepton2pt_g1Mbg1Y2l0ol", "h_lepton2pt_g1Mbg1Y2l0ol", 50, 0, 500);
+  TH1D * h_met_g1Mbg1Y2l0ol = new TH1D("h_met_g1Mbg1Y2l0ol","h_met_g1Mbg1Y2l0ol",20,0,1000);
+  TH1D * h_jet1pt_g1Mbg1Y2l0ol = new TH1D("h_jet1pt_g1Mbg1Y2l0ol","h_jet1pt_g1Mbg1Y2l0ol",20,0,1000);
+  TH1D * h_jet2pt_g1Mbg1Y2l0ol = new TH1D("h_jet2pt_g1Mbg1Y2l0ol","h_jet2pt_g1Mbg1Y2l0ol",20,0,1000);
+  TH1D * h_jet3pt_g1Mbg1Y2l0ol = new TH1D("h_jet3pt_g1Mbg1Y2l0ol","h_jet3pt_g1Mbg1Y2l0ol",20,0,1000);
+  TH1D * h_lepton1pt_g1Mbg1Y2l0ol = new TH1D("h_lepton1pt_g1Mbg1Y2l0ol", "h_lepton1pt_g1Mbg1Y2l0ol", 25, 0, 500);
+  TH1D * h_lepton2pt_g1Mbg1Y2l0ol = new TH1D("h_lepton2pt_g1Mbg1Y2l0ol", "h_lepton2pt_g1Mbg1Y2l0ol", 25, 0, 500);
 
   // Gen level plots
   TH1D* h_gen_toppt = new TH1D("h_gen_toppt", "h_gen_toppt", 50, 0, 1000);
