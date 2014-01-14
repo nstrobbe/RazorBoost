@@ -354,16 +354,20 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
         if "QCD" in hdict["name"]:
             hQCD_index = i
 
+    hdata = 0
     # Get data histogram
-    if not hdict_data["histogram"]:
-        print hdict["name"], "doesn't exist, will stop making this plot now"
-        return
-    hdata = hdict_data["histogram"].Clone()
-    hdata.Sumw2()
-    hdata.SetMarkerStyle(hdict_data["markerstyle"])
-    hdata.SetLineColor(hdict_data["color"])
-    hdata.GetYaxis().SetTitle(hdict_data["ytitle"])
-    hdata.SetTitle(hdict_data["title"])
+    if hdict_data == 0:
+        print "Will make plots without data"
+    else:
+        if not hdict_data["histogram"]:
+            print hdict["name"], "doesn't exist, will stop making this plot now"
+            return
+        hdata = hdict_data["histogram"].Clone()
+        hdata.Sumw2()
+        hdata.SetMarkerStyle(hdict_data["markerstyle"])
+        hdata.SetLineColor(hdict_data["color"])
+        hdata.GetYaxis().SetTitle(hdict_data["ytitle"])
+        hdata.SetTitle(hdict_data["title"])
 
     # Get signal histograms
     hsignal = []
@@ -390,7 +394,7 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
         htotal.Add(h)
 
     # scale MC to data if required
-    if scale == "Yes":
+    if scale == "Yes" and hdata != 0:
         sf = scalefactor
         if sf == 1: # we should rescale to match data
             mc_int = htotal.Integral(0,htotal.GetNbinsX()+1)
@@ -406,13 +410,14 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     if scale == "Width":
         for h in histos:
             h.Scale(scalefactor,"width")
-        hdata.Scale(scalefactor,"width")
+        if hdata != 0:
+            hdata.Scale(scalefactor,"width")
         for h in hsignal:
             h.Scale(scalefactor,"width")
         print "Will plot per bin width"
         
     # scale only QCD to match data in the first non-empty bin
-    if scale == "QCD":
+    if scale == "QCD" and hdata != 0:
         sf = scalefactor
         if sf == 1:
             # find first non-empty bin
@@ -441,7 +446,8 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
         legend.SetNColumns(legdict["ncolumns"])
     legend.SetFillColor(0)
     legend.SetBorderSize(0)
-    legend.AddEntry(hdata," data ("+ str(intlumi) + "/fb)","epl")
+    if hdata != 0:
+        legend.AddEntry(hdata," data ("+ str(intlumi) + "/fb)","epl")
     for i,h in enumerate(histos):
         if hdictlist_bg[i]["appear in legend"]:
             legend.AddEntry(h,hdictlist_bg[i]["name"],"f")
@@ -450,7 +456,9 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
             legend.AddEntry(h,hdictlist_sig[i]["name"],"f")
         
     # Get the maximum of the histograms, so that we can set the Y-axis range
-    maxi = hdata.GetMaximum()
+    maxi = 0
+    if hdata != 0:
+        hdata.GetMaximum()
     if htotal.GetMaximum() > maxi:
         maxi = htotal.GetMaximum()
 
@@ -463,16 +471,28 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     pad1.Draw()
     pad1.cd()
 
-    hdata.GetYaxis().SetTitleSize(0.055)
-    hdata.GetYaxis().SetTitleOffset(0.8)
-    hdata.GetYaxis().SetLabelSize(0.05)
-    hdata.SetMaximum(2.*maxi)
-    if logscale:
-        hdata.SetMaximum(5.*maxi)
-        hdata.SetMinimum(0.007)
-    hdata.Draw("EP")
+    if hdata != 0:
+        hdata.GetYaxis().SetTitleSize(0.055)
+        hdata.GetYaxis().SetTitleOffset(0.8)
+        hdata.GetYaxis().SetLabelSize(0.05)
+        hdata.SetMaximum(2.*maxi)
+        if logscale:
+            hdata.SetMaximum(5.*maxi)
+            hdata.SetMinimum(0.007)
+        hdata.Draw("EP")
+    else:
+        mc.Draw()
+        mc.GetYaxis().SetTitleSize(0.055)
+        mc.GetYaxis().SetTitleOffset(0.8)
+        mc.GetYaxis().SetLabelSize(0.05)
+        mc.SetMaximum(2.*maxi)
+        if logscale:
+            mc.SetMaximum(5.*maxi)
+            mc.SetMinimum(0.007)
+        
     mc.Draw("same")
-    hdata.Draw("EPsame")
+    if hdata != 0:
+        hdata.Draw("EPsame")
     legend.Draw("same")
     t = '#scale[1.1]{%s}' % (plotinfo)
     tex = rt.TLatex(0.52,0.82,t)
@@ -489,8 +509,10 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     pad2.Draw()
     pad2.cd()
 
-    ratio = hdata.Clone()
-    ratio.Divide(htotal)
+    ratio = rt.TH1D()
+    if hdata != 0:
+        ratio = hdata.Clone()
+        ratio.Divide(htotal)
     ratio.SetTitle("")
     ratio.SetName("histoRatio")
     ratio.GetYaxis().SetRangeUser(0,2.2)
@@ -502,7 +524,10 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     ratio.GetXaxis().SetLabelSize(0.13)
     ratio.GetXaxis().SetTitleSize(0.15)
     ratio.GetXaxis().SetTickLength(0.1)
-    ratio.GetXaxis().SetTitle(hdict_data["xtitle"])
+    if hdata != 0:
+        ratio.GetXaxis().SetTitle(hdict_data["xtitle"])
+    else:
+        ratio.GetXaxis().SetTitle(hdictlist_bg[0]["xtitle"])
     ratio.SetStats(0)
     ratio.Draw("pe")
 

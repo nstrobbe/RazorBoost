@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140101"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140110_nodata"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109_v2/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -65,17 +65,18 @@ if __name__ == '__main__':
             hlist = []
             for i in range(len(mc_datasets)):
                 if not flist[i]: continue
-                hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle)
+                hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle,xtitle=var)
                 hlist.append(hdict)
         
             hsiglist = []
             for i in range(len(sig_datasets)):
                 if not fsiglist[i]: continue
-                hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle)
+                hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle,xtitle=var)
                 hsiglist.append(hdict)
 
-            hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
-
+            #hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
+            hdict_data = 0
+            
             # now make the actual plot
             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                                  cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
@@ -83,13 +84,14 @@ if __name__ == '__main__':
 
             # scale according to bin width; need to adjust y axis title according to variable
             if var == "MR":
-                hdict_data2 = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events/(100 GeV)",markerstyle=20)
+                #hdict_data2 = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events/(100 GeV)",markerstyle=20)
+                hdict_data2=0
                 plotTools.PlotDataMC(hlist,hdict_data2,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                                      cname="DataMC_%s_%s_width"%(var,cut), plotinfo="Selection %s"%(cut),
                                      ratiotitle="Data/MC", logscale=True, scale="Width", scalefactor=100)
             else:
-                hdict_data2 = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events/(0.01)",markerstyle=20)
-                
+                #hdict_data2 = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events/(0.01)",markerstyle=20)
+                hdict_data2=0
                 plotTools.PlotDataMC(hlist,hdict_data2,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                                      cname="DataMC_%s_%s_width"%(var,cut), plotinfo="Selection %s"%(cut),
                                      ratiotitle="Data/MC", logscale=True, scale="Width", scalefactor=0.01)
@@ -138,7 +140,7 @@ if __name__ == '__main__':
                              cname="DataMC_"+hname.replace("h_",""), plotinfo="Selection 0Lbg1uW0Ll",
                              ratiotitle="Data/MC", logscale=True, scale="No")
 
-    hnames = ["h_TrueNumVertices","h_TrueNumVertices_reweighted"]
+    hnames = ["h_mT_g1Mbg1W1Ll","h_mT_0Lbg1Y1Ll"]
     htitle = "Data/MC comparison plot"
     for hname in hnames:
         var = hname.split("_")[1]
@@ -158,7 +160,31 @@ if __name__ == '__main__':
         hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
 
         plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
-                             cname="DataMC_"+hname.replace("h_",""), plotinfo="No Selection",
+                             cname="DataMC_"+hname.replace("h_",""), plotinfo="Selection "+hname.replace("h_mT_",""),
+                             ratiotitle="Data/MC", logscale=True, scale="No")
+
+    #hnames = ["h_TrueNumVertices","h_TrueNumVertices_reweighted"]
+    hnames = ["h_PV","h_PV_reweighted"]
+    htitle = "Data/MC comparison plot"
+    for hname in hnames:
+        var = hname.split("_")[1]
+        
+        hlist = []
+        for i in range(len(mc_datasets)):
+            if not flist[i]: continue
+            hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle)
+            hlist.append(hdict)
+        
+        hsiglist = []
+        for i in range(len(sig_datasets)):
+            if not fsiglist[i]: continue
+            hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle)
+            hsiglist.append(hdict)
+
+        hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
+
+        plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
+                             cname="DataMC_"+hname.replace("h_",""), plotinfo="HLT + njets >= 3",
                              ratiotitle="Data/MC", logscale=True, scale="No")
 
 

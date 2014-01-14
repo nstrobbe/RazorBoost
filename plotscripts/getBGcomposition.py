@@ -54,7 +54,7 @@ def printCut(cut,info,signame="T1ttcc",option="Counts"):
     total = ttj + wj + qcd + diboson + top + zjets + zll + triboson + ttX + Wbb + DYhad
     if option == "Counts":
         print "Cut %s \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d \t %d" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX,Wbb,DYhad,sig)
-        row = "%s & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g \\\\ \n" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX,Wbb,DYhad,total,sig) 
+        row = "%s & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %.3g & %d & %.3g \\\\ \n" % (cut,qcd,ttj,wj,diboson,top,zjets,zll,triboson,ttX,Wbb,DYhad,total,sig) 
         return row.replace("%","\%")
     
     elif option == "Percentage":
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     intlumi = 19.789
 
     # input information
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109"
     analyzer = "rzrBoostMC"
     signame = "T1ttcc_325_300"
     sigxs = 0.0243547

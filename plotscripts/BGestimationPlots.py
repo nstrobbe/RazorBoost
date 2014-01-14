@@ -7,11 +7,11 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "BGplots"
+    outputdir = "BGplots_20140109_v2"
     
-    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131125/summary/rzrBoostMC_data.root" # data histograms
-    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131125/rzrBoostMC_bg.root" # data histograms
-    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/BGestimate/BGestimate_g1Mbg1W0Ll.root" # bg estimate histograms
+    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109_v2/summary/rzrBoostMC_data.root" # data histograms
+    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109_v2/rzrBoostMC_bg.root" # data histograms
+    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/BGestimate/BGestimate_g1Mbg1W0Ll_onlyQCDTTJ.root" # bg estimate histograms
 
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
@@ -54,7 +54,8 @@ if __name__ == '__main__':
                                             name="Full MC BG estimate", color=rt.kRed+2,
                                             title=htitle, drawoption="E0", fillstyle=3002,
                                             appear_in_ratio="Yes", xtitle=var)
-        hdictlist=[hdict_estimate,hdict_bg,hdict_data]
+        #hdictlist=[hdict_estimate,hdict_bg,hdict_data]
+        hdictlist=[hdict_estimate,hdict_data]
         canvasname = var+"_comparison_data_estimate_g1Mbg1W0Ll"
         rtitle = "#frac{BG estimate}{Data}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,
