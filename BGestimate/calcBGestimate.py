@@ -17,7 +17,7 @@ def make_info_dict(base,
     info["WJetsToLNu"] = [base+"WJetsToLNu.root", WJetsToLNu_CR, WJetsToLNu_binbybin]
     info["Top"] = [base+"Top.root", Top_CR, Top_binbybin]
     info["ZJetsToNuNu"] = [base+"ZJetsToNuNu.root", ZJetsToNuNu_CR, ZJetsToNuNu_binbybin]
-    info["DYJetsToLL"] = [base+"DYJetsToLL.root", DYJetsToLL_CR, DYJetsToLL_binbybin]
+    info["DYJetsToLL"] = [base+"DYJetsToLL_PtZ.root", DYJetsToLL_CR, DYJetsToLL_binbybin]
     info["VV"] = [base+"VV.root", VV_CR, VV_binbybin]
     info["VVV"] = [base+"VVV.root", VVV_CR, VVV_binbybin]
     info["TTX"] = [base+"TTX.root", TTX_CR, TTX_binbybin]
@@ -147,35 +147,36 @@ if __name__ == "__main__":
     print "Will perform the background estimate"
 
     # directory containing all the raw histograms
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20131125/summary/" 
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109_v2/summary/" 
 
     # analyzer name
     analyzer = "rzrBoostMC"
     
     # make the dictionary with process information, one per region
     SIG_info = make_info_dict(inputdir+analyzer+"_",
-                              QCD_CR="0Lbg1uW0Ll_mdPhi0p3",
+                              QCD_CR="0Lbg1uW0Ll_mdPhiHat4",
                               TTJets_CR="g1Mbg1W1LlmT100")
 
-    QCD_info = make_info_dict(inputdir+analyzer+"_",
-                              ZJetsToNuNu_CR="0Lbg1Y2mu0el",ZJetsToNuNu_binbybin=False)
-    #QCD_info2 = make_info_dict(inputdir+analyzer+"_")
+    #QCD_info = make_info_dict(inputdir+analyzer+"_",
+    #                          ZJetsToNuNu_CR="0Lbg1Y2mu0el",ZJetsToNuNu_binbybin=False)
+    QCD_info = make_info_dict(inputdir+analyzer+"_")
 
     TTJ_info = make_info_dict(inputdir+analyzer+"_",
-                              QCD_CR="0Lbg1uW0Ll_mdPhi0p3")
+                              QCD_CR="0Lbg1uW0Ll_mdPhiHat4")
     #TTJ_info2 = make_info_dict(inputdir+analyzer+"_")             
 
-    Zll_info = make_info_dict(inputdir+analyzer+"_")
+    #Zll_info = make_info_dict(inputdir+analyzer+"_")
 
     # put all this in one big dictionary:
     info = {"g1Mbg1W0Ll":SIG_info,
-            "0Lbg1uW0Ll_mdPhi0p3":QCD_info,
+            "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
             "g1Mbg1W1LlmT100":TTJ_info,
-            "0Lbg1Y2mu0el": Zll_info}
+            #"0Lbg1Y2mu0el": Zll_info
+            }
 
 
     #doBGestimate(region,infodict,fdata,extra_info)
-    doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","_test") # BG estimate for signal region, using bin-by-bin ratio
+    doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","_onlyQCDTTJ") # BG estimate for signal region, using bin-by-bin ratio
 
     #doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","global") # BG estimate for signal region, using global MC ratio
 

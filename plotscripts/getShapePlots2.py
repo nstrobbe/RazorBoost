@@ -13,12 +13,13 @@ if __name__ == '__main__':
     #outputdir = sys.argv[1]
     #inputfile = sys.argv[2] # total bg histograms
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140101"
-    inputfile_TTJ = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_TTJets.root"
-    inputfile_QCD = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_QCD.root"
-    inputfile_WJets = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_WJetsToLNu.root"
-    inputfile_DYJets = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_DYJetsToLL_PtZ.root"
-    inputfile_ZJetsToNuNu = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/rzrBoostMC_ZJetsToNuNu.root"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140109"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140101/summary/"
+    inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
+    inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
+    inputfile_WJets = basedir + "rzrBoostMC_WJetsToLNu.root"
+    inputfile_DYJets = basedir + "rzrBoostMC_DYJetsToLL_PtZ.root"
+    inputfile_ZJetsToNuNu = basedir + "rzrBoostMC_ZJetsToNuNu.root"
     
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
