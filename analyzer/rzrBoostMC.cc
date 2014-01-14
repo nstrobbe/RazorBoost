@@ -1222,9 +1222,6 @@ int main(int argc, char** argv)
 	svertex.push_back(vertex[i]);
       }
 
-      h_PV->Fill(svertex.size(),w_old);
-      h_PV_reweighted->Fill(svertex.size(),w);
-
       // jets - selected:
       // From https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetID
       std::vector<cmgpfjet_s> sjet;
@@ -1595,6 +1592,10 @@ int main(int argc, char** argv)
 	TTsemilep->Fill("HLT", w);
       else if(isTTdilep)
 	TTdilep->Fill("HLT", w);
+
+      if (w_pileup != 0)
+	h_PV->Fill(eventhelperextra_numberOfPrimaryVertices,w/w_pileup);
+      h_PV_reweighted->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 
       // pt of first jet greater than 200 GeV
       if (!(sjet[0].pt > 200)) continue;
