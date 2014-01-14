@@ -7,13 +7,18 @@ gStyle.SetTextFont(42)
 
 MC = "mc"
 #MC = "sig52X"
-    
-fdata = TFile.Open("data_pileup.root")
+
+DATA = ""
+#DATA = "AB"
+
+fdata = TFile.Open("data"+DATA+"_pileup.root")
 fmc = TFile.Open(MC+"_pileup.root")
 
 ext = ""
+if DATA != "":
+    ext = "_" + DATA
 if MC != "mc":
-    ext = "_"+MC
+    ext = ext + "_" + MC
 fout = TFile.Open("pileup_weights"+ext+".root","RECREATE")
 fout.cd()
 
@@ -76,8 +81,10 @@ hratio.Draw("HISTsame")
 c.cd()
 
 ext = ""
+if DATA != "":
+    ext = "_" + DATA
 if MC == "sig52X":
-    ext = "_52X"
+    ext = ext + "_52X"
 c.SaveAs("compare_pileup_profile"+ext+".pdf")
 #c.SaveAs("compare_pileup_profile"+ext+".root")
 
