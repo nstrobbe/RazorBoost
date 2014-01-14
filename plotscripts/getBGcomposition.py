@@ -136,7 +136,7 @@ if __name__ == '__main__':
     intlumi = 19.789
 
     # input information
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140114"
     analyzer = "rzrBoostMC"
     signame = "T1ttcc_325_300"
     sigxs = 0.0243547
