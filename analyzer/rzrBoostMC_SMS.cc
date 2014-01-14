@@ -565,17 +565,17 @@ int main(int argc, char** argv)
       std::vector<cmgpfjet_s> slbjet;
       for (unsigned int i=0; i<cmgpfjet.size(); i++) {
 	if (!(cmgpfjet[i].pt > 30) ) continue;
-	if (!(fabs(cmgpfjet[i].eta) < 3) ) continue;
+	if (!(fabs(cmgpfjet[i].eta) < 2.4) ) continue;
 	//if (!(cmgpfjet[i].neutralHadronEnergyFraction < 0.99) ) continue;
 	if (!(cmgpfjet[i].component_5_fraction + cmgpfjet[i].component_6_fraction < 0.99) ) continue;
 	//if (!(cmgpfjet[i].neutralEmEnergyFraction < 0.99) ) continue;
 	if (!(cmgpfjet[i].component_4_fraction < 0.99) ) continue;
 	if (!(cmgpfjet[i].nConstituents > 1) ) continue;
-	if (fabs(cmgpfjet[i].eta) < 2.4) {
-	  if (!(cmgpfjet[i].component_1_fraction > 0) ) continue;
-	  if (!(cmgpfjet[i].component_1_number > 0) ) continue;
-	  if (!(cmgpfjet[i].component_2_fraction < 0.99) ) continue;
-	}
+	//if (fabs(cmgpfjet[i].eta) < 2.4) {
+	if (!(cmgpfjet[i].component_1_fraction > 0) ) continue;
+	if (!(cmgpfjet[i].component_1_number > 0) ) continue;
+	if (!(cmgpfjet[i].component_2_fraction < 0.99) ) continue;
+	//}
 	sjet.push_back(cmgpfjet[i]);
 	if (cmgpfjet[i].combinedSecondaryVertexBJetTags > 0.679) {
 	  sbjet.push_back(cmgpfjet[i]);
