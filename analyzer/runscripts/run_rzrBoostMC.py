@@ -9,6 +9,7 @@ parser = OptionParser(usage=usage)
 parser.add_option("--ISR", action="store_true", dest="ISR", default=False, help="Switch on ISR reweighting")
 parser.add_option("--TopPt", action="store_true", dest="TopPt", default=False, help="Switch on Top Pt reweighting")
 parser.add_option("--noPileup", action="store_false", dest="Pileup", default=True, help="Switch off Pileup reweighting")
+parser.add_option("--AB", action="store_true", dest="RunsAB", default=False, help="Use the Pileup profile for Runs AB only")
 (option,args) = parser.parse_args()
 
 
@@ -51,13 +52,16 @@ names['anl'] = anl
 names['ISR'] = "ISR_False" 
 names['TopPt'] = "TopPt_False"
 names['Pileup'] = "Pileup_False"
+names['Runs'] = ""
 if option.ISR:
     names['ISR'] = "ISR_True"
 if option.TopPt:
     names['TopPt'] = "TopPt_True"
 if option.Pileup:
     names['Pileup'] = "Pileup_True"
-
+if option.RunsAB:
+    names['Runs'] = "AB"
+    
 # Total number of runs
 nrunstot = 0
 # Number of input files per run

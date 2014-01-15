@@ -96,6 +96,9 @@ int main(int argc, char** argv)
   string Pileup = "";
   if ( argc > 9 )
     Pileup = string(argv[9]);
+  string Runs = "";
+  if ( argc > 10 )
+    Runs = string(argv[10]);
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
@@ -118,8 +121,14 @@ int main(int argc, char** argv)
 
   // Get the pileup histogram:
   TString pileupname = "pileup_weights.root";
+  if (Runs == "AB"){
+    pileupname = "pileup_weights_AB.root";
+    cout << "Using pileup profile for runs A+B only" << endl;
+  }
   if (sample == "T1ttcc" || sample == "T2tt"){
     pileupname = "pileup_weights_sig52X.root";
+    if (Runs == "AB")
+      pileupname = "pileup_weights_AB_sig52X.root";
   }
   TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
   if (!fpileup){

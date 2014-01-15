@@ -23,9 +23,10 @@ sample = '%(sample)s'
 ISR = '%(ISR)s'
 TopPt = '%(TopPt)s'
 Pileup = '%(Pileup)s'
+Runs = '%(Runs)s'
 
 # Args:
-args = nmflisttmp+' '+xsect+' '+totweight+' '+lumi+' '+histo+' '+sample+' '+ISR+' '+TopPt+' '+Pileup
+args = nmflisttmp+' '+xsect+' '+totweight+' '+lumi+' '+histo+' '+sample+' '+ISR+' '+TopPt+' '+Pileup+' '+Runs
 
 # Run
 os.system(exe+' '+args)
