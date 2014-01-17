@@ -45,12 +45,20 @@ if __name__ == '__main__':
     # build hdictlist for TTJ:
     for var in vars:
         hdict_TTJ = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W1Ll"),
-                                             name="TTJets CR", title="R2 vs MR for TTJets in TTJets Contol region",
+                                             name="TTJets CR", title="R2 vs MR for TTJets in TTJets Control region",
+                                             xtitle=var.split("_")[0], ytitle=var.split("_")[1],
+                                             drawoption="colz", palette="SMS")
+        
+        hdict_SIG = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                             name="SIG", title="R2 vs MR for TTJets in SIG Control region",
                                              xtitle=var.split("_")[0], ytitle=var.split("_")[1],
                                              drawoption="colz", palette="SMS")
         
         canvasname = var+"_TTJ"
         plotTools.Plot2D(hdict_TTJ,outputdir,outfile,cname=canvasname,scale="No",logscale=True)
+
+        canvasname = var+"_ratio_TTJ_SIG"
+        plotTools.Plot2DRatio(hdict_TTJ,hdict_SIG,outputdir,outfile,cname=canvasname,scale="Yes",ctitle="Ratio TTJ CR / SIG region for TTJets MC",ztitle="TTJ/SIG")
 
 
 

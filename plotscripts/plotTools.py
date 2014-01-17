@@ -86,7 +86,6 @@ def Plot2D(hdict,outputdir="plots",outfile=0,cname="canvas"
     canvas = rt.TCanvas(cname,"")
     canvas.SetLeftMargin(0.13)
     canvas.SetRightMargin(0.17)
-    #canvas.SetTopMargin(0.17)
     canvas.SetBottomMargin(0.13)
     if logscale:
         canvas.SetLogz(1)
@@ -96,7 +95,6 @@ def Plot2D(hdict,outputdir="plots",outfile=0,cname="canvas"
     print "Getting histogram"
 
     h = hdict["histogram"] # Get the histogram
-    maxi = h.GetMaximum()
     if scale == "Yes":
         sf = h.Integral(0,h.GetNbinsX()+1,0,h.GetNbinsY()+1)
         h.Scale(1./sf)
@@ -108,6 +106,7 @@ def Plot2D(hdict,outputdir="plots",outfile=0,cname="canvas"
     else:
         h.GetZaxis().SetTitle("Events")
     
+    maxi = h.GetMaximum()
     if logscale:
         h.SetMaximum(maxi*2)
     else:
@@ -133,6 +132,82 @@ def Plot2D(hdict,outputdir="plots",outfile=0,cname="canvas"
     if drawoption == "colz" and palette == "SMS":
         SetColorPaletteSMS()
     rootEvil.append(h.DrawClone(drawoption))
+            
+    print "Drew histogram"
+    
+    canvas.cd()
+    canvas.SaveAs(outputdir+"/"+cname+".pdf")
+    if outfile != 0:
+        outfile.cd()
+        canvas.Write()
+    canvas.Close()
+
+# ---------------------------------------------- #
+# -- Plot routine for 2D ratio plots          -- #
+# ---------------------------------------------- # 
+def Plot2DRatio(hdict1,hdict2,outputdir="plots",outfile=0,
+                cname="canvas",logscale=False,scale="No",
+                ztitle="Data/MC",ctitle="Title"):
+    # First do some checks on the input
+    if outfile == 0:
+        print "You did not pass me a root file to store the plots. I will only produce pdf files."
+    if not os.path.isdir(outputdir):
+        print "Output directory doesn't exist yet"
+        print "Will create directory %s" % (outputdir)
+        os.makedirs(outputdir)
+
+    # placeholder for draw objects
+    rootEvil = []
+
+    # Make the canvas
+    canvas = rt.TCanvas(cname,"")
+    canvas.SetLeftMargin(0.13)
+    canvas.SetRightMargin(0.17)
+    canvas.SetBottomMargin(0.13)
+    if logscale:
+        canvas.SetLogz(1)
+    canvas.cd()
+    
+    # Get histograms from dictionary, and plot it 
+    print "Getting histograms"
+
+    h1 = hdict1["histogram"] # Get the histogram
+    h1.Sumw2()
+    h2 = hdict2["histogram"] # Get the histogram
+    h2.Sumw2()
+    if scale == "Yes":
+        sf1 = h1.Integral(0,h1.GetNbinsX()+1,0,h1.GetNbinsY()+1)
+        h1.Scale(1./sf1)
+        sf2 = h2.Integral(0,h2.GetNbinsX()+1,0,h2.GetNbinsY()+1)
+        h2.Scale(1./sf2)
+    if scale == "Width":
+        h1.Scale(1,"width")
+        h2.Scale(1,"width")
+
+    ratio = h1.Clone("ratio")
+    ratio.Divide(h2)
+    ratio.SetMaximum(5)
+    ratio.GetZaxis().SetTitle(ztitle)
+    
+    ratio.GetXaxis().SetTitle(hdict1["xtitle"])
+    ratio.GetXaxis().SetTitleSize(0.05)
+    ratio.GetXaxis().SetTitleOffset(1.1)
+    ratio.GetXaxis().SetLabelSize(0.04)
+    ratio.GetYaxis().SetTitle(hdict1["ytitle"])
+    ratio.GetYaxis().SetTitleSize(0.05)
+    ratio.GetYaxis().SetTitleOffset(1.1)
+    ratio.GetYaxis().SetLabelSize(0.04)
+    ratio.GetZaxis().SetTitleSize(0.05)
+    ratio.GetZaxis().SetTitleOffset(1.1)
+    ratio.GetZaxis().SetLabelSize(0.04)
+    ratio.SetTitle(ctitle)
+
+    
+    drawoption = hdict1["drawoption"]
+    palette = hdict1["palette"]
+    if drawoption == "colz" and palette == "SMS":
+        SetColorPaletteSMS()
+    rootEvil.append(ratio.DrawClone(drawoption))
             
     print "Drew histogram"
     
