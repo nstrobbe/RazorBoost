@@ -661,6 +661,10 @@ int main(int argc, char** argv)
   TH2D* h_gen_W1pt_dRqq_g1Mb0Ll = new TH2D("h_gen_W1pt_dRqq_g1Mb0Ll", "h_gen_W1pt_dRqq_g1Mb0Ll", 200, 0, 1000, 200, 0, 5);
 
   // Define the order of bins in the counts histogram:
+
+  ofile.count("NoCuts2genallmu", 0.0);
+  ofile.count("NoCuts2genmu", 0.0);
+  ofile.count("NoCuts2mu", 0.0);
   
   ofile.count("NoCuts", 0.0);
   ofile.count("Cleaning", 0.0);
@@ -694,6 +698,11 @@ int main(int argc, char** argv)
   ofile.count("0Lbg1Y1LlmT100", 0.0);
   ofile.count("0Lbg1Y1LlmT", 0.0);
 
+  ofile.count("presel2genallmu", 0.0);
+  ofile.count("presel2genmu", 0.0);
+  ofile.count("presel2mu", 0.0);
+  ofile.count("2genallmu", 0.0);
+  ofile.count("2genmu", 0.0);
   ofile.count("2munoZmass", 0.0);
   ofile.count("2mu", 0.0);
   ofile.count("2mu0el", 0.0);
@@ -717,6 +726,8 @@ int main(int argc, char** argv)
   ofile.count("g1Mb2l0ol", 0.0);
   ofile.count("0Lbg1Y2l0ol", 0.0);
   ofile.count("g1Mbg1Y2l0ol", 0.0);
+
+
   
   TH1D* TTallhad = new TH1D("counts_TTallhad","",1,0,1);
   TTallhad->SetBit(TH1::kCanRebin);
@@ -724,7 +735,10 @@ int main(int argc, char** argv)
   TTsemilep->SetBit(TH1::kCanRebin);
   TH1D* TTdilep = new TH1D("counts_TTdilep","",1,0,1);
   TTdilep->SetBit(TH1::kCanRebin);
- 
+
+  TTallhad->Fill("NoCuts2genallmu", 0.0);
+  TTallhad->Fill("NoCuts2genmu", 0.0);
+  TTallhad->Fill("NoCuts2mu", 0.0);
   TTallhad->Fill("NoCuts", 0.0);
   TTallhad->Fill("Cleaning", 0.0);
   TTallhad->Fill("Pileup", 0.0);
@@ -754,6 +768,11 @@ int main(int argc, char** argv)
   TTallhad->Fill("0Lbg1Y1Ll", 0.0);
   TTallhad->Fill("0Lbg1Y1LlmT100", 0.0);
   TTallhad->Fill("0Lbg1Y1LlmT", 0.0);
+  TTallhad->Fill("presel2genallmu", 0.0);
+  TTallhad->Fill("presel2genmu", 0.0);
+  TTallhad->Fill("presel2mu", 0.0);
+  TTallhad->Fill("2genallmu", 0.0);
+  TTallhad->Fill("2genmu", 0.0);
   TTallhad->Fill("2munoZmass", 0.0);
   TTallhad->Fill("2mu", 0.0);
   TTallhad->Fill("2mu0el", 0.0);
@@ -777,7 +796,10 @@ int main(int argc, char** argv)
   TTallhad->Fill("g1Mbg1Y2l0ol", 0.0);
 
 
-  TTsemilep->Fill("NoCuts", 0.0);
+
+  TTsemilep->Fill("NoCuts2genallmu", 0.0);
+  TTsemilep->Fill("NoCuts2genmu", 0.0);
+  TTsemilep->Fill("NoCuts2mu", 0.0);
   TTsemilep->Fill("Cleaning", 0.0);
   TTsemilep->Fill("Pileup", 0.0);
   TTsemilep->Fill("HCAL_noise", 0.0);
@@ -806,6 +828,11 @@ int main(int argc, char** argv)
   TTsemilep->Fill("0Lbg1Y1Ll", 0.0);
   TTsemilep->Fill("0Lbg1Y1LlmT100", 0.0);
   TTsemilep->Fill("0Lbg1Y1LlmT", 0.0);
+  TTsemilep->Fill("presel2genallmu", 0.0);
+  TTsemilep->Fill("presel2genmu", 0.0);
+  TTsemilep->Fill("presel2mu", 0.0);
+  TTsemilep->Fill("2genallmu", 0.0);
+  TTsemilep->Fill("2genmu", 0.0);
   TTsemilep->Fill("2munoZmass", 0.0);
   TTsemilep->Fill("2mu", 0.0);
   TTsemilep->Fill("2mu0el", 0.0);
@@ -829,7 +856,9 @@ int main(int argc, char** argv)
   TTsemilep->Fill("g1Mbg1Y2l0ol", 0.0);
 
 
-  TTdilep->Fill("NoCuts", 0.0);
+  TTdilep->Fill("NoCuts2genallmu", 0.0);
+  TTdilep->Fill("NoCuts2genmu", 0.0);
+  TTdilep->Fill("NoCuts2mu", 0.0);
   TTdilep->Fill("Cleaning", 0.0);
   TTdilep->Fill("Pileup", 0.0);
   TTdilep->Fill("HCAL_noise", 0.0);
@@ -858,6 +887,11 @@ int main(int argc, char** argv)
   TTdilep->Fill("0Lbg1Y1Ll", 0.0);
   TTdilep->Fill("0Lbg1Y1LlmT100", 0.0);
   TTdilep->Fill("0Lbg1Y1LlmT", 0.0);
+  TTdilep->Fill("presel2genallmu", 0.0);
+  TTdilep->Fill("presel2genmu", 0.0);
+  TTdilep->Fill("presel2mu", 0.0);
+  TTdilep->Fill("2genallmu", 0.0);
+  TTdilep->Fill("2genmu", 0.0);
   TTdilep->Fill("2munoZmass", 0.0);
   TTdilep->Fill("2mu", 0.0);
   TTdilep->Fill("2mu0el", 0.0);
@@ -1256,6 +1290,39 @@ int main(int argc, char** argv)
       h_totalTopPTweight_up->Fill(1,w_TopPt_up);
       h_totalTopPTweight_down->Fill(1,w_TopPt_down);
 
+
+      // GEN Z selection
+
+      std::vector<genparticlehelper_s> genZ;      
+      for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+        if (genparticlehelper[i].status != 3) continue;
+        if (!(fabs(genparticlehelper[i].pdgId) == 23) ) continue;
+	genZ.push_back(genparticlehelper[i]);
+      }
+
+      // GEN muon selection (to be used for dimuon acceptance)
+      // We select status 1 particles, because in our DY sample, there seem to be
+      // no extra muons...
+
+      std::vector<genparticlehelper_s> genmu;
+      std::vector<genparticlehelper_s> sgenmu;
+      std::vector<TLorentzVector> LVsgenmu;
+      for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+        if (!(fabs(genparticlehelper[i].pdgId) == 13) ) continue;
+        if (!(genparticlehelper[i].status) != 1) continue;
+	genmu.push_back(genparticlehelper[i]);
+	if (!(genparticlehelper[i].pt > 10.) ) continue;
+	if (!(fabs(genparticlehelper[i].eta) < 2.4) ) continue;
+	//cout << genparticlehelper[i].status << " " << genparticlehelper[i].pt << " " 
+	//     << genparticlehelper[i].eta << endl;
+	sgenmu.push_back(genparticlehelper[i]);
+	TLorentzVector lvmu;
+	lvmu.SetPtEtaPhiM(genparticlehelper[i].pt, genparticlehelper[i].eta,
+			  genparticlehelper[i].phi, genparticlehelper[i].mass);
+        LVsgenmu.push_back(lvmu);
+      }
+
+
       // ----------------------
       // -- object selection --
       // ----------------------
@@ -1572,6 +1639,50 @@ int main(int argc, char** argv)
       // ---------------------
       // -- event selection --
       // ---------------------
+
+      // dimuon selections for the muon acceptance and efficiency - for no cuts
+      if (genmu.size() == 2 && genZ.size() == 1) {
+	if (!(genmu[0].charge == -genmu[1].charge)) continue;
+	ofile.count("NoCuts2genallmu", w);
+	if(isTTallhad)
+	  TTallhad->Fill("NoCuts2genallnmu", w);
+	else if(isTTsemilep)
+	  TTsemilep->Fill("NoCuts2genallmu", w);
+	else if(isTTdilep)
+	  TTdilep->Fill("NoCuts2genallmu", w);
+      }
+      if (sgenmu.size() == 2) {
+	if (!(genmu[0].charge == -genmu[1].charge)) continue;
+	TLorentzVector LVZcand;
+	for (unsigned int m=0; m<LVsgenmu.size(); m++) {
+	  LVZcand += LVmu[m];
+	}
+	double Zmass = LVZcand.M();
+	if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	ofile.count("NoCuts2mu", w);
+	ofile.count("NoCuts2genmu", w);
+	if(isTTallhad)
+	  TTallhad->Fill("NoCuts2genmu", w);
+	else if(isTTsemilep)
+	  TTsemilep->Fill("NoCuts2genmu", w);
+	else if(isTTdilep)
+	  TTdilep->Fill("NoCuts2genmu", w);
+      }
+      if (smuon.size() == 2) {
+	TLorentzVector LVZcand;
+	for (unsigned int m=0; m<LVmu.size(); m++) {
+	  LVZcand += LVmu[m];
+	}
+	double Zmass = LVZcand.M();
+	if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	ofile.count("NoCuts2mu", w);
+	if(isTTallhad)
+	  TTallhad->Fill("NoCuts2mu", w);
+	else if(isTTsemilep)
+	  TTsemilep->Fill("NoCuts2mu", w);
+	else if(isTTdilep)
+	  TTdilep->Fill("NoCuts2mu", w);
+      }
 
       // Additional HCAL noise cleaning
       double dphi_PF_CALO_met = fdeltaPhi(cmgbasemet2[0].phi,calomet[0].phi);
@@ -2178,8 +2289,82 @@ int main(int argc, char** argv)
       // -----------------------------------------------------------------------------
 
       // Start the 2mu stuff here.
+
+      // dimuon selections for the muon acceptance and efficiency - after preselection
+      if (genmu.size() == 2 && genZ.size() == 1) {
+	if (!(genmu[0].charge == -genmu[1].charge)) continue;
+	ofile.count("presel2genallmu", w);
+	if(isTTallhad)
+	  TTallhad->Fill("presel2genallnmu", w);
+	else if(isTTsemilep)
+	  TTsemilep->Fill("presel2genallmu", w);
+	else if(isTTdilep)
+	  TTdilep->Fill("presel2genallmu", w);
+      }
+      if (sgenmu.size() == 2) {
+	if (!(genmu[0].charge == -genmu[1].charge)) continue;
+	TLorentzVector LVZcand;
+	for (unsigned int m=0; m<LVsgenmu.size(); m++) {
+	  LVZcand += LVmu[m];
+	}
+	double Zmass = LVZcand.M();
+	if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	ofile.count("presel2genmu", w);
+	if(isTTallhad)
+	  TTallhad->Fill("presel2genmu", w);
+	else if(isTTsemilep)
+	  TTsemilep->Fill("presel2genmu", w);
+	else if(isTTdilep)
+	  TTdilep->Fill("presel2genmu", w);
+      }
+      if (smuon.size() == 2) {
+	TLorentzVector LVZcand;
+	for (unsigned int m=0; m<LVmu.size(); m++) {
+	  LVZcand += LVmu[m];
+	}
+	double Zmass = LVZcand.M();
+	if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	ofile.count("presel2mu", w);
+	if(isTTallhad)
+	  TTallhad->Fill("presel2mu", w);
+	else if(isTTsemilep)
+	  TTsemilep->Fill("presel2mu", w);
+	else if(isTTdilep)
+	  TTdilep->Fill("presel2mu", w);
+      }
+
+
       // Need to use R2metmu to define the signal region
       if (MR > 800 && R2metmu > 0.08){
+	// GEN
+	if (genmu.size() == 2 && genZ.size() == 1) {
+	  if (!(genmu[0].charge == -genmu[1].charge)) continue;
+	  ofile.count("2genallmu", w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2genallnmu", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2genallmu", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("2genallmu", w);
+	}
+	if (sgenmu.size() == 2) {
+	  if (!(genmu[0].charge == -genmu[1].charge)) continue;
+	  TLorentzVector LVZcand;
+	  for (unsigned int m=0; m<LVsgenmu.size(); m++) {
+	    LVZcand += LVmu[m];
+	  }
+	  double Zmass = LVZcand.M();
+	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	  ofile.count("2genmu", w);
+	  if(isTTallhad)
+	    TTallhad->Fill("2genmu", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("2genmu", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("genmu", w);
+	}
+
+	// reco
 	TLorentzVector LVZcand;
 	if (ntightmuons == 2 && nloosemuons == 2) {
 	  // Make sure that the muons are opposite-signed:
