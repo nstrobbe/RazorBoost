@@ -333,6 +333,18 @@ int main(int argc, char** argv)
   TH1D * h_jet2pt_g1Mbg1W0Ll = new TH1D("h_jet2pt_g1Mbg1W0Ll","h_jet2pt_g1Mbg1W0Ll",20,0,1000);
   TH1D * h_jet3pt_g1Mbg1W0Ll = new TH1D("h_jet3pt_g1Mbg1W0Ll","h_jet3pt_g1Mbg1W0Ll",20,0,1000);
 
+  // g1Mb 0W g1uW 0Ll ; Signal-like box: >= 1 Mb; 0 W - 1 uW; 0 Ll
+  TH1D * h_MR_g1Mb0Wg1uW0Ll     = new TH1D("h_MR_g1Mb0Wg1uW0Ll", "h_MR_g1Mb0Wg1uW0Ll", nbins_MR, bins_MR);
+  TH1D * h_R2_g1Mb0Wg1uW0Ll     = new TH1D("h_R2_g1Mb0Wg1uW0Ll", "h_R2_g1Mb0Wg1uW0Ll", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_g1Mb0Wg1uW0Ll  = new TH2D("h_MR_R2_g1Mb0Wg1uW0Ll", "h_MR_R2_g1Mb0Wg1uW0Ll", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
+  TH1D * h_njets_g1Mb0Wg1uW0Ll  = new TH1D("h_njets_g1Mb0Wg1uW0Ll","h_njets_g1Mb0Wg1uW0Ll",15,0,15);
+  TH1D * h_nbjets_g1Mb0Wg1uW0Ll = new TH1D("h_nbjets_g1Mb0Wg1uW0Ll","h_nbjets_g1Mb0Wg1uW0Ll",6,0,6);
+  TH1D * h_met_g1Mb0Wg1uW0Ll    = new TH1D("h_met_g1Mb0Wg1uW0Ll","h_met_g1Mb0Wg1uW0Ll",20,0,1000);
+  TH1D * h_jet1pt_g1Mb0Wg1uW0Ll = new TH1D("h_jet1pt_g1Mb0Wg1uW0Ll","h_jet1pt_g1Mb0Wg1uW0Ll",20,0,1000);
+  TH1D * h_jet2pt_g1Mb0Wg1uW0Ll = new TH1D("h_jet2pt_g1Mb0Wg1uW0Ll","h_jet2pt_g1Mb0Wg1uW0Ll",20,0,1000);
+  TH1D * h_jet3pt_g1Mb0Wg1uW0Ll = new TH1D("h_jet3pt_g1Mb0Wg1uW0Ll","h_jet3pt_g1Mb0Wg1uW0Ll",20,0,1000);
+
   // 0Lb 0Ll
   TH1D * h_MR_0Lb0Ll = new TH1D("h_MR_0Lb0Ll", "h_MR_0Lb0Ll", nbins_MR, bins_MR);
   TH1D * h_R2_0Lb0Ll = new TH1D("h_R2_0Lb0Ll", "h_R2_0Lb0Ll", nbins_R2, bins_R2);
@@ -681,6 +693,7 @@ int main(int argc, char** argv)
   ofile.count("trackIso", 0.0);
   ofile.count("g1Mb0Ll", 0.0);
   ofile.count("g1Mbg1W0Ll", 0.0);
+  ofile.count("g1Mb0Wg1uW0Ll", 0.0);
   ofile.count("0Lb0Ll", 0.0);
   ofile.count("0Lbg1uW0Ll", 0.0);
   ofile.count("0Lbg1uW0Ll_mdPhi0p3", 0.0);
@@ -753,6 +766,7 @@ int main(int argc, char** argv)
   TTallhad->Fill("trackIso", 0.0);
   TTallhad->Fill("g1Mb0Ll", 0.0);
   TTallhad->Fill("g1Mbg1W0Ll", 0.0);
+  TTallhad->Fill("g1Mb0Wg1uW0Ll", 0.0);
   TTallhad->Fill("0Lb0Ll", 0.0);
   TTallhad->Fill("0Lbg1uW0Ll", 0.0);
   TTallhad->Fill("0Lbg1uW0Ll_mdPhi0p3", 0.0);
@@ -813,6 +827,7 @@ int main(int argc, char** argv)
   TTsemilep->Fill("trackIso", 0.0);
   TTsemilep->Fill("g1Mb0Ll", 0.0);
   TTsemilep->Fill("g1Mbg1W0Ll", 0.0);
+  TTsemilep->Fill("g1Mb0Wg1uW0Ll", 0.0);
   TTsemilep->Fill("0Lb0Ll", 0.0);
   TTsemilep->Fill("0Lbg1uW0Ll", 0.0);
   TTsemilep->Fill("0Lbg1uW0Ll_mdPhi0p3", 0.0);
@@ -872,6 +887,7 @@ int main(int argc, char** argv)
   TTdilep->Fill("trackIso", 0.0);
   TTdilep->Fill("g1Mb0Ll", 0.0);
   TTdilep->Fill("g1Mbg1W0Ll", 0.0);
+  TTdilep->Fill("g1Mb0Wg1uW0Ll", 0.0);
   TTdilep->Fill("0Lb0Ll", 0.0);
   TTdilep->Fill("0Lbg1uW0Ll", 0.0);
   TTdilep->Fill("0Lbg1uW0Ll_mdPhi0p3", 0.0);
@@ -1645,7 +1661,7 @@ int main(int argc, char** argv)
 	if (!(genmu[0].charge == -genmu[1].charge)) continue;
 	ofile.count("NoCuts2genallmu", w);
 	if(isTTallhad)
-	  TTallhad->Fill("NoCuts2genallnmu", w);
+	  TTallhad->Fill("NoCuts2genallmu", w);
 	else if(isTTsemilep)
 	  TTsemilep->Fill("NoCuts2genallmu", w);
 	else if(isTTdilep)
@@ -1659,7 +1675,6 @@ int main(int argc, char** argv)
 	}
 	double Zmass = LVZcand.M();
 	if (!(Zmass >= 60 && Zmass <= 120)) continue;
-	ofile.count("NoCuts2mu", w);
 	ofile.count("NoCuts2genmu", w);
 	if(isTTallhad)
 	  TTallhad->Fill("NoCuts2genmu", w);
@@ -1985,6 +2000,27 @@ int main(int argc, char** argv)
 		    TTdilep->Fill("g1Mbg1W0Ll", w);
 		  
 		} // end of sW.size() > 0
+		else { // sW.size() == 0
+		  if( aW.size() > 0) {
+		    ofile.count("g1Mb0Wg1uW0Ll",w);
+		    h_MR_g1Mb0Wg1uW0Ll->Fill(MR, w);
+		    h_R2_g1Mb0Wg1uW0Ll->Fill(R2, w);
+		    h_MR_R2_g1Mb0Wg1uW0Ll->Fill(MR, R2, w);
+		    h_njets_g1Mb0Wg1uW0Ll->Fill(sjet.size(),w);
+		    h_nbjets_g1Mb0Wg1uW0Ll->Fill(nmediumbs,w);
+		    h_met_g1Mb0Wg1uW0Ll->Fill(met.Pt(),w);
+		    h_jet1pt_g1Mb0Wg1uW0Ll->Fill(sjet[0].pt,w);
+		    h_jet2pt_g1Mb0Wg1uW0Ll->Fill(sjet[1].pt,w);
+		    h_jet3pt_g1Mb0Wg1uW0Ll->Fill(sjet[2].pt,w);
+		    
+		    if(isTTallhad)
+		      TTallhad->Fill("g1Mb0Wg1uW0Ll", w);
+		    else if(isTTsemilep)
+		      TTsemilep->Fill("g1Mb0Wg1uW0Ll", w);
+		    else if(isTTdilep)
+		      TTdilep->Fill("g1Mb0Wg1uW0Ll", w);
+		  } // end of aW.size() > 0
+		} // end of sW.size() == 0
 	      } // end of nmediumbs > 0
 	      
 	      if (nloosebs == 0){
@@ -2295,7 +2331,7 @@ int main(int argc, char** argv)
 	if (!(genmu[0].charge == -genmu[1].charge)) continue;
 	ofile.count("presel2genallmu", w);
 	if(isTTallhad)
-	  TTallhad->Fill("presel2genallnmu", w);
+	  TTallhad->Fill("presel2genallmu", w);
 	else if(isTTsemilep)
 	  TTsemilep->Fill("presel2genallmu", w);
 	else if(isTTdilep)
@@ -2341,7 +2377,7 @@ int main(int argc, char** argv)
 	  if (!(genmu[0].charge == -genmu[1].charge)) continue;
 	  ofile.count("2genallmu", w);
 	  if(isTTallhad)
-	    TTallhad->Fill("2genallnmu", w);
+	    TTallhad->Fill("2genallmu", w);
 	  else if(isTTsemilep)
 	    TTsemilep->Fill("2genallmu", w);
 	  else if(isTTdilep)
