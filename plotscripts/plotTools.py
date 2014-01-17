@@ -4,6 +4,7 @@
 ##################################################################
 import sys, os
 import ROOT as rt
+from array import array
 
 # ---------------------------------------------- #
 # -- ROOT style                               -- #
@@ -18,7 +19,7 @@ def SetBoostStyle():
 # ---------------------------------------------- # 
 def ConstructHDict(h, name="name", color=rt.kBlue, title="title", appear_in_ratio="Yes"
                    , linestyle=1, linewidth=2, markerstyle=20, markersize=1, fillstyle=0
-                   , xtitle="", ytitle="", drawoption = "hist"
+                   , xtitle="", ytitle="", drawoption = "hist", palette="Default"
                    , appear_in_legend=True):
     hdict = {}
     hdict["name"] = name                         # what will appear in the legend
@@ -35,6 +36,7 @@ def ConstructHDict(h, name="name", color=rt.kBlue, title="title", appear_in_rati
     hdict["xtitle"] = xtitle                     # x axis title
     hdict["ytitle"] = ytitle                     # y axis title
     hdict["drawoption"] = drawoption             # draw option
+    hdict["palette"] = palette                   # color palette: "Default" or "SMS"
     return hdict
 
 # ---------------------------------------------- #
@@ -50,11 +52,97 @@ def ConstructLDict(xmin,xmax,ymin,ymax,title="",ncolumns=1):
     legdict["ncolumns"] = ncolumns
     return legdict
 
+# -----------------------------------------------#
+# -- Color style for 2D plots                 -- #
+# ---------------------------------------------- #
+def SetColorPaletteSMS():
+    # define the palette for z axis
+    NRGBs = 5
+    NCont = 255
+    stops = array("d",[0.00, 0.34, 0.61, 0.84, 1.00])
+    red= array("d",[0.50, 0.50, 1.00, 1.00, 1.00])
+    green = array("d",[ 0.50, 1.00, 1.00, 0.60, 0.50])
+    blue = array("d",[1.00, 1.00, 0.50, 0.40, 0.50])
+    rt.TColor.CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont)
+    rt.gStyle.SetNumberContours(NCont)
+
 # ---------------------------------------------- #
 # -- Plot routine for 2D plots                -- #
 # ---------------------------------------------- # 
-def Plot2D():
-    pass
+def Plot2D(hdict,outputdir="plots",outfile=0,cname="canvas"
+           ,logscale=False,scale="No"):
+    # First do some checks on the input
+    if outfile == 0:
+        print "You did not pass me a root file to store the plots. I will only produce pdf files."
+    if not os.path.isdir(outputdir):
+        print "Output directory doesn't exist yet"
+        print "Will create directory %s" % (outputdir)
+        os.makedirs(outputdir)
+
+    # placeholder for draw objects
+    rootEvil = []
+
+    # Make the canvas
+    canvas = rt.TCanvas(cname,"")
+    canvas.SetLeftMargin(0.13)
+    canvas.SetRightMargin(0.17)
+    #canvas.SetTopMargin(0.17)
+    canvas.SetBottomMargin(0.13)
+    if logscale:
+        canvas.SetLogz(1)
+    canvas.cd()
+    
+    # Get histogram from dictionary, and plot it 
+    print "Getting histogram"
+
+    h = hdict["histogram"] # Get the histogram
+    maxi = h.GetMaximum()
+    if scale == "Yes":
+        sf = h.Integral(0,h.GetNbinsX()+1,0,h.GetNbinsY()+1)
+        h.Scale(1./sf)
+    if scale == "Width":
+        h.Scale(1,"width")
+            
+    if scale == "Yes":
+        h.GetZaxis().SetTitle("A.U.")
+    else:
+        h.GetZaxis().SetTitle("Events")
+    
+    if logscale:
+        h.SetMaximum(maxi*2)
+    else:
+        h.SetMaximum(maxi*1.2)
+    if scale == "Yes":
+        h.SetMaximum(1)
+    h.GetXaxis().SetTitle(hdict["xtitle"])
+    h.GetXaxis().SetTitleSize(0.05)
+    h.GetXaxis().SetTitleOffset(1.1)
+    h.GetXaxis().SetLabelSize(0.04)
+    h.GetYaxis().SetTitle(hdict["ytitle"])
+    h.GetYaxis().SetTitleSize(0.05)
+    h.GetYaxis().SetTitleOffset(1.1)
+    h.GetYaxis().SetLabelSize(0.04)
+    h.GetZaxis().SetTitleSize(0.05)
+    h.GetZaxis().SetTitleOffset(1.1)
+    h.GetZaxis().SetLabelSize(0.04)
+    h.SetTitle(hdict["title"])
+
+    
+    drawoption = hdict["drawoption"]
+    palette = hdict["palette"]
+    if drawoption == "colz" and palette == "SMS":
+        SetColorPaletteSMS()
+    rootEvil.append(h.DrawClone(drawoption))
+            
+    print "Drew histogram"
+    
+    canvas.cd()
+    canvas.SaveAs(outputdir+"/"+cname+".pdf")
+    if outfile != 0:
+        outfile.cd()
+        canvas.Write()
+    canvas.Close()
+
 
 # ---------------------------------------------- #
 # -- Plot routine for 1D comparison plots     -- #
