@@ -710,7 +710,7 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_2l0ol = new TH2D("h_MR_R2_2l0ol", "h_MR_R2_2l0ol", nbins_MR, bins_MR, nbins_R2, bins_R2);
   
   TH1D * h_njets_2l0ol = new TH1D("h_njets_2l0ol","h_njets_2l0ol",15,0,15);
-  TH1D * h_nbjets_2l0ol = new TH1D("h_nbjets_g1Mb2l0ol","h_nbjets_g1Mb2l0ol",6,0,6);
+  TH1D * h_nbjets_2l0ol = new TH1D("h_nbjets_2l0ol","h_nbjets_2l0ol",6,0,6);
   TH1D * h_met_2l0ol = new TH1D("h_met_2l0ol","h_met_2l0ol",20,0,1000);
   TH1D * h_jet1pt_2l0ol = new TH1D("h_jet1pt_2l0ol","h_jet1pt_2l0ol",20,0,1000);
   TH1D * h_jet2pt_2l0ol = new TH1D("h_jet2pt_2l0ol","h_jet2pt_2l0ol",20,0,1000);
