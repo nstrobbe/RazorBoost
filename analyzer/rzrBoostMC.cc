@@ -927,6 +927,7 @@ int main(int argc, char** argv)
   TTsemilep->Fill("NoCuts2genallmu", 0.0);
   TTsemilep->Fill("NoCuts2genmu", 0.0);
   TTsemilep->Fill("NoCuts2mu", 0.0);
+  TTsemilep->Fill("NoCuts", 0.0);
   TTsemilep->Fill("Cleaning", 0.0);
   TTsemilep->Fill("Pileup", 0.0);
   TTsemilep->Fill("HCAL_noise", 0.0);
@@ -987,6 +988,7 @@ int main(int argc, char** argv)
   TTdilep->Fill("NoCuts2genallmu", 0.0);
   TTdilep->Fill("NoCuts2genmu", 0.0);
   TTdilep->Fill("NoCuts2mu", 0.0);
+  TTdilep->Fill("NoCuts", 0.0);
   TTdilep->Fill("Cleaning", 0.0);
   TTdilep->Fill("Pileup", 0.0);
   TTdilep->Fill("HCAL_noise", 0.0);
