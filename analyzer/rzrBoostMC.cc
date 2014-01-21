@@ -371,6 +371,12 @@ int main(int argc, char** argv)
   TH2D * h_MR_minDeltaPhiHat_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhiHat_0Lbg1uW0Ll", "h_MR_minDeltaPhiHat_0Lbg1uW0Ll", nbins_MR, bins_MR, 30, 0, 15);
   TH2D * h_R2_minDeltaPhiHat_0Lbg1uW0Ll = new TH2D("h_R2_minDeltaPhiHat_0Lbg1uW0Ll", "h_R2_minDeltaPhiHat_0Lbg1uW0Ll", nbins_R2, bins_R2, 30, 0, 15);
   
+  TH1D * h_njets_0Lbg1uW0Ll = new TH1D("h_njets_0Lbg1uW0Ll","h_njets_0Lbg1uW0Ll",15,0,15);
+  TH1D * h_met_0Lbg1uW0Ll = new TH1D("h_met_0Lbg1uW0Ll","h_met_0Lbg1uW0Ll",20,0,1000);
+  TH1D * h_jet1pt_0Lbg1uW0Ll = new TH1D("h_jet1pt_0Lbg1uW0Ll","h_jet1pt_0Lbg1uW0Ll",20,0,1000);
+  TH1D * h_jet2pt_0Lbg1uW0Ll = new TH1D("h_jet2pt_0Lbg1uW0Ll","h_jet2pt_0Lbg1uW0Ll",20,0,1000);
+  TH1D * h_jet3pt_0Lbg1uW0Ll = new TH1D("h_jet3pt_0Lbg1uW0Ll","h_jet3pt_0Lbg1uW0Ll",20,0,1000);
+
   // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhi < 0.3
   TH1D * h_MR_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhi0p3", "h_MR_0Lbg1uW0Ll_mdPhi0p3", nbins_MR, bins_MR);
   TH1D * h_R2_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhi0p3", "h_R2_0Lbg1uW0Ll_mdPhi0p3", nbins_R2, bins_R2);
@@ -2173,6 +2179,12 @@ int main(int argc, char** argv)
 		  h_minDeltaPhiHat_0Lbg1uW0Ll->Fill(minDeltaPhiHat, w);
 		  h_MR_minDeltaPhiHat_0Lbg1uW0Ll->Fill(MR, minDeltaPhiHat, w);
 		  h_R2_minDeltaPhiHat_0Lbg1uW0Ll->Fill(R2, minDeltaPhiHat, w);
+
+		  h_njets_0Lbg1uW0Ll->Fill(sjet.size(),w);
+		  h_met_0Lbg1uW0Ll->Fill(met.Pt(),w);
+		  h_jet1pt_0Lbg1uW0Ll->Fill(sjet[0].pt,w);
+		  h_jet2pt_0Lbg1uW0Ll->Fill(sjet[1].pt,w);
+		  h_jet3pt_0Lbg1uW0Ll->Fill(sjet[2].pt,w);
 
 		  if(isTTallhad)
 		    TTallhad->Fill("0Lbg1uW0Ll", w);
