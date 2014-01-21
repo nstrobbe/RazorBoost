@@ -1446,7 +1446,7 @@ int main(int argc, char** argv)
       std::vector<TLorentzVector> LVsgenmu;
       for (unsigned int i=0; i<genparticlehelper.size(); i++) {
         if (!(fabs(genparticlehelper[i].pdgId) == 13) ) continue;
-        if (!(genparticlehelper[i].status) != 1) continue;
+        if (!(genparticlehelper[i].status != 1) ) continue;
 	genmu.push_back(genparticlehelper[i]);
 	if (!(genparticlehelper[i].pt > 10.) ) continue;
 	if (!(fabs(genparticlehelper[i].eta) < 2.4) ) continue;
