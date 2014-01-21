@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140114"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140114/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140120"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140120/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     vars = ["MR","R2"]
     cuts = ["Cleaning","HCAL_noise","vertexg0","njetge3","HLT","jet1ptg200",
             "SIG","neleeq0","nmueq0","trackIso",
-            "g1Mb0Ll","g1Mbg1W0Ll",
+            "g1Mb0Ll","g1Mbg1W0Ll","g1Mb0Wg1uW0Ll",
             "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5","0Lbg1W0Ll",
             "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100","g1Mbg1W1LlmT",
             "0Lb1Ll","0Lbg1Y1Ll","0Lbg1Y1LlmT100","0Lbg1Y1LlmT",
@@ -192,13 +192,13 @@ if __name__ == '__main__':
 
     vars = ["njets","nbjets","met","jet1pt","jet2pt","jet3pt",
             "leptonpt","lepton1pt","lepton2pt"]
-    cuts = ["g1Mbg1W0Ll",
-            "0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5",
-            "g1Mbg1W1LlmT100",
-            "0Lbg1Y1LlmT100",
-            "2mu","0Lbg1Y2mu0el","g1Mbg1Y2mu0el",
-            "2el","0Lbg1Y2el0mu","g1Mbg1Y2el0mu",
-            "2l","0Lbg1Y2l0ol","g1Mbg1Y2l0ol",
+    cuts = ["g1Mbg1W0Ll","g1Mb0Wg1uW0Ll",
+            "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5",
+            "g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100",
+            "0Lb1Ll","0Lbg1Y1Ll","0Lbg1Y1LlmT","0Lbg1Y1LlmT100",
+            "2mu","2mu0el","0Lb2mu0el","g1Mb2mu0el","0Lbg1Y2mu0el","g1Mbg1Y2mu0el",
+            "2el","2el0mu","0Lb2el0mu","g1Mb2el0mu","0Lbg1Y2el0mu","g1Mbg1Y2el0mu",
+            "2l","2l0ol","0Lb2l0ol","g1Mb2l0ol","0Lbg1Y2l0ol","g1Mbg1Y2l0ol"
             ]
 
     for cut in cuts:
