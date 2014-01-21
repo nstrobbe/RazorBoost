@@ -1792,7 +1792,7 @@ int main(int argc, char** argv)
 	if (!(genmu[0].charge == -genmu[1].charge)) continue;
 	TLorentzVector LVZcand;
 	for (unsigned int m=0; m<LVsgenmu.size(); m++) {
-	  LVZcand += LVmu[m];
+	  LVZcand += LVsgenmu[m];
 	}
 	double Zmass = LVZcand.M();
 	if (!(Zmass >= 60 && Zmass <= 120)) continue;
@@ -2511,7 +2511,7 @@ int main(int argc, char** argv)
 	if (!(genmu[0].charge == -genmu[1].charge)) continue;
 	TLorentzVector LVZcand;
 	for (unsigned int m=0; m<LVsgenmu.size(); m++) {
-	  LVZcand += LVmu[m];
+	  LVZcand += LVsgenmu[m];
 	}
 	double Zmass = LVZcand.M();
 	if (!(Zmass >= 60 && Zmass <= 120)) continue;
@@ -2557,7 +2557,7 @@ int main(int argc, char** argv)
 	  if (!(genmu[0].charge == -genmu[1].charge)) continue;
 	  TLorentzVector LVZcand;
 	  for (unsigned int m=0; m<LVsgenmu.size(); m++) {
-	    LVZcand += LVmu[m];
+	    LVZcand += LVsgenmu[m];
 	  }
 	  double Zmass = LVZcand.M();
 	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
