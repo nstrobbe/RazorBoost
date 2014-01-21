@@ -1,27 +1,102 @@
 from ROOT import *
 
+def get_Zll_acceptance(rootfilename,selection):
+    f = TFile.Open(rootfilename)
+    h = f.Get("counts")
+    num = h.GetBinContent(h.GetXaxis().FindBin(selection+"2genmu"))
+    den = h.GetBinContent(h.GetXaxis().FindBin(selection+"2genallmu"))
+    acc = 0
+    if den != 0:
+        acc = num/den
+    f.Close()
+    return acc
+
+def get_Zll_efficiency(rootfilename,selection):
+    f = TFile.Open(rootfilename)
+    h = f.Get("counts")
+    num = h.GetBinContent(h.GetXaxis().FindBin(selection+"2mu"))
+    den = h.GetBinContent(h.GetXaxis().FindBin(selection+"2genmu"))
+    eff = 0
+    if den != 0:
+        eff = num/den
+    f.Close()
+    return eff
+
+def get_Zll_scalefactor(rootfilename,selection):
+    BR_nunu = 20.0
+    BR_mumu = 3.366
+    acc = get_Zll_acceptance(rootfilename,selection)
+    eff = get_Zll_efficiency(rootfilename,selection)
+    sf = BR_nunu / (BR_mumu * acc * eff)
+    return sf
+
+def get_Zvv_estimation(CR, selection_for_sf, fdataname, infodict):
+    outfile = TFile.Open("BGestimate_Zinv_from_"+CR+"_sf_from_"+selection_for_sf+".root","RECREATE")
+    
+    # first get Zmumu estimation in the control region. For this get data and subtract rest
+    hCR = "h_MR_R2_" + CR
+
+    f_data = TFile.Open(fdataname)
+    h_data = f_data.Get(hCR)
+
+    otherBG = 0
+    process_to_skip = ["ZJetsToNuNu","DYJetsToLNu","DYJetsToLNu_PtZ"]
+    for name,info in infodict.iteritems():
+        # skip the process we want to determine:
+        if name in process_to_skip: continue
+        filename = info[0]
+        # open the file and get the histogram
+        f = TFile.Open(filename)
+        outfile.cd()
+        h = f.Get(hCR)
+        h.Sumw2()
+        # if this is the first histogram we look at:
+        if otherBG == 0:
+            otherBG = h.Clone()
+            otherBG.Sumw2()
+        else:
+            otherBG.Add(h)
+        f.Close()
+
+    h_est = h_data.Clone("h_MR_R2_Zinv_from_"+CR)
+    h_est.Sumw2()
+    h_est.Add(otherBG,-1)
+    
+    # scale factor containing branching ratios and acceptance + efficiency
+    sf = get_Zll_scalefactor(rootfilename,selection_for_sf)
+    h_est.Scale(sf)
+    
+    # TODO: add a factor for Wtag efficiency
+
+    outfile.cd()
+    h_est.Write()
+    outfile.Close()
+    
 def make_info_dict(base,
                    QCD_CR="MC",TTJets_CR="MC",WJetsToLNu_CR="MC",Top_CR="MC",
                    ZJetsToNuNu_CR="MC",DYJetsToLL_CR="MC",VV_CR="MC",
                    Vhad_CR="MC",VVV_CR="MC",TTX_CR="MC",
                    QCD_binbybin=True,TTJets_binbybin=True,WJetsToLNu_binbybin=True,Top_binbybin=True,
                    ZJetsToNuNu_binbybin=True,DYJetsToLL_binbybin=True,VV_binbybin=True,
-                   Vhad_binbybin=True,VVV_binbybin=True,TTX_binbybin=True
+                   Vhad_binbybin=True,VVV_binbybin=True,TTX_binbybin=True,
+                   QCD_include=True,TTJets_include=True,WJetsToLNu_include=True,Top_include=True,
+                   ZJetsToNuNu_include=True,DYJetsToLL_include=True,VV_include=True,
+                   Vhad_include=True,VVV_include=True,TTX_include=True,
                    ):
     # this will contain all the info pertaining to all background processes.
     info = dict()
     # for each process, form a list with following information:
     # [filename, fromMC, CR if required]
-    info["QCD"] = [base+"QCD.root", QCD_CR, QCD_binbybin]
-    info["TTJets"] = [base+"TTJets.root", TTJets_CR, TTJets_binbybin] 
-    info["WJetsToLNu"] = [base+"WJetsToLNu.root", WJetsToLNu_CR, WJetsToLNu_binbybin]
-    info["Top"] = [base+"Top.root", Top_CR, Top_binbybin]
-    info["ZJetsToNuNu"] = [base+"ZJetsToNuNu.root", ZJetsToNuNu_CR, ZJetsToNuNu_binbybin]
-    info["DYJetsToLL"] = [base+"DYJetsToLL_PtZ.root", DYJetsToLL_CR, DYJetsToLL_binbybin]
-    info["VV"] = [base+"VV.root", VV_CR, VV_binbybin]
-    info["VVV"] = [base+"VVV.root", VVV_CR, VVV_binbybin]
-    info["TTX"] = [base+"TTX.root", TTX_CR, TTX_binbybin]
-    info["Vhad"] = [base+"Vhad.root", Vhad_CR, Vhad_binbybin]
+    info["QCD"] = [base+"QCD.root", QCD_CR, QCD_binbybin, QCD_include]
+    info["TTJets"] = [base+"TTJets.root", TTJets_CR, TTJets_binbybin, TTJets_include]
+    info["WJetsToLNu"] = [base+"WJetsToLNu.root", WJetsToLNu_CR, WJetsToLNu_binbybin, WJetsToLNu_include]
+    info["Top"] = [base+"Top.root", Top_CR, Top_binbybin, Top_include]
+    info["ZJetsToNuNu"] = [base+"ZJetsToNuNu.root", ZJetsToNuNu_CR, ZJetsToNuNu_binbybin, ZJetsToNuNu_include]
+    info["DYJetsToLL"] = [base+"DYJetsToLL_PtZ.root", DYJetsToLL_CR, DYJetsToLL_binbybin, DYJetsToLL_include]
+    info["VV"] = [base+"VV.root", VV_CR, VV_binbybin, VV_include]
+    info["VVV"] = [base+"VVV.root", VVV_CR, VVV_binbybin, VVV_include]
+    info["TTX"] = [base+"TTX.root", TTX_CR, TTX_binbybin, TTX_include]
+    info["Vhad"] = [base+"Vhad.root", Vhad_CR, Vhad_binbybin, Vhad_include]
 
     return info
 
@@ -42,6 +117,9 @@ def calcBGfromCR(process, SIG, CR, fdataname, infodict, outfile):
     for name,info in info_CR.iteritems():
         # skip the process we want to determine:
         if name == process: continue
+        if not info[3]:
+            print "skipping process", name
+            continue
         filename = info[0]
         poss_CR = info[1]               
         if poss_CR == "MC":
@@ -108,9 +186,12 @@ def doBGestimate(region,infodict,fdata,extra_info=""):
     region_info = infodict[region]
     for name,info in region_info.iteritems():
         print "Determine background", name
+        if not info[3]:
+            print "Skipping background", name, "Should be obtained in a different way"
+            continue
         # unpack info
         filename = info[0]
-        poss_CR = info[1]
+        poss_CR = info[1]        
         # if we want to take it from MC:
         if poss_CR == "MC":
             # open the file
@@ -155,8 +236,10 @@ if __name__ == "__main__":
     # make the dictionary with process information, one per region
     SIG_info = make_info_dict(inputdir+analyzer+"_",
                               QCD_CR="0Lbg1uW0Ll_mdPhiHat4",
-                              TTJets_CR="g1Mbg1W1LlmT100")
-
+                              TTJets_CR="g1Mbg1W1LlmT100",
+                              ZJetsToNuNu_include=False
+                              )
+    
     #QCD_info = make_info_dict(inputdir+analyzer+"_",
     #                          ZJetsToNuNu_CR="0Lbg1Y2mu0el",ZJetsToNuNu_binbybin=False)
     QCD_info = make_info_dict(inputdir+analyzer+"_")
@@ -167,6 +250,7 @@ if __name__ == "__main__":
 
     #Zll_info = make_info_dict(inputdir+analyzer+"_")
 
+                                
     # put all this in one big dictionary:
     info = {"g1Mbg1W0Ll":SIG_info,
             "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
@@ -180,3 +264,16 @@ if __name__ == "__main__":
 
     #doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","global") # BG estimate for signal region, using global MC ratio
 
+    regions_Zll_est = ["NoCuts","presel",""]
+    for region in regions_Zll_est:
+        print "Acceptance", region, ",", get_Zll_acceptance(inputdir+"DYJetsToLL_HT.root",region)
+        print "Efficiency", region, ",", get_Zll_efficiency(inputdir+"DYJetsToLL_HT.root",region)
+        print "Scale factor", region, ",", get_Zll_scalefactor(inputdir+"DYJetsToLL_HT.root",region)
+
+    Zinv_info = make_info_dict(inputdir+analyzer+"_")
+    get_Zvv_estimation("g1Mbg1Y2mu0el", "", inputdir+analyzer+"_data.root", Zinv_info)
+
+        
+    #TODO: fix things for Znunu estimation. bit complicated as we want to use Zmumu sample for this
+    # Maybe I make this two separate things... so remove Znunu from the list (maybe with a flag), and add a separate function to do that estimation
+    # then we can combine the histograms when we make the plots
