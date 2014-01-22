@@ -244,7 +244,6 @@ int main(int argc, char** argv)
   // Loop over events
   //---------------------------------------------------------------------------
 
-  nevents = 10000;
   for(int entry=0; entry < nevents; ++entry)
     {
       // Read event into memory
