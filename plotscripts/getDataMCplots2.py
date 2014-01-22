@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140120"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140120/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140122"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140122/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     # define all the datasets we want to plot, and their colors
     # backgrounds
-    mc_datasets = ["QCD","TTJets","WJetsToLNu","Wbb","Top","TTX","ZJetsToNuNu","DYJetsToLL_PtZ","DYToBB","DYToCC","VV","VVV"]
+    mc_datasets = ["QCD","TTJets","WJetsToLNu","Wbb","Top","TTX","ZJetsToNuNu","DYJetsToLL","DYToBB","DYToCC","VV","VVV"]
     mc_colors   = [rt.kMagenta,rt.kRed,rt.kGreen+1,rt.kGreen+3,rt.kCyan,rt.kCyan+2,rt.kOrange,rt.kOrange+2,rt.kOrange+7,rt.kOrange+9,rt.kBlue+1,rt.kBlue-3]
     #mc_datasets = ["QCD","TTJets","WJetsToLNu","Top","TTX","ZJetsToNuNu","DYJetsToLL_PtZ","VV","VVV"]
     #mc_colors   = [rt.kMagenta,rt.kRed,rt.kGreen+1,rt.kCyan,rt.kCyan+2,rt.kOrange,rt.kOrange+2,rt.kBlue+1,rt.kBlue-3]

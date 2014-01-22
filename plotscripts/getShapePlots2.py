@@ -13,12 +13,12 @@ if __name__ == '__main__':
     #outputdir = sys.argv[1]
     #inputfile = sys.argv[2] # total bg histograms
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140120"
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140120/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140122"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140122/summary/"
     inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
     inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
     inputfile_WJets = basedir + "rzrBoostMC_WJetsToLNu.root"
-    inputfile_DYJets = basedir + "rzrBoostMC_DYJetsToLL_PtZ.root"
+    inputfile_DYJets = basedir + "rzrBoostMC_DYJetsToLL.root"
     inputfile_ZJetsToNuNu = basedir + "rzrBoostMC_ZJetsToNuNu.root"
     
     if not os.path.isdir(outputdir):
@@ -82,6 +82,29 @@ if __name__ == '__main__':
         rtitle = "#frac{TTJ}{SIG}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
 
+    # compare Wjets and TTjets in signal region and TTJets control region
+    for var in vars:
+        hdict_TTJ_S = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                               name="TTJets in SIG region", color=rt.kCyan+3,
+                                               title="Shape comparison for TTJets and WJets in the Signal and TTJets Control region",
+                                               appear_in_ratio="Ref", xtitle=var)
+        hdict_TTJ_T = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W1LlmT100"),
+                                               name="TTJets in TTJets CR", color=rt.kCyan+2,
+                                               title="Shape comparison for TTJets and WJets in the Signal and TTJets Control region",
+                                               appear_in_ratio="Yes", xtitle=var)
+        hdict_WJ_S = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                              name="WJets in SIG region", color=rt.kCyan+3,
+                                              title="Shape comparison for TTJets and WJets in the Signal and TTJets Control region",
+                                              appear_in_ratio="Ref", xtitle=var)
+        hdict_WJ_T = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_g1Mbg1W1LlmT100"),
+                                              name="WJets in TTJets CR", color=rt.kCyan+2,
+                                              title="Shape comparison for TTJets and WJets in the Signal and TTJets Control region",
+                                              appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_TTJ_S, hdict_TTJ_T,hdict_WJ_S,hdict_WJ_T]
+        canvasname = var+"_comparison_TTJ_WJ"
+        rtitle = "#frac{other}{TTJets SIG}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
     # build hdictlist for QCD:
     for var in vars:
         hdict_SIG = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_g1Mbg1W0Ll"),
@@ -127,8 +150,8 @@ if __name__ == '__main__':
     leps = ["2el0mu","2mu0el","2l0ol"]
     # build hdictlist for Zjets 0b:
     for var in vars:
-        hdict_SIG = plotTools.ConstructHDict(infile_DYJets.Get("h_"+var+"_g1Mbg1W0Ll"),
-                                             name="SIGNAL region", color=rt.kBlack,
+        hdict_SIG = plotTools.ConstructHDict(infile_Zinv.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                             name="ZJetsToNuNu in SIGNAL region", color=rt.kBlack,
                                              title="Shape comparison for ZJets in the Signal and various ZJets Control regions",
                                              appear_in_ratio="Ref", xtitle=var)
         hdictlist=[hdict_SIG]
@@ -144,8 +167,8 @@ if __name__ == '__main__':
 
     # build hdictlist for Zjets g1b:
     for var in vars:
-        hdict_SIG = plotTools.ConstructHDict(infile_DYJets.Get("h_"+var+"_g1Mbg1W0Ll"),
-                                             name="SIGNAL region", color=rt.kBlack,
+        hdict_SIG = plotTools.ConstructHDict(infile_Zinv.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                             name="ZJetsToNuNu in SIGNAL region", color=rt.kBlack,
                                              title="Shape comparison for ZJets in the Signal and various ZJets Control regions",
                                              appear_in_ratio="Ref", xtitle=var)
         hdictlist=[hdict_SIG]
@@ -174,6 +197,48 @@ if __name__ == '__main__':
         rtitle = "#frac{Znunu}{Wlnu}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
 
+    ###################################
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                             name="SIGNAL region", color=rt.kBlack,
+                                             title="Shape comparison for TTJets in Signal and Validation region",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_SIGlike = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mb0Wg1uW0Ll"),
+                                             name="SIGNAL like region", color=rt.kCyan+2,
+                                             title="Shape comparison for TTJets in Signal and Validation region",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_SIG,hdict_SIGlike]
+        canvasname = var+"_comparison_SIG_SIGlike_TTJ"
+        rtitle = "#frac{SIGlike}{SIG}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                             name="SIGNAL region", color=rt.kBlack,
+                                             title="Shape comparison for QCD in Signal and Validation region",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_SIGlike = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_g1Mb0Wg1uW0Ll"),
+                                             name="SIGNAL like region", color=rt.kCyan+2,
+                                             title="Shape comparison for QCD in Signal and Validation region",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_SIG,hdict_SIGlike]
+        canvasname = var+"_comparison_SIG_SIGlike_QCD"
+        rtitle = "#frac{SIGlike}{SIG}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_g1Mbg1W0Ll"),
+                                             name="SIGNAL region", color=rt.kBlack,
+                                             title="Shape comparison for WJets in Signal and Validation region",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_SIGlike = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_g1Mb0Wg1uW0Ll"),
+                                             name="SIGNAL like region", color=rt.kCyan+2,
+                                             title="Shape comparison for WJets in Signal and Validation region",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_SIG,hdict_SIGlike]
+        canvasname = var+"_comparison_SIG_SIGlike_WJets"
+        rtitle = "#frac{SIGlike}{SIG}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
 
     outfile.Close()
     infile_TTJ.Close()
