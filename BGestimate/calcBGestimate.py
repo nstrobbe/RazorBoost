@@ -228,7 +228,8 @@ if __name__ == "__main__":
     print "Will perform the background estimate"
 
     # directory containing all the raw histograms
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109_v2/summary/" 
+    #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109_v2/summary/" 
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140122/summary/" 
 
     # analyzer name
     analyzer = "rzrBoostMC"
@@ -260,18 +261,18 @@ if __name__ == "__main__":
 
 
     #doBGestimate(region,infodict,fdata,extra_info)
-    doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","_onlyQCDTTJ") # BG estimate for signal region, using bin-by-bin ratio
+    ###doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","_onlyQCDTTJ") # BG estimate for signal region, using bin-by-bin ratio
 
     #doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","global") # BG estimate for signal region, using global MC ratio
 
     regions_Zll_est = ["NoCuts","presel",""]
     for region in regions_Zll_est:
-        print "Acceptance", region, ",", get_Zll_acceptance(inputdir+"DYJetsToLL_HT.root",region)
-        print "Efficiency", region, ",", get_Zll_efficiency(inputdir+"DYJetsToLL_HT.root",region)
-        print "Scale factor", region, ",", get_Zll_scalefactor(inputdir+"DYJetsToLL_HT.root",region)
+        print "Acceptance", region, ",", get_Zll_acceptance(inputdir+"rzrBoostMC_DYJetsToLL.root",region)
+        print "Efficiency", region, ",", get_Zll_efficiency(inputdir+"rzrBoostMC_DYJetsToLL.root",region)
+        print "Scale factor", region, ",", get_Zll_scalefactor(inputdir+"rzrBoostMC_DYJetsToLL.root",region)
 
-    Zinv_info = make_info_dict(inputdir+analyzer+"_")
-    get_Zvv_estimation("g1Mbg1Y2mu0el", "", inputdir+analyzer+"_data.root", Zinv_info)
+    #Zinv_info = make_info_dict(inputdir+analyzer+"_")
+    #get_Zvv_estimation("g1Mbg1Y2mu0el", "", inputdir+analyzer+"_data.root", Zinv_info)
 
         
     #TODO: fix things for Znunu estimation. bit complicated as we want to use Zmumu sample for this
