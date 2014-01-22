@@ -482,6 +482,7 @@ int	lheeventproduct_hepeup_IDPRUP;
 int	lheeventproduct_hepeup_NUP;
 double	lheeventproduct_hepeup_SCALUP;
 double	lheeventproduct_hepeup_XWGTUP;
+double	lheeventproducthelper_mg;
 double	lheeventproducthelper_mt1;
 double	lheeventproducthelper_mz1;
 std::vector<double>	met1_energy(200,0);
@@ -4057,6 +4058,7 @@ void selectVariables(itreestream& stream)
   stream.select("LHEEventProduct_source.hepeup_NUP", lheeventproduct_hepeup_NUP);
   stream.select("LHEEventProduct_source.hepeup_SCALUP", lheeventproduct_hepeup_SCALUP);
   stream.select("LHEEventProduct_source.hepeup_XWGTUP", lheeventproduct_hepeup_XWGTUP);
+  stream.select("LHEEventProductHelper_source.mg", lheeventproducthelper_mg);
   stream.select("LHEEventProductHelper_source.mt1", lheeventproducthelper_mt1);
   stream.select("LHEEventProductHelper_source.mz1", lheeventproducthelper_mz1);
   stream.select("patMET_patMETsRaw.energy", met1_energy);

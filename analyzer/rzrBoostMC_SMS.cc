@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
-      && (sample == "T2tt" || sample == "T1ttcc" 
+      && (sample == "T2tt" || sample == "T1ttcc" || sample == "T1t1t"
 	  || sample == "TTJets" || sample == "WJets" || sample == "ZJets" )
       ){
     doISRreweighting = true;
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 
   // Get the pileup histogram:
   TString pileupname = "pileup_weights.root";
-  if (sample == "T1ttcc" || sample == "T2tt"){
+  if (sample == "T1ttcc" || sample == "T2tt" || sample == "T1t1t"){
     pileupname = "pileup_weights_sig52X.root";
   }
   TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
@@ -147,6 +147,14 @@ int main(int argc, char** argv)
   int LSP_max = 500; 
 
   if (sample == "T1ttcc"){
+    // stop is actually gluino in this case
+    nbins_stop = 15;
+    nbins_LSP = 11;
+    stop_min = 600; 
+    stop_max = 1350; 
+    LSP_min = 0; 
+    LSP_max = 550; 
+  } else if (sample == "T1ttcc_old"){
     nbins_stop = 113;
     nbins_LSP = 6;
     stop_min = 310; 
@@ -182,6 +190,7 @@ int main(int argc, char** argv)
   TH2D* h_mstop_mLSP_trackIso = new TH2D("h_mstop_mLSP_trackIso","h_mstop_mLSP_trackIso",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mb0Ll = new TH2D("h_mstop_mLSP_g1Mb0Ll","h_mstop_mLSP_g1Mb0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W0Ll = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll","h_mstop_mLSP_g1Mbg1W0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mb0Wg1uW0Ll = new TH2D("h_mstop_mLSP_g1Mb0Wg1uW0Ll","h_mstop_mLSP_g1Mb0Wg1uW0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
  
   TH2D* h_mstop_mLSP_0Lb0Ll = new TH2D("h_mstop_mLSP_0Lb0Ll","h_mstop_mLSP_0Lb0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_0Lbg1uW0Ll = new TH2D("h_mstop_mLSP_0Lbg1uW0Ll","h_mstop_mLSP_0Lbg1uW0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
@@ -235,7 +244,7 @@ int main(int argc, char** argv)
   // Loop over events
   //---------------------------------------------------------------------------
 
-  //nevents = 10000;
+  nevents = 10000;
   for(int entry=0; entry < nevents; ++entry)
     {
       // Read event into memory
@@ -259,8 +268,17 @@ int main(int argc, char** argv)
       fillObjects();
 
       // now find out which mass point this event belongs to
-      double mt1 = lheeventproducthelper_mt1;
+      double mg = lheeventproducthelper_mg;
+      double mt = lheeventproducthelper_mt1;
+     
+      // fill out histograms using mt1
+      double mt1 = mt;
+      if (sample == "T1ttcc")
+	mt1 = mg;
+
       double mz1 = lheeventproducthelper_mz1;
+      cout << "mgluino = " << mg << ", mstop = " << mt << ", mLSP = " << mz1 << endl;
+
       if (mz1 == 0) continue; // mLSP=0 should be rejected
 
       h_mstop->Fill(mt1);
@@ -917,6 +935,9 @@ int main(int argc, char** argv)
 		  h_mstop_mLSP_g1Mbg1W0Ll->Fill(mt1,mz1,w);
 
 		} // end of sW.size() > 0
+		else if (aW.size() > 0){
+		  h_mstop_mLSP_g1Mb0Wg1uW0Ll->Fill(mt1,mz1,w);
+		}
 	      } // end of nmediumbs > 0
 	      
 	      if (nloosebs == 0){
