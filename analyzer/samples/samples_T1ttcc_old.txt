@@ -1,6 +1,6 @@
-tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-310-325-350-375_mLSP-300/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc
-tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-410-425-450-475_mLSP-400/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc
-tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-510-525-550-575_mLSP-500/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc
-tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-610-625-650-675_mLSP-600/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc
-tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-710-725-750-775_mLSP-700/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc
-tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-810-825-850-875_mLSP-800/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc
+tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-310-325-350-375_mLSP-300/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc_old
+tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-410-425-450-475_mLSP-400/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc_old
+tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-510-525-550-575_mLSP-500/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc_old
+tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-610-625-650-675_mLSP-600/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc_old
+tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-710-725-750-775_mLSP-700/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc_old
+tnm_group%/SMS-MadGraph_Pythia6Zstar_8TeV_T1ttcc_2J_mGo-1000_mStop-810-825-850-875_mLSP-800/Summer12-START52_V9_FSIM-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1/ mc 1 1 T1ttcc_old

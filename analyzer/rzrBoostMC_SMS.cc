@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
-      && (sample == "T2tt" || sample == "T1ttcc" || sample == "T1t1t"
+      && (sample == "T2tt" || sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t"
 	  || sample == "TTJets" || sample == "WJets" || sample == "ZJets" )
       ){
     doISRreweighting = true;
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 
   // Get the pileup histogram:
   TString pileupname = "pileup_weights.root";
-  if (sample == "T1ttcc" || sample == "T2tt" || sample == "T1t1t"){
+  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
     pileupname = "pileup_weights_sig52X.root";
   }
   TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
@@ -146,7 +146,7 @@ int main(int argc, char** argv)
   int LSP_min = 0; 
   int LSP_max = 500; 
 
-  if (sample == "T1ttcc"){
+  if (sample == "T1ttcc" || sample == "T1t1t"){
     // stop is actually gluino in this case
     nbins_stop = 15;
     nbins_LSP = 11;
@@ -272,11 +272,11 @@ int main(int argc, char** argv)
      
       // fill out histograms using mt1
       double mt1 = mt;
-      if (sample == "T1ttcc")
+      if (sample == "T1ttcc" || sample == "T1t1t")
 	mt1 = mg;
 
       double mz1 = lheeventproducthelper_mz1;
-      cout << "mgluino = " << mg << ", mstop = " << mt << ", mLSP = " << mz1 << endl;
+      //cout << "mgluino = " << mg << ", mstop = " << mt << ", mLSP = " << mz1 << endl;
 
       if (mz1 == 0) continue; // mLSP=0 should be rejected
 
@@ -496,7 +496,7 @@ int main(int argc, char** argv)
 	  int ID_to_find = -1;
 	  if (sample == "T2tt")
 	    ID_to_find = 1000006;
-	  if (sample == "T1ttcc")
+	  if (sample == "T1ttcc" || sample == "T1t1t")
 	    ID_to_find = 1000021;
 	  if (sample == "TTJets")
 	    ID_to_find = 6;
