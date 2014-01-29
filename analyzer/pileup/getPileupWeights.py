@@ -7,6 +7,7 @@ gStyle.SetTextFont(42)
 
 MC = "mc"
 #MC = "sig52X"
+#MC = "sig53X"
 
 DATA = ""
 #DATA = "AB"
@@ -85,6 +86,8 @@ if DATA != "":
     ext = "_" + DATA
 if MC == "sig52X":
     ext = ext + "_52X"
+if MC == "sig53X":
+    ext = ext + "_53X"
 c.SaveAs("compare_pileup_profile"+ext+".pdf")
 #c.SaveAs("compare_pileup_profile"+ext+".root")
 
