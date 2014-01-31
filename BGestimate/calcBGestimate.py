@@ -92,7 +92,7 @@ def make_info_dict(base,
     info["WJetsToLNu"] = [base+"WJetsToLNu.root", WJetsToLNu_CR, WJetsToLNu_binbybin, WJetsToLNu_include]
     info["Top"] = [base+"Top.root", Top_CR, Top_binbybin, Top_include]
     info["ZJetsToNuNu"] = [base+"ZJetsToNuNu.root", ZJetsToNuNu_CR, ZJetsToNuNu_binbybin, ZJetsToNuNu_include]
-    info["DYJetsToLL"] = [base+"DYJetsToLL_PtZ.root", DYJetsToLL_CR, DYJetsToLL_binbybin, DYJetsToLL_include]
+    info["DYJetsToLL"] = [base+"DYJetsToLL.root", DYJetsToLL_CR, DYJetsToLL_binbybin, DYJetsToLL_include]
     info["VV"] = [base+"VV.root", VV_CR, VV_binbybin, VV_include]
     info["VVV"] = [base+"VVV.root", VVV_CR, VVV_binbybin, VVV_include]
     info["TTX"] = [base+"TTX.root", TTX_CR, TTX_binbybin, TTX_include]
@@ -240,13 +240,20 @@ if __name__ == "__main__":
                               TTJets_CR="g1Mbg1W1LlmT100",
                               ZJetsToNuNu_include=False
                               )
+    SIGlike_info = make_info_dict(inputdir+analyzer+"_",
+                                  QCD_CR="0Lbg1uW0Ll",QCD_binbybin=False,
+                                  TTJets_CR="g1Mbg1W1LlmT100",
+                                  )
     
     #QCD_info = make_info_dict(inputdir+analyzer+"_",
     #                          ZJetsToNuNu_CR="0Lbg1Y2mu0el",ZJetsToNuNu_binbybin=False)
     QCD_info = make_info_dict(inputdir+analyzer+"_")
 
+    WJ_info = make_info_dict(inputdir+analyzer+"_")
+
     TTJ_info = make_info_dict(inputdir+analyzer+"_",
-                              QCD_CR="0Lbg1uW0Ll_mdPhiHat4")
+                              QCD_CR="0Lbg1uW0Ll")
+                              #QCD_CR="0Lbg1uW0Ll_mdPhiHat4")
     #TTJ_info2 = make_info_dict(inputdir+analyzer+"_")             
 
     #Zll_info = make_info_dict(inputdir+analyzer+"_")
@@ -259,22 +266,25 @@ if __name__ == "__main__":
             #"0Lbg1Y2mu0el": Zll_info
             }
 
+    info2 = {"g1Mb0Wg1uW0Ll":SIGlike_info,
+             "0Lbg1uW0Ll":QCD_info,
+             "g1Mbg1W1LlmT100":TTJ_info,
+             }
+
 
     #doBGestimate(region,infodict,fdata,extra_info)
     ###doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","_onlyQCDTTJ") # BG estimate for signal region, using bin-by-bin ratio
+    doBGestimate("g1Mb0Wg1uW0Ll",info2,inputdir+analyzer+"_data.root","_onlyQCDTTJ_QCDglobal") # BG estimate for signal region, using bin-by-bin ratio
 
     #doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","global") # BG estimate for signal region, using global MC ratio
 
-    regions_Zll_est = ["NoCuts","presel",""]
-    for region in regions_Zll_est:
-        print "Acceptance", region, ",", get_Zll_acceptance(inputdir+"rzrBoostMC_DYJetsToLL.root",region)
-        print "Efficiency", region, ",", get_Zll_efficiency(inputdir+"rzrBoostMC_DYJetsToLL.root",region)
-        print "Scale factor", region, ",", get_Zll_scalefactor(inputdir+"rzrBoostMC_DYJetsToLL.root",region)
+    #regions_Zll_est = ["NoCuts","presel",""]
+    #for region in regions_Zll_est:
+    #    print "Acceptance", region, ",", get_Zll_acceptance(inputdir+"rzrBoostMC_DYJetsToLL.root",region)
+    #    print "Efficiency", region, ",", get_Zll_efficiency(inputdir+"rzrBoostMC_DYJetsToLL.root",region)
+    #    print "Scale factor", region, ",", get_Zll_scalefactor(inputdir+"rzrBoostMC_DYJetsToLL.root",region)
 
     #Zinv_info = make_info_dict(inputdir+analyzer+"_")
     #get_Zvv_estimation("g1Mbg1Y2mu0el", "", inputdir+analyzer+"_data.root", Zinv_info)
 
-        
-    #TODO: fix things for Znunu estimation. bit complicated as we want to use Zmumu sample for this
-    # Maybe I make this two separate things... so remove Znunu from the list (maybe with a flag), and add a separate function to do that estimation
-    # then we can combine the histograms when we make the plots
+    

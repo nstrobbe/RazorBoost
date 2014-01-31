@@ -125,10 +125,15 @@ int main(int argc, char** argv)
     pileupname = "pileup_weights_AB.root";
     cout << "Using pileup profile for runs A+B only" << endl;
   }
-  if (sample == "T1ttcc" || sample == "T2tt"){
+  if (sample == "T1ttcc_old" || sample == "T2tt"){
     pileupname = "pileup_weights_sig52X.root";
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig52X.root";
+  }
+  if (sample == "T1ttcc" || sample == "T1t1t"){
+    pileupname = "pileup_weights_sig53X.root";
+    if (Runs == "AB")
+      pileupname = "pileup_weights_AB_sig53X.root";
   }
   TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
   if (!fpileup){
@@ -284,6 +289,13 @@ int main(int argc, char** argv)
   TH1D * h_minDeltaPhiHat_jet1ptg200 = new TH1D("h_minDeltaPhiHat_jet1ptg200", "h_minDeltaPhiHat_jet1ptg200", 30, 0, 15);
   TH2D * h_MR_minDeltaPhiHat_jet1ptg200 = new TH2D("h_MR_minDeltaPhiHat_jet1ptg200", "h_MR_minDeltaPhiHat_jet1ptg200", nbins_MR, bins_MR, 30, 0, 15);
   TH2D * h_R2_minDeltaPhiHat_jet1ptg200 = new TH2D("h_R2_minDeltaPhiHat_jet1ptg200", "h_R2_minDeltaPhiHat_jet1ptg200", nbins_R2, bins_R2, 30, 0, 15);
+
+  TH1D * h_njets_jet1ptg200 = new TH1D("h_njets_jet1ptg200","h_njets_jet1ptg200",15,0,15);
+  TH1D * h_nbjets_jet1ptg200 = new TH1D("h_nbjets_jet1ptg200","h_nbjets_jet1ptg200",6,0,6);
+  TH1D * h_met_jet1ptg200 = new TH1D("h_met_jet1ptg200","h_met_jet1ptg200",20,0,1000);
+  TH1D * h_jet1pt_jet1ptg200 = new TH1D("h_jet1pt_jet1ptg200","h_jet1pt_jet1ptg200",20,0,1000);
+  TH1D * h_jet2pt_jet1ptg200 = new TH1D("h_jet2pt_jet1ptg200","h_jet2pt_jet1ptg200",20,0,1000);
+  TH1D * h_jet3pt_jet1ptg200 = new TH1D("h_jet3pt_jet1ptg200","h_jet3pt_jet1ptg200",20,0,1000);
 
   TH1D * h_MR_SIG = new TH1D("h_MR_SIG", "h_MR_SIG", nbins_MR, bins_MR);
   TH1D * h_R2_SIG = new TH1D("h_R2_SIG", "h_R2_SIG", nbins_R2, bins_R2);
@@ -1933,6 +1945,14 @@ int main(int argc, char** argv)
       h_MR_jet1ptg200->Fill(MR, w);
       h_R2_jet1ptg200->Fill(R2, w);
       h_MR_R2_jet1ptg200->Fill(MR, R2, w);
+
+      h_njets_jet1ptg200->Fill(sjet.size(),w);
+      h_nbjets_jet1ptg200->Fill(sbjet.size(),w);
+      h_met_jet1ptg200->Fill(met.Pt(),w);
+      h_jet1pt_jet1ptg200->Fill(sjet[0].pt,w);
+      h_jet2pt_jet1ptg200->Fill(sjet[1].pt,w);
+      h_jet3pt_jet1ptg200->Fill(sjet[2].pt,w);
+      
       if(isTTallhad)
 	TTallhad->Fill("jet1ptg200", w);
       else if(isTTsemilep)
