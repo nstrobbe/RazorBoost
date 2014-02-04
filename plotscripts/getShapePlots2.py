@@ -13,8 +13,8 @@ if __name__ == '__main__':
     #outputdir = sys.argv[1]
     #inputfile = sys.argv[2] # total bg histograms
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140122"
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140122/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140131"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140131/summary/"
     inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
     inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
     inputfile_WJets = basedir + "rzrBoostMC_WJetsToLNu.root"
@@ -239,6 +239,50 @@ if __name__ == '__main__':
         canvasname = var+"_comparison_SIG_SIGlike_WJets"
         rtitle = "#frac{SIGlike}{SIG}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+
+    #############################################################3######
+    # build hdictlist to compare dphimegajets
+    dphis = ["dphimegajets","dphijet1jet2"]
+    legd2 = plotTools.ConstructLDict(0.2,0.4,0.65,0.85)
+    for dphi in dphis:
+        hdict_QCD = plotTools.ConstructHDict(infile_QCD.Get("h_"+dphi+"_g1Mbg1W0Ll"),
+                                             name="QCD", color=rt.kMagenta,
+                                             title="",
+                                             appear_in_ratio="Ref", xtitle=dphi)
+        hdict_TTJ = plotTools.ConstructHDict(infile_TTJ.Get("h_"+dphi+"_g1Mbg1W0Ll"),
+                                             name="TTJets", color=rt.kRed,
+                                             title="",
+                                             appear_in_ratio="Yes", xtitle=dphi)
+
+        hdictlist=[hdict_QCD,hdict_TTJ]
+        canvasname = dphi+"_comparison"
+        rtitle = "#frac{TTJ}{QCD}"
+        plotTools.Plot1D(hdictlist,outputdir,outfile,legdict=legd2,cname=canvasname,scale="Yes")
+
+    # build hdictlist to compare HT
+    legd3 = plotTools.ConstructLDict(0.2,0.47,0.65,0.85)
+    hdict_QCD = plotTools.ConstructHDict(infile_QCD.Get("h_HT_SIG"),
+                                         name="QCD", color=rt.kMagenta,
+                                         title="HT after baseline selection",
+                                         xtitle="HT")
+    hdict_WJets = plotTools.ConstructHDict(infile_WJets.Get("h_HT_SIG"),
+                                         name="WJets", color=rt.kGreen+2,
+                                         title="HT after baseline selection",
+                                         xtitle="HT")
+    hdict_DYJets = plotTools.ConstructHDict(infile_DYJets.Get("h_HT_SIG"),
+                                            name="DYJets", color=rt.kOrange+7,
+                                            title="HT after baseline selection",
+                                            xtitle="HT")
+    hdict_Zinv = plotTools.ConstructHDict(infile_Zinv.Get("h_HT_SIG"),
+                                         name="ZJetsToNuNu", color=rt.kOrange,
+                                         title="HT after baseline selection",
+                                         xtitle="HT")
+    
+    hdictlist=[hdict_QCD,hdict_WJets,hdict_DYJets,hdict_Zinv]
+    canvasname = "HT_comparison"
+    plotTools.Plot1D(hdictlist,outputdir,outfile,legdict=legd3,logscale=True,cname=canvasname,scale="Yes")
+
 
     outfile.Close()
     infile_TTJ.Close()
