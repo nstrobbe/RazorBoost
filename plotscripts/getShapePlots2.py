@@ -13,13 +13,14 @@ if __name__ == '__main__':
     #outputdir = sys.argv[1]
     #inputfile = sys.argv[2] # total bg histograms
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140131"
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140131/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140204"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/summary/"
     inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
     inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
     inputfile_WJets = basedir + "rzrBoostMC_WJetsToLNu.root"
     inputfile_DYJets = basedir + "rzrBoostMC_DYJetsToLL.root"
     inputfile_ZJetsToNuNu = basedir + "rzrBoostMC_ZJetsToNuNu.root"
+    inputfile_data = basedir + "rzrBoostMC_data.root"
     
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
@@ -30,6 +31,7 @@ if __name__ == '__main__':
     infile_WJets = TFile.Open(inputfile_WJets)
     infile_DYJets = TFile.Open(inputfile_DYJets)
     infile_Zinv = TFile.Open(inputfile_ZJetsToNuNu)
+    infile_data = TFile.Open(inputfile_data)
 
     # Integrated luminosity in fb-1s
     intlumi = 19.789 # ABCD
@@ -261,7 +263,11 @@ if __name__ == '__main__':
         plotTools.Plot1D(hdictlist,outputdir,outfile,legdict=legd2,cname=canvasname,scale="Yes")
 
     # build hdictlist to compare HT
-    legd3 = plotTools.ConstructLDict(0.2,0.47,0.65,0.85)
+    legd3 = plotTools.ConstructLDict(0.6,0.87,0.65,0.85)
+    hdict_data = plotTools.ConstructHDict(infile_data.Get("h_HT_SIG"),
+                                          name="Data", color=rt.kBlack,
+                                          title="HT after baseline selection",
+                                          xtitle="HT")
     hdict_QCD = plotTools.ConstructHDict(infile_QCD.Get("h_HT_SIG"),
                                          name="QCD", color=rt.kMagenta,
                                          title="HT after baseline selection",
@@ -279,7 +285,7 @@ if __name__ == '__main__':
                                          title="HT after baseline selection",
                                          xtitle="HT")
     
-    hdictlist=[hdict_QCD,hdict_WJets,hdict_DYJets,hdict_Zinv]
+    hdictlist=[hdict_data,hdict_QCD,hdict_WJets,hdict_DYJets,hdict_Zinv]
     canvasname = "HT_comparison"
     plotTools.Plot1D(hdictlist,outputdir,outfile,legdict=legd3,logscale=True,cname=canvasname,scale="Yes")
 
@@ -290,3 +296,4 @@ if __name__ == '__main__':
     infile_WJets.Close()
     infile_DYJets.Close()
     infile_Zinv.Close()
+    infile_data.Close()

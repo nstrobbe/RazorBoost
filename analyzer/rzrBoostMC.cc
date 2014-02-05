@@ -869,6 +869,7 @@ int main(int argc, char** argv)
   ofile.count("1Mbg1W0Ll", 0.0);
   ofile.count("g2Mbg1W0Ll", 0.0);
   ofile.count("g1Mbg1W0Ll_mdPhiHat4", 0.0);
+  ofile.count("g1Mbg1W0Ll_mdPhiHatg4", 0.0);
   ofile.count("g1Mb0Wg1uW0Ll", 0.0);
   ofile.count("0Lb0Ll", 0.0);
   ofile.count("0Lbg1uW0Ll", 0.0);
