@@ -222,6 +222,29 @@ def doBGestimate(region,infodict,fdata,extra_info=""):
     BGestimate.Write()
     outfile.Close()
 
+def simple_estimate(sigregion,cregion,fdataname,fbgname):
+    outfile = TFile.Open("BGestimate_simple_"+sigregion+"_from_"+cregion+".root","RECREATE")
+
+    fdata = TFile.Open(fdataname)
+    fbg = TFile.Open(fbgname)
+    
+    # estimate_sig = observed_CR * (N_sig_all/N_CR_all)_MC
+
+    obs = fdata.Get("h_MR_R2_"+cregion)
+    obs.Sumw2()
+    N_sig = fbg.Get("h_MR_R2_"+sigregion)
+    N_sig.Sumw2()
+    N_cr = fbg.Get("h_MR_R2_"+cregion)
+    N_cr.Sumw2()
+
+    pred = obs.Clone()
+    #pred.Sumw2()
+    pred.Multiply(N_sig)
+    pred.Divide(N_cr)
+
+    outfile.cd()
+    pred.Write()
+    outfile.Close()
     
 if __name__ == "__main__":
 
@@ -229,7 +252,8 @@ if __name__ == "__main__":
 
     # directory containing all the raw histograms
     #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109_v2/summary/" 
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140122/summary/" 
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/summary/" 
+    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/" 
 
     # analyzer name
     analyzer = "rzrBoostMC"
@@ -238,22 +262,31 @@ if __name__ == "__main__":
     SIG_info = make_info_dict(inputdir+analyzer+"_",
                               QCD_CR="0Lbg1uW0Ll_mdPhiHat4",
                               TTJets_CR="g1Mbg1W1LlmT100",
-                              ZJetsToNuNu_include=False
+                              WJetsToLNu_CR="0Lbg1Y1LlmT"
                               )
     SIGlike_info = make_info_dict(inputdir+analyzer+"_",
-                                  QCD_CR="0Lbg1uW0Ll",QCD_binbybin=False,
+                                  QCD_CR="0Lbg1uW0Ll_mdPhiHat4",
                                   TTJets_CR="g1Mbg1W1LlmT100",
+                                  WJetsToLNu_CR="0Lbg1Y1LlmT"
                                   )
+    
+    SIG_dphi4_info = make_info_dict(inputdir+analyzer+"_",
+                                    QCD_CR="0Lbg1uW0Ll_mdPhiHat4",QCD_binbybin=True,
+                                    TTJets_CR="g1Mbg1W1LlmT100",
+                                    WJetsToLNu_CR="0Lbg1Y1LlmT"
+                                    )
     
     #QCD_info = make_info_dict(inputdir+analyzer+"_",
     #                          ZJetsToNuNu_CR="0Lbg1Y2mu0el",ZJetsToNuNu_binbybin=False)
     QCD_info = make_info_dict(inputdir+analyzer+"_")
 
-    WJ_info = make_info_dict(inputdir+analyzer+"_")
+    WJ_info = make_info_dict(inputdir+analyzer+"_",
+                             QCD_CR="0Lbg1uW0Ll_mdPhiHat4"
+                             )
 
     TTJ_info = make_info_dict(inputdir+analyzer+"_",
-                              QCD_CR="0Lbg1uW0Ll")
-                              #QCD_CR="0Lbg1uW0Ll_mdPhiHat4")
+                              QCD_CR="0Lbg1uW0Ll_mdPhiHat4"
+                              )
     #TTJ_info2 = make_info_dict(inputdir+analyzer+"_")             
 
     #Zll_info = make_info_dict(inputdir+analyzer+"_")
@@ -263,18 +296,26 @@ if __name__ == "__main__":
     info = {"g1Mbg1W0Ll":SIG_info,
             "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
             "g1Mbg1W1LlmT100":TTJ_info,
-            #"0Lbg1Y2mu0el": Zll_info
+            "0Lbg1Y1LlmT": WJ_info
             }
 
     info2 = {"g1Mb0Wg1uW0Ll":SIGlike_info,
-             "0Lbg1uW0Ll":QCD_info,
+             "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
              "g1Mbg1W1LlmT100":TTJ_info,
+             "0Lbg1Y1LlmT": WJ_info
              }
 
+    info_dphi4 = {"g1Mbg1W0Ll_mdPhiHatg4":SIG_dphi4_info,
+                  "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
+                  "g1Mbg1W1LlmT100":TTJ_info,
+                  "0Lbg1Y1LlmT": WJ_info
+                  }
 
     #doBGestimate(region,infodict,fdata,extra_info)
-    ###doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","_onlyQCDTTJ") # BG estimate for signal region, using bin-by-bin ratio
-    doBGestimate("g1Mb0Wg1uW0Ll",info2,inputdir+analyzer+"_data.root","_onlyQCDTTJ_QCDglobal") # BG estimate for signal region, using bin-by-bin ratio
+
+    #doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb5") # BG estimate for signal region, using bin-by-bin ratio
+    #doBGestimate("g1Mb0Wg1uW0Ll",info2,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb5") # BG estimate for signal region, using bin-by-bin ratio
+    #doBGestimate("g1Mbg1W0Ll_mdPhiHatg4",info_dphi4,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb5") # BG estimate for signal region, using bin-by-bin ratio
 
     #doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","global") # BG estimate for signal region, using global MC ratio
 
@@ -288,3 +329,8 @@ if __name__ == "__main__":
     #get_Zvv_estimation("g1Mbg1Y2mu0el", "", inputdir+analyzer+"_data.root", Zinv_info)
 
     
+    #simple_estimate("g1Mbg1W1LlmT100","0Lbg1Y1LlmT",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    #simple_estimate("0Lbg1Y1LlmT","g1Mbg1W1LlmT100",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+
+    simple_estimate("1Mbg1W1LlmT100","0Lbg1Y1LlmT",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    simple_estimate("g2Mbg1W1LlmT100","1Mbg1W1LlmT100",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
