@@ -98,7 +98,7 @@ int main(int argc, char** argv)
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
-      && (sample == "T2tt" || sample == "T1ttcc" || sample == "T1t1t"
+      && (sample == "T2tt" || sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t"
 	  || sample == "TTJets" || sample == "WJets" || sample == "ZJets" )
       ){
     doISRreweighting = true;
@@ -128,6 +128,7 @@ int main(int argc, char** argv)
 
   // Total weight
   TH1D* h_totweight = new TH1D("h_totweight", "h_totweight", 1, 1, 2);
+  TH1D* h_totweight_filter = new TH1D("h_totweight_filter", "h_totweight_filter", 1, 1, 2);
 
   // histograms for total ISR weight: Sum(all events) w_ISR
   // needed to do the reweighting properly without changing the overall cross section. 
@@ -184,7 +185,7 @@ int main(int argc, char** argv)
       if (eventhelper_isRealData!=1) {
         if (triggerresultshelper2_totalKinematicsFilterPath==0) continue;
       }
-
+      h_totweight_filter->Fill(1,w);
 
       // Fill number of pileup interactions
       h_pileup->Fill(pileupsummaryinfo[0].getTrueNumInteractions);
@@ -204,7 +205,7 @@ int main(int argc, char** argv)
 	  int ID_to_find = -1;
 	  if (sample == "T2tt")
 	    ID_to_find = 1000006;
-	  if (sample == "T1ttcc" || sample == "T1t1t")
+	  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t")
 	    ID_to_find = 1000021;
 	  if (sample == "TTJets")
 	    ID_to_find = 6;
