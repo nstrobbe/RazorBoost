@@ -102,7 +102,7 @@ int main(int argc, char** argv)
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
-      && (sample == "T2tt" || sample == "T1ttcc" 
+      && (sample == "T2tt" || sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t"
 	  || sample == "TTJets" || sample == "WJets" || sample == "ZJets" )
       ){
     doISRreweighting = true;
@@ -1438,7 +1438,7 @@ int main(int argc, char** argv)
 	  int ID_to_find = -1;
 	  if (sample == "T2tt")
 	    ID_to_find = 1000006;
-	  if (sample == "T1ttcc")
+	  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t" )
 	    ID_to_find = 1000021;
 	  if (sample == "TTJets")
 	    ID_to_find = 6;
@@ -1476,8 +1476,8 @@ int main(int argc, char** argv)
       h_totalISRweight_down->Fill(1,w_ISR_down);
 
       // Need to think when to apply these weights
-      //if (doISRreweighting)
-      //w = w*w_ISR_nominal;
+      if (doISRreweighting)
+	w = w*w_ISR_nominal;
      
       // **************************************************************
       // ***  Top Pt Reweighting recipe for Madgraph TTbar samples  ***
