@@ -13,8 +13,8 @@ if __name__ == '__main__':
     #outputdir = sys.argv[1]
     #inputfile = sys.argv[2] # total bg histograms
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140204"
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140213"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140213/summary/"
     inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
     inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
     inputfile_WJets = basedir + "rzrBoostMC_WJetsToLNu.root"
@@ -128,6 +128,25 @@ if __name__ == '__main__':
         hdictlist=[hdict_SIG,hdict_QCD_mdphi,hdict_QCD_mdphihat4,hdict_QCD_mdphihat5]
         canvasname = var+"_comparison_QCD"
         rtitle = "#frac{QCD}{SIG}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    # build hdictlist for QCD:
+    for var in vars:
+        hdict_QCD_mdphihat4 = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_0Lbg1uW0Ll_mdPhiHat4"),
+                                             name="QCD CR", color=rt.kMagenta,
+                                             title="Shape comparison for QCD MC in the QCD CR and in the SIG region with mdPhiHat > or < 4",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_SIG_mdphihat4 = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_g1Mbg1W0Ll_mdPhiHat4"),
+                                             name="SIGNAL region, mdPhiHat < 4", color=rt.kOrange-3,
+                                             title="Shape comparison for QCD MC in the QCD CR and in the SIG region with mdPhiHat > or < 4",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdict_SIG_mdphihatg4 = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_g1Mbg1W0Ll_mdPhiHatg4"),
+                                             name="SIGNAL region, mdPhiHat > 4", color=rt.kBlue-3,
+                                             title="Shape comparison for QCD MC in the QCD CR and in the SIG region with mdPhiHat > or < 4",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_QCD_mdphihat4,hdict_SIG_mdphihat4,hdict_SIG_mdphihatg4]
+        canvasname = var+"_comparison_QCD_SIG_mdphihat"
+        rtitle = "#frac{SIG}{QCD}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
 
     # build hdictlist for Wjets:
