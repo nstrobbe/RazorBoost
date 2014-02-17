@@ -854,6 +854,7 @@ int main(int argc, char** argv)
   ofile.count("NoCuts", 0.0);
   ofile.count("Cleaning", 0.0);
   ofile.count("Pileup", 0.0);
+  ofile.count("ISR", 0.0);
   ofile.count("HCAL_noise", 0.0);
   ofile.count("vertexg0", 0.0);
   ofile.count("njetge3", 0.0);
@@ -934,6 +935,7 @@ int main(int argc, char** argv)
   TTallhad->Fill("NoCuts", 0.0);
   TTallhad->Fill("Cleaning", 0.0);
   TTallhad->Fill("Pileup", 0.0);
+  TTallhad->Fill("ISR", 0.0);
   TTallhad->Fill("HCAL_noise", 0.0);
   TTallhad->Fill("vertexg0", 0.0);
   TTallhad->Fill("njetge3", 0.0);
@@ -1001,6 +1003,7 @@ int main(int argc, char** argv)
   TTsemilep->Fill("NoCuts", 0.0);
   TTsemilep->Fill("Cleaning", 0.0);
   TTsemilep->Fill("Pileup", 0.0);
+  TTsemilep->Fill("ISR", 0.0);
   TTsemilep->Fill("HCAL_noise", 0.0);
   TTsemilep->Fill("vertexg0", 0.0);
   TTsemilep->Fill("njetge3", 0.0);
@@ -1067,6 +1070,7 @@ int main(int argc, char** argv)
   TTdilep->Fill("NoCuts", 0.0);
   TTdilep->Fill("Cleaning", 0.0);
   TTdilep->Fill("Pileup", 0.0);
+  TTdilep->Fill("ISR", 0.0);
   TTdilep->Fill("HCAL_noise", 0.0);
   TTdilep->Fill("vertexg0", 0.0);
   TTdilep->Fill("njetge3", 0.0);
@@ -1416,11 +1420,11 @@ int main(int argc, char** argv)
 	  isTTdilep = true;
       }
       if(isTTallhad)
-	TTallhad->Fill("Cleaning",w);
+	TTallhad->Fill("Pileup",w);
       else if(isTTsemilep)
-	TTsemilep->Fill("Cleaning",w);
+	TTsemilep->Fill("Pileup",w);
       else if(isTTdilep)
-	TTdilep->Fill("Cleaning",w);
+	TTdilep->Fill("Pileup",w);
 
 
       // *****************************************************
@@ -1479,6 +1483,14 @@ int main(int argc, char** argv)
       if (doISRreweighting)
 	w = w*w_ISR_nominal;
      
+      ofile.count("ISR",w);
+      if(isTTallhad)
+	TTallhad->Fill("ISR",w);
+      else if(isTTsemilep)
+	TTsemilep->Fill("ISR",w);
+      else if(isTTdilep)
+	TTdilep->Fill("ISR",w);
+      
       // **************************************************************
       // ***  Top Pt Reweighting recipe for Madgraph TTbar samples  ***
       // **************************************************************
