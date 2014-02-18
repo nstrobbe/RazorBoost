@@ -162,6 +162,9 @@ int main(int argc, char** argv)
   //---------------------------------------------------------------------------
   // Declare histograms
   //---------------------------------------------------------------------------
+  TH1::SetDefaultSumw2();
+
+
   string binning = "variable";
   //string binning = "";
 
