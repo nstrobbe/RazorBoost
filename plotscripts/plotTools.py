@@ -223,7 +223,7 @@ def Plot2DRatio(hdict1,hdict2,outputdir="plots",outfile=0,
 # -- Plot routine for 1D comparison plots     -- #
 # ---------------------------------------------- # 
 def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
-                    ,ratiotitle="ratio",logscale=False,scale="No"):
+                    ,ratiotitle="ratio",logscale=False,scale="No",scalefactor=1):
     # First do some checks on the input
     if outfile == 0:
         print "You did not pass me a root file to store the plots. I will only produce pdf files."
@@ -264,9 +264,9 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
         h.Sumw2() # need to put this otherwise errors in ratio plot are wrong
         if scale == "Yes":
             sf = h.Integral(0,h.GetNbinsX()+1)
-            h.Scale(1./sf)
+            h.Scale(scalefactor/sf)
         if scale == "Width":
-            h.scale(1,"width")
+            h.Scale(scalefactor,"width")
             
         if hdict["appear in ratio"] == "Ref":
             print "Found ref histo"
@@ -339,8 +339,11 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
         if hdict["appear in ratio"]!= "Yes": continue
 
         h = hdict["histogram"]
+        h.Sumw2()
         ratio = h.Clone()
+        ratio.Sumw2()
         h_ref_ratio = h_ref.Clone()
+        h_ref_ratio.Sumw2()
         ratio.Divide(h_ref_ratio)
 
         ratio.SetMarkerColor(hdict["color"])
@@ -381,7 +384,7 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
 # -- Plot routine for 1D comparison plots without a ratio plot -- #
 # --------------------------------------------------------------- # 
 def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
-           ,logscale=False,scale="No"):
+           ,logscale=False,scale="No",scalefactor=1):
     # First do some checks on the input
     if outfile == 0:
         print "You did not pass me a root file to store the plots. I will only produce pdf files."
@@ -419,9 +422,9 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
         h.Sumw2() # need to put this otherwise errors in ratio plot are wrong
         if scale == "Yes":
             sf = h.Integral(0,h.GetNbinsX()+1)
-            h.Scale(1./sf)
+            h.Scale(scalefactor/sf)
         if scale == "Width":
-            h.Scale(1,"width")
+            h.Scale(scalefactor,"width")
             
         if scale == "Yes":
             h.GetYaxis().SetTitle("A.U.")
