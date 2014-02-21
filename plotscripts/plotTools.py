@@ -299,7 +299,9 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
             h.SetMarkerSize(hdict["markersize"])
             h.SetMarkerStyle(hdict["markerstyle"])
         h.SetTitle(hdict["title"])
-
+        if hdict["ytitle"] != "":
+            h.GetYaxis().SetTitle(hdict["ytitle"])
+            
         if hdict["appear in legend"]:
             legoption = "l"
             if "E" in hdict["drawoption"]:

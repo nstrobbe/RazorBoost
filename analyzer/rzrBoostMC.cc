@@ -21,16 +21,17 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-  // Get the trigger histogram:
-  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
+  // Get the trigger histogram: // old name: extr_eff0_sm2.root
+  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
   if (!fhlt){
-    fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
+    fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
   }
   if (!fhlt){
     cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
     return 1;
   }
-  TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
+  //TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
+  TH2D* h_hlteff = (TH2D*)fhlt->Get("h_HT_j1pt_0_effph");
     
   // Get file list and histogram filename from command line
   commandLine cmdline;
@@ -191,6 +192,16 @@ int main(int argc, char** argv)
     bins_R2 = getVariableBinEdges(nbins_R2+1,bins_R2_tmp);
   }
 
+  // variable binning for trigger histogram
+  int nbn_HT = 19;
+  int nbn_j1pt = 12;
+  Double_t bn_HT_tmp[] = {0.,50.,100.,150.,200.,250.,300.,350.,400.,450.,500.,550.,600.,650.,700.,750.,800.,900.,1000.,2500.};
+  Double_t* bn_HT = 0;
+  bn_HT = getVariableBinEdges(nbn_HT+1,bn_HT_tmp);
+  Double_t bn_j1pt_tmp[] = {0.,50.,100.,150.,200.,250.,300.,350.,400.,450.,500.,700.,1000.};
+  Double_t* bn_j1pt = 0;
+  bn_j1pt = getVariableBinEdges(nbn_j1pt+1,bn_j1pt_tmp);
+
   TH1D* h_totweight = new TH1D("h_totweight", "h_totweight", 1, 1, 2);
 
   // histograms for total ISR weight: Sum(all events) w_ISR
@@ -209,6 +220,19 @@ int main(int argc, char** argv)
 
   TH1D* h_PV = new TH1D("h_PV","h_PV",50,0,50);
   TH1D* h_PV_reweighted = new TH1D("h_PV_reweighted","h_PV_reweighted",50,0,50);
+
+  TH1D* h_PV_nosel = new TH1D("h_PV_nosel","h_PV_nosel",50,0,50);
+  TH1D* h_PV_reweighted_nosel = new TH1D("h_PV_reweighted_nosel","h_PV_reweighted_nosel",50,0,50);
+
+  TH1D* h_PV_SIG = new TH1D("h_PV_SIG","h_PV_SIG",50,0,50);
+  TH1D* h_PV_reweighted_SIG = new TH1D("h_PV_reweighted_SIG","h_PV_reweighted_SIG",50,0,50);
+
+  TH1D* h_PV_g1Mbg1W1LlmT100 = new TH1D("h_PV_g1Mbg1W1LlmT100","h_PV_g1Mbg1W1LlmT100",50,0,50);
+  TH1D* h_PV_reweighted_g1Mbg1W1LlmT100 = new TH1D("h_PV_reweighted_g1Mbg1W1LlmT100","h_PV_reweighted_g1Mbg1W1LlmT100",50,0,50);
+
+
+  TH2D * h_HT_jet1pt_nosel = new TH2D("h_HT_jet1pt_nosel", "h_HT_jet1pt_nosel", nbn_HT, bn_HT, nbn_j1pt, bn_j1pt);
+  TH2D * h_HT_jet1pt_nosel_notrigw = new TH2D("h_HT_jet1pt_nosel_notrigw", "h_HT_jet1pt_nosel_notrigw", nbn_HT, bn_HT, nbn_j1pt, bn_j1pt);
 
   // W tagging plots
 
@@ -312,6 +336,8 @@ int main(int argc, char** argv)
   TH2D * h_R2_minDeltaPhiHat_SIG = new TH2D("h_R2_minDeltaPhiHat_SIG", "h_R2_minDeltaPhiHat_SIG", nbins_R2, bins_R2, 30, 0, 15);
 
   TH1D * h_HT_SIG = new TH1D("h_HT_SIG", "h_HT_SIG", 100, 0, 2000);
+  TH2D * h_HT_jet1pt_SIG = new TH2D("h_HT_jet1pt_SIG", "h_HT_jet1pt_SIG", nbn_HT, bn_HT, nbn_j1pt, bn_j1pt);
+  TH2D * h_HT_jet1pt_SIG_notrigw = new TH2D("h_HT_jet1pt_SIG_notrigw", "h_HT_jet1pt_SIG_notrigw", nbn_HT, bn_HT, nbn_j1pt, bn_j1pt);
 
   // 0 lepton trajectory
   TH1D * h_MR_neleeq0 = new TH1D("h_MR_neleeq0", "h_MR_neleeq0", nbins_MR, bins_MR);
@@ -1215,27 +1241,27 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 190456 && eventhelper_run < 190762 ) {
 	  if (fsample.find("_Jet_") < fsample.length()) {
 	    if (!
-		(triggerresultshelper_HLT_PFJet320_v3 == 1 ||
+		(triggerresultshelper_HLT_PFJet320_v3 == 1 //||
 		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
 		 //triggerresultshelper_HLT_PFHT650_v5 == 1 ||
 		 //triggerresultshelper_HLT_HT750_v1 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
+		 ////triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
 		 )) continue;
 	  } else if (fsample.find("_HT_") < fsample.length()) {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v3 == 0 &&
-		 (triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
-		  triggerresultshelper_HLT_PFHT650_v5 == 1) &&
+		 (////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
+		  triggerresultshelper_HLT_PFHT650_v5 == 1) //&&
 		  //triggerresultshelper_HLT_HT750_v1 == 1 &&
-		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 0 
+		 ////triggerresultshelper_HLT_DiPFJetAve320_v3 == 0 
 		 )) continue;
 	  } else {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v3 == 1 ||
-		 triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
-		 triggerresultshelper_HLT_PFHT650_v5 == 1 ||
+		 ////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
+		 triggerresultshelper_HLT_PFHT650_v5 == 1 //||
 		 //triggerresultshelper_HLT_HT750_v1 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
+		 ////triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
 		 ) ) continue;
 	  }
 	}
@@ -1243,27 +1269,27 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 190762 && eventhelper_run < 191512 ) {
 	  if (fsample.find("_Jet_") < fsample.length()) {
 	    if (!
-		(triggerresultshelper_HLT_PFJet320_v4 == 1 ||
+		(triggerresultshelper_HLT_PFJet320_v4 == 1 //||
 		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
 		 //triggerresultshelper_HLT_PFHT650_v6 == 1 ||
 		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
+		 ////triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
 		 )) continue;
 	  } else if (fsample.find("_HT_") < fsample.length()) {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v4 == 0 &&
-		 (triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
-		  triggerresultshelper_HLT_PFHT650_v6 == 1) &&
+		 (////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
+		  triggerresultshelper_HLT_PFHT650_v6 == 1) //&&
 		 //triggerresultshelper_HLT_HT750_v2 == 1 &&
-		 triggerresultshelper_HLT_DiPFJetAve320_v4 == 0
+		 ////triggerresultshelper_HLT_DiPFJetAve320_v4 == 0
 		 )) continue;
 	  } else {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v4 == 1 ||
-		 triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
-		 triggerresultshelper_HLT_PFHT650_v6 == 1 ||
+		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
+		 triggerresultshelper_HLT_PFHT650_v6 == 1 //||
 		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
+		 ////triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
 		 ) ) continue;
 	  }
 	}
@@ -1271,27 +1297,27 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 191512 && eventhelper_run < 193746 ) {
 	  if (fsample.find("_Jet_") < fsample.length()) {
 	    if (!
-		(triggerresultshelper_HLT_PFJet320_v5 == 1 ||
+		(triggerresultshelper_HLT_PFJet320_v5 == 1 //||
 		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
 		 //triggerresultshelper_HLT_PFHT650_v7 == 1 ||
 		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
+		 ////triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
 		 )) continue;
 	  } else if (fsample.find("_HT_") < fsample.length()) {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v5 == 0 &&
-		 (triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
-		  triggerresultshelper_HLT_PFHT650_v7 == 1) &&
+		 (////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
+		  triggerresultshelper_HLT_PFHT650_v7 == 1) //&&
 		 //triggerresultshelper_HLT_HT750_v2 == 1 &&
-		 triggerresultshelper_HLT_DiPFJetAve320_v5 == 0
+		 ////triggerresultshelper_HLT_DiPFJetAve320_v5 == 0
 		 )) continue;
 	  } else {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-		 triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
-		 triggerresultshelper_HLT_PFHT650_v7 == 1 ||
+		 ////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
+		 triggerresultshelper_HLT_PFHT650_v7 == 1 //||
 		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
+		 ////triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
 		 ) ) continue;
 	  }
 	}
@@ -1300,20 +1326,20 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 193746 && eventhelper_run < 196039) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v5 == 1 ||
-	       triggerresultshelper_HLT_PFHT650_v8 == 1 ||
+	       ////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v5 == 1 ||
+	       triggerresultshelper_HLT_PFHT650_v8 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v3 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
+	       ////triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
 	       ) ) continue;
 	}
 
 	if ( eventhelper_run >= 196039 && eventhelper_run < 197770 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v6 == 1 ||
-	       triggerresultshelper_HLT_PFHT650_v9 == 1 ||
+	       ////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v6 == 1 ||
+	       triggerresultshelper_HLT_PFHT650_v9 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v4 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
+	       ////triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
 	       ) ) continue;
 	}
 
@@ -1321,30 +1347,30 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 197770 && eventhelper_run < 199648 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet400_v6 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v7 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v1 == 1 ||
+	       ////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v7 == 1 ||
+	       triggerresultshelper_HLT_PFNoPUHT650_v1 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v5 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v7 == 1
+	       ////triggerresultshelper_HLT_DiPFJetAve400_v7 == 1
 	       ) ) continue;
 	}
 
 	if ( eventhelper_run >= 199648 && eventhelper_run < 202807 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v8 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v9 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v3 == 1 ||
+	       ////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v9 == 1 ||
+	       triggerresultshelper_HLT_PFNoPUHT650_v3 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v7 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v9 == 1
+	       ////triggerresultshelper_HLT_DiPFJetAve400_v9 == 1
 	       ) ) continue;
 	}
 
 	if ( eventhelper_run >= 202807 && eventhelper_run < 203734 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v9 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 ||
+	       ////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
+	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v7 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
+	       ////triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
 	       ) ) continue;
 	}
 
@@ -1352,13 +1378,14 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 203734 && eventhelper_run < 208940 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v9 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 ||
+	       ////triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
+	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v7 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
+	       ////triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
 	       ) ) continue;
 	}
       }
+
 
       // ---------------------------------------------
       // -- First look at generator level particles --
@@ -1791,6 +1818,30 @@ int main(int argc, char** argv)
       h_nW_nb_Cleaning->Fill(nWs, nbs, w);
 
       h_nWAK5_Cleaning->Fill(sWAK5.size(), w);
+
+      double w_temp = 1.;
+      if (sjet.size()>0){
+	if (eventhelper_isRealData==0) {
+	  for (int i=1; i<h_hlteff->GetNbinsX()+1; i++) {
+	    double xmin = h_hlteff->GetXaxis()->GetBinLowEdge(i);
+	    double xmax = h_hlteff->GetXaxis()->GetBinUpEdge(i);
+	    if (!(HT >= xmin && HT < xmax)) continue;
+	    for (int j=1; j<h_hlteff->GetNbinsY()+1; j++) {
+	      double ymin = h_hlteff->GetYaxis()->GetBinLowEdge(j);
+	      double ymax = h_hlteff->GetYaxis()->GetBinUpEdge(j);
+	      if (sjet[0].pt >= ymin && sjet[0].pt < ymax) {
+		w_temp = h_hlteff->GetBinContent(i, j);
+		//cout << xmin << " " << MR << " " << xmax << " " << ymin << " " << R2 << " " << ymax << " " << whlt << endl;
+		break;
+	      }
+	    }
+	  }
+	}
+	h_PV_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_temp); // Included Trigger, But No PU weights, ISR weights or top pt weights
+	h_PV_reweighted_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w*w_temp); // current weight, includes Trigger, PU, ISR, top pt reweighting
+	h_HT_jet1pt_nosel->Fill(HT,sjet[0].pt,w*w_temp);
+	h_HT_jet1pt_nosel_notrigw->Fill(HT,sjet[0].pt,w);
+      }
       
       // ---------------------
       // -- Razor variables --
@@ -1954,6 +2005,8 @@ int main(int argc, char** argv)
       
       // Calculate the HLT weight and include it in the total weight:
       double whlt = 1;
+      double w_nohlt = w;
+      /*
       if (eventhelper_isRealData==0) {
 	for (int i=1; i<h_hlteff->GetNbinsX()+1; i++) {
 	  double xmin = h_hlteff->GetXaxis()->GetBinLowEdge(i);
@@ -1963,6 +2016,25 @@ int main(int argc, char** argv)
 	    double ymin = h_hlteff->GetYaxis()->GetBinLowEdge(j);
 	    double ymax = h_hlteff->GetYaxis()->GetBinUpEdge(j);
 	    if (R2 >= ymin && R2 < ymax) {
+	      whlt = h_hlteff->GetBinContent(i, j);
+	      //cout << xmin << " " << MR << " " << xmax << " " << ymin << " " << R2 << " " << ymax << " " << whlt << endl;
+	      break;
+	    }
+	  }
+	}
+	
+	w = w*whlt;
+      }
+      */
+      if (eventhelper_isRealData==0) {
+	for (int i=1; i<h_hlteff->GetNbinsX()+1; i++) {
+	  double xmin = h_hlteff->GetXaxis()->GetBinLowEdge(i);
+	  double xmax = h_hlteff->GetXaxis()->GetBinUpEdge(i);
+	  if (!(HT >= xmin && HT < xmax)) continue;
+	  for (int j=1; j<h_hlteff->GetNbinsY()+1; j++) {
+	    double ymin = h_hlteff->GetYaxis()->GetBinLowEdge(j);
+	    double ymax = h_hlteff->GetYaxis()->GetBinUpEdge(j);
+	    if (sjet[0].pt >= ymin && sjet[0].pt < ymax) {
 	      whlt = h_hlteff->GetBinContent(i, j);
 	      //cout << xmin << " " << MR << " " << xmax << " " << ymin << " " << R2 << " " << ymax << " " << whlt << endl;
 	      break;
@@ -2082,7 +2154,13 @@ int main(int argc, char** argv)
 	h_R2_minDeltaPhiHat_SIG->Fill(R2, minDeltaPhiHat, w);
 
 	h_HT_SIG->Fill(HT, w);
+	h_HT_jet1pt_SIG->Fill(HT,sjet[0].pt,w);
+	h_HT_jet1pt_SIG_notrigw->Fill(HT,sjet[0].pt,w_nohlt);
 
+	if (w_pileup != 0)
+	  h_PV_SIG->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*whlt);
+	h_PV_reweighted_SIG->Fill(eventhelperextra_numberOfPrimaryVertices,w);
+	
 	if(isTTallhad)
 	  TTallhad->Fill("SIG", w);
 	else if(isTTsemilep)
@@ -2517,6 +2595,9 @@ int main(int argc, char** argv)
 		h_jet3pt_g1Mbg1W1LlmT100->Fill(sjet[2].pt,w);
 		h_leptonpt_g1Mbg1W1LlmT100->Fill(lepton.Pt(),w);
 		h_HT_g1Mbg1W1LlmT100->Fill(HT,w);
+		if (w_pileup != 0)
+		  h_PV_g1Mbg1W1LlmT100->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*whlt);
+		h_PV_reweighted_g1Mbg1W1LlmT100->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 		if(isTTallhad)
 		  TTallhad->Fill("g1Mbg1W1LlmT100", w);
 		else if(isTTsemilep)

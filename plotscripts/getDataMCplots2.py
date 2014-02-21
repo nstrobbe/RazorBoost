@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140213"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140213/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140220_newtrigger_noISR"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140220_newtrigger_noISR/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -166,7 +166,11 @@ if __name__ == '__main__':
                              ratiotitle="Data/MC", logscale=True, scale="No")
 
     #hnames = ["h_TrueNumVertices","h_TrueNumVertices_reweighted"]
-    hnames = ["h_PV","h_PV_reweighted"]
+    hnames = ["h_PV","h_PV_reweighted"
+              , "h_PV_nosel", "h_PV_reweighted_nosel"
+              , "h_PV_SIG", "h_PV_reweighted_SIG" 
+              , "h_PV_g1Mbg1W1LlmT100", "h_PV_reweighted_g1Mbg1W1LlmT100"
+              ]
     htitle = "Data/MC comparison plot"
     for hname in hnames:
         var = hname.split("_")[1]
