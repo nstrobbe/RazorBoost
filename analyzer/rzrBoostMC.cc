@@ -21,7 +21,10 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-  // Get the trigger histogram: // old name: extr_eff0_sm2.root
+  // ----------------------------------------------------------------
+  // -- Get the trigger histogram: // old name: extr_eff0_sm2.root --
+  // ----------------------------------------------------------------
+
   TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
   if (!fhlt){
     fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
@@ -33,6 +36,10 @@ int main(int argc, char** argv)
   //TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
   TH2D* h_hlteff = (TH2D*)fhlt->Get("h_HT_j1pt_0_effph");
     
+  // ------------------------------
+  // -- Parse command line stuff --
+  // ------------------------------
+
   // Get file list and histogram filename from command line
   commandLine cmdline;
   decodeCommandLine(argc, argv, cmdline);
@@ -40,7 +47,8 @@ int main(int argc, char** argv)
   // Get names of ntuple files to be processed and open chain of ntuples
   vector<string> filenames = getFilenames(cmdline.filelist);
   itreestream stream(filenames, "Events");
-  if ( !stream.good() ) error("unable to open ntuple file(s)");
+  if ( !stream.good() ) 
+    error("unable to open ntuple file(s)");
 
   // Get number of events to be read
   int nevents = stream.size();
@@ -85,6 +93,7 @@ int main(int argc, char** argv)
   double totweight = cmdline.totweight; 
   double lumi = cmdline.lumi;
 
+  // parse rest of command line arguments
   string sample = "";
   if ( argc > 6 )
     sample = string(argv[6]);
@@ -120,8 +129,11 @@ int main(int argc, char** argv)
     cout << "Will do pileup reweighting" << endl;
   }
 
-  // Get the pileup histogram:
-  TString pileupname = "pileup_weights.root";
+  // ---------------------------------------
+  // --- Get the correct pileup histogram --
+  // ---------------------------------------
+
+  TString pileupname = "pileup_weights.root"; // default
   if (Runs == "AB"){
     pileupname = "pileup_weights_AB.root";
     cout << "Using pileup profile for runs A+B only" << endl;
@@ -146,10 +158,13 @@ int main(int argc, char** argv)
   }
   TH1D* h_pileup = (TH1D*)fpileup->Get("pileup_weight");
 
-  // Calculate the normalization factor for the event weights
-  // The original MC weight will be divided by this quantity
+  // --------------------------------------------------------------
+  // -- Calculate the normalization factor for the event weights --
+  // -- The original MC weight will be divided by this quantity  --
+  // --------------------------------------------------------------
+
   double weightnorm = 1.;
-  if (xsect != -1 && totweight != -1 && lumi != -1) {
+  if (xsect != -1 && totweight != -1 && lumi != -1) { // i.e. is not data
     weightnorm = (xsect*lumi)/totweight;
   }
 
@@ -160,11 +175,11 @@ int main(int argc, char** argv)
 
   outputFile ofile(cmdline.outputfilename);
 
-  //---------------------------------------------------------------------------
-  // Declare histograms
-  //---------------------------------------------------------------------------
-  TH1::SetDefaultSumw2();
+  // ---------------------------------------------------------------------------
+  // -- Declare histograms                                                    --
+  // ---------------------------------------------------------------------------
 
+  TH1::SetDefaultSumw2();
 
   string binning = "variable";
   //string binning = "";
@@ -180,7 +195,7 @@ int main(int argc, char** argv)
   double R2mx = 1;
   Double_t* bins_R2 = getFixedBinEdges(nbins_R2, R2mn, R2mx);
 
-  // for variable bin width
+  // for variable bin width in MR, R2
   if (binning == "variable"){
     nbins_MR = 7;
     nbins_R2 = 7;
@@ -196,12 +211,11 @@ int main(int argc, char** argv)
   int nbn_HT = 19;
   int nbn_j1pt = 12;
   Double_t bn_HT_tmp[] = {0.,50.,100.,150.,200.,250.,300.,350.,400.,450.,500.,550.,600.,650.,700.,750.,800.,900.,1000.,2500.};
-  Double_t* bn_HT = 0;
-  bn_HT = getVariableBinEdges(nbn_HT+1,bn_HT_tmp);
+  Double_t* bn_HT = getVariableBinEdges(nbn_HT+1,bn_HT_tmp);
   Double_t bn_j1pt_tmp[] = {0.,50.,100.,150.,200.,250.,300.,350.,400.,450.,500.,700.,1000.};
-  Double_t* bn_j1pt = 0;
-  bn_j1pt = getVariableBinEdges(nbn_j1pt+1,bn_j1pt_tmp);
+  Double_t* bn_j1pt = getVariableBinEdges(nbn_j1pt+1,bn_j1pt_tmp);
 
+  // Save the total weight for cross check purposes
   TH1D* h_totweight = new TH1D("h_totweight", "h_totweight", 1, 1, 2);
 
   // histograms for total ISR weight: Sum(all events) w_ISR
@@ -210,6 +224,7 @@ int main(int argc, char** argv)
   TH1D* h_totalISRweight_up = new TH1D("h_totalISRweight_up", "h_totalISRweight_up", 1, 1, 2); //  ISR up weight
   TH1D* h_totalISRweight_down = new TH1D("h_totalISRweight_down", "h_totalISRweight_down", 1, 1, 2); // ISR down weight
 
+  // histograms for top pt reweighting
   TH1D* h_totalTopPTweight_nominal = new TH1D("h_totalTopPTweight_nominal", "h_totalTopPTweight_nominal", 1, 1, 2); // nominal ISR weight
   TH1D* h_totalTopPTweight_up = new TH1D("h_totalTopPTweight_up", "h_totalTopPTweight_up", 1, 1, 2); //  ISR up weight
   TH1D* h_totalTopPTweight_down = new TH1D("h_totalTopPTweight_down", "h_totalTopPTweight_down", 1, 1, 2); // ISR down weight
@@ -218,24 +233,20 @@ int main(int argc, char** argv)
   TH1D* h_TrueNumVertices = new TH1D("h_TrueNumVertices","h_TrueNumVertices",100,0,100);
   TH1D* h_TrueNumVertices_reweighted = new TH1D("h_TrueNumVertices_reweighted","h_TrueNumVertices_reweighted",100,0,100);
 
-  TH1D* h_PV = new TH1D("h_PV","h_PV",50,0,50);
-  TH1D* h_PV_reweighted = new TH1D("h_PV_reweighted","h_PV_reweighted",50,0,50);
-
+  TH1D* h_PV_HLT = new TH1D("h_PV_HLT","h_PV_HLT",50,0,50);
+  TH1D* h_PV_reweighted_HLT = new TH1D("h_PV_reweighted_HLT","h_PV_reweighted_HLT",50,0,50);
   TH1D* h_PV_nosel = new TH1D("h_PV_nosel","h_PV_nosel",50,0,50);
   TH1D* h_PV_reweighted_nosel = new TH1D("h_PV_reweighted_nosel","h_PV_reweighted_nosel",50,0,50);
-
   TH1D* h_PV_SIG = new TH1D("h_PV_SIG","h_PV_SIG",50,0,50);
   TH1D* h_PV_reweighted_SIG = new TH1D("h_PV_reweighted_SIG","h_PV_reweighted_SIG",50,0,50);
-
   TH1D* h_PV_g1Mbg1W1LlmT100 = new TH1D("h_PV_g1Mbg1W1LlmT100","h_PV_g1Mbg1W1LlmT100",50,0,50);
   TH1D* h_PV_reweighted_g1Mbg1W1LlmT100 = new TH1D("h_PV_reweighted_g1Mbg1W1LlmT100","h_PV_reweighted_g1Mbg1W1LlmT100",50,0,50);
 
-
+  // Cross check plots for trigger weights
   TH2D * h_HT_jet1pt_nosel = new TH2D("h_HT_jet1pt_nosel", "h_HT_jet1pt_nosel", nbn_HT, bn_HT, nbn_j1pt, bn_j1pt);
   TH2D * h_HT_jet1pt_nosel_notrigw = new TH2D("h_HT_jet1pt_nosel_notrigw", "h_HT_jet1pt_nosel_notrigw", nbn_HT, bn_HT, nbn_j1pt, bn_j1pt);
 
   // W tagging plots
-
   TH2D* h_jmass_jpt = new TH2D("h_jmass_jpt", "h_jmass_jpt", 20, 0, 350, 20, 0, 1400);
   TH2D* h_d1pt_d2pt = new TH2D("h_d1pt_d2pt", "h_d1pt_d2pt", 20, 0, 1400, 20, 0, 1400);
   TH2D* h_d1m_d2m = new TH2D("h_d1m_d2m", "h_d1m_d2m", 20, 0, 200, 20, 0, 200);
@@ -251,20 +262,18 @@ int main(int argc, char** argv)
   TH2D* h_mdrp2_yasym = new TH2D("h_mdrp2_yasym", "h_mdrp2_yasym", 20, 0, 1, 20, 0, 1);
 
   // Plots of relevant quantities with tag for the cut flow
-
-  TH1D* h_nW_Cleaning = new TH1D("h_nW_Cleaning", "h_nW_Cleaning", 5, 0, 5);
-  TH1D* h_nb_Cleaning = new TH1D("h_nb_Cleaning", "h_nb_Cleaning", 5, 0, 5);
-  TH2D* h_nW_nb_Cleaning = new TH2D("h_nW_nb_Cleaning", "h_nW_nb_Cleaning", 5, 0, 5, 5, 0, 5);
-  TH1D* h_nWAK5_Cleaning = new TH1D("h_nWAK5_Cleaning", "h_nWAK5_Cleaning", 5, 0, 5);
-  TH2D* h_met_R2_Cleaning = new TH2D("h_met_R2_Cleaning", "h_met_R2_Cleaning", 20, 0, 1000, 25, 0, 1);
-  TH1D* h_met_Cleaning = new TH1D("h_met_Cleaning", "h_met_Cleaning", 20, 0, 1000);
-  TH2D* h_metmu_R2metmu_Cleaning = new TH2D("h_metmu_R2metmu_Cleaning", "h_metmu_R2metmu_Cleaning", 20, 0, 1000, 25, 0, 1);
-  TH1D* h_metmu_Cleaning = new TH1D("h_metmu_Cleaning", "h_metmu_Cleaning", 20, 0, 1000);
-  TH2D* h_metel_R2metel_Cleaning = new TH2D("h_metel_R2metel_Cleaning", "h_metel_R2metel_Cleaning", 20, 0, 1000, 25, 0, 1);
-  TH1D* h_metel_Cleaning = new TH1D("h_metel_Cleaning", "h_metel_Cleaning", 20, 0, 1000);
-
-  TH1D* h_j1pt_Cleaning = new TH1D("h_j1pt_Cleaning", "h_j1pt_Cleaning", 20, 0, 1000);
-  TH1D* h_nj_Cleaning = new TH1D("h_nj_Cleaning", "h_nj_Cleaning", 20, 0, 20);
+  TH1D* h_nW_Pileup = new TH1D("h_nW_Pileup", "h_nW_Pileup", 5, 0, 5);
+  TH1D* h_nb_Pileup = new TH1D("h_nb_Pileup", "h_nb_Pileup", 5, 0, 5);
+  TH2D* h_nW_nb_Pileup = new TH2D("h_nW_nb_Pileup", "h_nW_nb_Pileup", 5, 0, 5, 5, 0, 5);
+  TH1D* h_nWAK5_Pileup = new TH1D("h_nWAK5_Pileup", "h_nWAK5_Pileup", 5, 0, 5);
+  TH2D* h_met_R2_Pileup = new TH2D("h_met_R2_Pileup", "h_met_R2_Pileup", 20, 0, 1000, 25, 0, 1);
+  TH1D* h_met_Pileup = new TH1D("h_met_Pileup", "h_met_Pileup", 20, 0, 1000);
+  TH2D* h_metmu_R2metmu_Pileup = new TH2D("h_metmu_R2metmu_Pileup", "h_metmu_R2metmu_Pileup", 20, 0, 1000, 25, 0, 1);
+  TH1D* h_metmu_Pileup = new TH1D("h_metmu_Pileup", "h_metmu_Pileup", 20, 0, 1000);
+  TH2D* h_metel_R2metel_Pileup = new TH2D("h_metel_R2metel_Pileup", "h_metel_R2metel_Pileup", 20, 0, 1000, 25, 0, 1);
+  TH1D* h_metel_Pileup = new TH1D("h_metel_Pileup", "h_metel_Pileup", 20, 0, 1000);
+  TH1D* h_j1pt_Pileup = new TH1D("h_j1pt_Pileup", "h_j1pt_Pileup", 20, 0, 1000);
+  TH1D* h_nj_Pileup = new TH1D("h_nj_Pileup", "h_nj_Pileup", 20, 0, 20);
 
   TH1D* h_nW_jet1ptg200 = new TH1D("h_nW_jet1ptg200", "h_nW_jet1ptg200", 5, 0, 5);
   TH1D* h_nb_jet1ptg200 = new TH1D("h_nb_jet1ptg200", "h_nb_jet1ptg200", 5, 0, 5);
@@ -274,14 +283,14 @@ int main(int argc, char** argv)
   // MR, R2 plots for the different steps in the selection
   // need at least two jets to be able to compute MR and R2
 
-  TH1D* h_MR_Cleaning = new TH1D("h_MR_Cleaning", "h_MR_Cleaning", nbins_MR, bins_MR);
-  TH1D* h_R2_Cleaning = new TH1D("h_R2_Cleaning", "h_R2_Cleaning", nbins_R2, bins_R2);
-  TH2D* h_MR_R2_Cleaning = new TH2D("h_MR_R2_Cleaning", "h_MR_R2_Cleaning", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_MR_Pileup = new TH1D("h_MR_Pileup", "h_MR_Pileup", nbins_MR, bins_MR);
+  TH1D* h_R2_Pileup = new TH1D("h_R2_Pileup", "h_R2_Pileup", nbins_R2, bins_R2);
+  TH2D* h_MR_R2_Pileup = new TH2D("h_MR_R2_Pileup", "h_MR_R2_Pileup", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
-  TH1D* h_R2metmu_Cleaning = new TH1D("h_R2metmu_Cleaning", "h_R2metmu_Cleaning", nbins_R2, bins_R2);
-  TH2D* h_MR_R2metmu_Cleaning = new TH2D("h_MR_R2metmu_Cleaning", "h_MR_R2metmu_Cleaning", nbins_MR, bins_MR, nbins_R2, bins_R2);
-  TH1D* h_R2metel_Cleaning = new TH1D("h_R2metel_Cleaning", "h_R2metel_Cleaning", nbins_R2, bins_R2);
-  TH2D* h_MR_R2metel_Cleaning = new TH2D("h_MR_R2metel_Cleaning", "h_MR_R2metel_Cleaning", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_R2metmu_Pileup = new TH1D("h_R2metmu_Pileup", "h_R2metmu_Pileup", nbins_R2, bins_R2);
+  TH2D* h_MR_R2metmu_Pileup = new TH2D("h_MR_R2metmu_Pileup", "h_MR_R2metmu_Pileup", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_R2metel_Pileup = new TH1D("h_R2metel_Pileup", "h_R2metel_Pileup", nbins_R2, bins_R2);
+  TH2D* h_MR_R2metel_Pileup = new TH2D("h_MR_R2metel_Pileup", "h_MR_R2metel_Pileup", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D* h_MR_HCAL_noise = new TH1D("h_MR_HCAL_noise", "h_MR_HCAL_noise", nbins_MR, bins_MR);
   TH1D* h_R2_HCAL_noise = new TH1D("h_R2_HCAL_noise", "h_R2_HCAL_noise", nbins_R2, bins_R2);
@@ -874,7 +883,9 @@ int main(int argc, char** argv)
   TH1D* h_gen_dRqq_g1Mb0Ll = new TH1D("h_gen_dRqq_g1Mb0Ll", "h_gen_dRqq_g1Mb0Ll", 200, 0, 5);
   TH2D* h_gen_W1pt_dRqq_g1Mb0Ll = new TH2D("h_gen_W1pt_dRqq_g1Mb0Ll", "h_gen_W1pt_dRqq_g1Mb0Ll", 200, 0, 1000, 200, 0, 5);
 
-  // Define the order of bins in the counts histogram:
+  // ------------------------------------------------------
+  // -- Define the order of bins in the counts histogram --
+  // ------------------------------------------------------
 
   ofile.count("NoCuts2genallmu", 0.0);
   ofile.count("NoCuts2genmu", 0.0);
@@ -884,6 +895,7 @@ int main(int argc, char** argv)
   ofile.count("Cleaning", 0.0);
   ofile.count("Pileup", 0.0);
   ofile.count("ISR", 0.0);
+  ofile.count("TopPt", 0.0);
   ofile.count("HCAL_noise", 0.0);
   ofile.count("vertexg0", 0.0);
   ofile.count("njetge3", 0.0);
@@ -949,7 +961,9 @@ int main(int argc, char** argv)
   ofile.count("0Lbg1Y2l0ol", 0.0);
   ofile.count("g1Mbg1Y2l0ol", 0.0);
 
-
+  // ------------------------------------------------
+  // -- Define order of cuts for ttbar composition --
+  // ------------------------------------------------
   
   TH1D* TTallhad = new TH1D("counts_TTallhad","",1,0,1);
   TTallhad->SetBit(TH1::kCanRebin);
@@ -965,6 +979,7 @@ int main(int argc, char** argv)
   TTallhad->Fill("Cleaning", 0.0);
   TTallhad->Fill("Pileup", 0.0);
   TTallhad->Fill("ISR", 0.0);
+  TTallhad->Fill("TopPt", 0.0);
   TTallhad->Fill("HCAL_noise", 0.0);
   TTallhad->Fill("vertexg0", 0.0);
   TTallhad->Fill("njetge3", 0.0);
@@ -1033,6 +1048,7 @@ int main(int argc, char** argv)
   TTsemilep->Fill("Cleaning", 0.0);
   TTsemilep->Fill("Pileup", 0.0);
   TTsemilep->Fill("ISR", 0.0);
+  TTsemilep->Fill("TopPt", 0.0);
   TTsemilep->Fill("HCAL_noise", 0.0);
   TTsemilep->Fill("vertexg0", 0.0);
   TTsemilep->Fill("njetge3", 0.0);
@@ -1100,6 +1116,7 @@ int main(int argc, char** argv)
   TTdilep->Fill("Cleaning", 0.0);
   TTdilep->Fill("Pileup", 0.0);
   TTdilep->Fill("ISR", 0.0);
+  TTdilep->Fill("TopPt", 0.0);
   TTdilep->Fill("HCAL_noise", 0.0);
   TTdilep->Fill("vertexg0", 0.0);
   TTdilep->Fill("njetge3", 0.0);
@@ -1160,23 +1177,18 @@ int main(int argc, char** argv)
   TTdilep->Fill("g1Mbg1Y2l0ol", 0.0);
 
 
-  TH1::SetDefaultSumw2();
-
-
-
   //---------------------------------------------------------------------------
   // Loop over events
   //---------------------------------------------------------------------------
 
-  //nevents = 10000;
   for(int entry=0; entry < nevents; ++entry)
     {
       // Read event into memory
       stream.read(entry);
       
-      
       // Count events and get the total weight contibuted by the event
       h_totweight->Fill(1, geneventinfoproduct_weight);
+
       double w = 1.;
       if (geneventinfoproduct_weight != 0) {
         w = geneventinfoproduct_weight*weightnorm;
@@ -1193,11 +1205,13 @@ int main(int argc, char** argv)
       
       fillObjects();
 
-      //cout << "will fill ofile with weight " << w << endl;
       ofile.count("NoCuts", w);
 
-      // Get rid of the noise in data before you start filling ANY histogram
-      // by applying the filters:
+      // -------------------------------------------------------------------------
+      // -- Get rid of the noise in data before you start filling ANY histogram --
+      // -- by applying the filters:                                            --
+      // -------------------------------------------------------------------------
+
       if (eventhelper_isRealData==1) {
         if (!(triggerresultshelper1_EcalDeadCellTriggerPrimitiveFilterPath==1)) continue;
         if (!(triggerresultshelper1_hcalLaserEventFilterPath==1)) continue;
@@ -1218,23 +1232,9 @@ int main(int argc, char** argv)
 
       ofile.count("Cleaning", w);
 
-      // do pileup reweighting
-      double num_vertices = pileupsummaryinfo[0].getTrueNumInteractions;
-      h_TrueNumVertices->Fill(num_vertices,w);
-      // get the bin number in the pileup histogram
-      int pileup_bin = (int)ceil(num_vertices);
-      double w_pileup = 1.;
-      if(doPileupReweighting)
-	w_pileup = h_pileup->GetBinContent(pileup_bin);      
-      h_TrueNumVertices_reweighted->Fill(num_vertices,w*w_pileup);
-
-      double w_old = w;
-      w = w*w_pileup;
-
-      ofile.count("Pileup",w);
-      // -------------------------
-      // -- Trigger requirement --
-      // -------------------------
+      // ---------------------------------
+      // -- Trigger requirement in Data --
+      // ---------------------------------
 
       if (eventhelper_isRealData==1) { 
 	// Run2012A:
@@ -1386,196 +1386,23 @@ int main(int argc, char** argv)
 	}
       }
 
+      // ------------------------
+      // -- Pileup reweighting --
+      // ------------------------
 
-      // ---------------------------------------------
-      // -- First look at generator level particles --
-      // ---------------------------------------------
+      double num_vertices = pileupsummaryinfo[0].getTrueNumInteractions;
+      h_TrueNumVertices->Fill(num_vertices,w);
+      // get bin number in pileup histogram
+      int pileup_bin = (int)ceil(num_vertices);
+      double w_pileup = 1.;
+      if(doPileupReweighting)
+	w_pileup = h_pileup->GetBinContent(pileup_bin);      
+      h_TrueNumVertices_reweighted->Fill(num_vertices,w*w_pileup);
 
-      std::vector<genparticlehelper_s> tops;
-      std::vector<genparticlehelper_s> Ws;      
-      for (unsigned int i=0; i<genparticlehelper.size(); i++) {
-        if (genparticlehelper[i].status != 3) continue;
-        if (fabs(genparticlehelper[i].pdgId) == 6) {
-          std::vector<genparticlehelper_s> topdaughters;
-          int id1 = genparticlehelper[i].firstDaughter;
-          int id2 = genparticlehelper[i].lastDaughter;
-          topdaughters.push_back(genparticlehelper[id1]);
-          topdaughters.push_back(genparticlehelper[id2]);
-          if ((fabs(topdaughters[0].pdgId) == 5 ||
-               fabs(topdaughters[0].pdgId) == 24) &&
-              (fabs(topdaughters[1].pdgId) == 5 ||
-               fabs(topdaughters[1].pdgId) == 24)   
-              ) {
-            tops.push_back(genparticlehelper[i]);
-	    h_gen_toppt->Fill(genparticlehelper[i].pt);
-            double dRWb = fdeltaR(genparticlehelper[id1].eta, genparticlehelper[id1].phi,
-                          genparticlehelper[id2].eta, genparticlehelper[id2].phi);
-	    h_gen_dRWb->Fill(dRWb);
-            h_gen_toppt_dRWb->Fill(genparticlehelper[i].pt, dRWb);
-            for (unsigned int j=0; j<topdaughters.size(); j++) {
-              if (fabs(topdaughters[j].pdgId)==24) {
-                Ws.push_back(topdaughters[j]);
-                h_gen_Wpt->Fill(topdaughters[j].pt);
-	      }
-            }
-          }
-	}
-      }
- 
-      // also get the composition of the decays of ttbar
-      bool isTTallhad = false;
-      bool isTTsemilep = false;
-      bool isTTdilep = false;
+      double w_old = w;
+      w = w*w_pileup;
 
-      if (Ws.size() == 2) {
-	int nlep = 0;
-	for (unsigned int i=0; i<Ws.size(); i++) {
-	  int iWd1 = Ws[i].firstDaughter;
-	  int iWd2 = Ws[i].lastDaughter;
-	  if (fabs(genparticlehelper[iWd1].pdgId) < 5 ||
-	      fabs(genparticlehelper[iWd2].pdgId) < 5 ) {
-	    double dRqq = fdeltaR(genparticlehelper[iWd1].eta, genparticlehelper[iWd1].phi,
-				  genparticlehelper[iWd2].eta, genparticlehelper[iWd2].phi);
-	    h_gen_dRqq->Fill(dRqq);
-            h_gen_Wpt_dRqq->Fill(Ws[i].pt, dRqq);
-	  } else {
-	    nlep++;
-	  }
-	}
-	if (nlep==0)
-	  isTTallhad = true;
-	else if(nlep==1)
-	  isTTsemilep = true;
-	else if(nlep==2)
-	  isTTdilep = true;
-      }
-      if(isTTallhad)
-	TTallhad->Fill("Pileup",w);
-      else if(isTTsemilep)
-	TTsemilep->Fill("Pileup",w);
-      else if(isTTdilep)
-	TTdilep->Fill("Pileup",w);
-
-
-      // *****************************************************
-      // ***  ISR Reweighting recipe for Madgraph samples  ***
-      // *****************************************************
-      // per event weights to apply
-      double w_ISR_nominal = 1.;
-      double w_ISR_up = 1.; // always stays 1, i.e. no reweighting
-      double w_ISR_down = 1.;
-      if (doISRreweighting)
-	{
-	  // recipe can be found at https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMST2ccMadgraph8TeV
-	  // find system recoiling against ISR: 
-	  TLorentzVector recoilsystem(0,0,0,0); 
-	  int ID_to_find = -1;
-	  if (sample == "T2tt")
-	    ID_to_find = 1000006;
-	  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t" )
-	    ID_to_find = 1000021;
-	  if (sample == "TTJets")
-	    ID_to_find = 6;
-	  if (sample == "WJets")
-	    ID_to_find = 24;
-	  if (sample == "ZJets")
-	    ID_to_find = 23;
-	  for (unsigned int i=0; i<genparticlehelper.size(); i++) {
-	    if (genparticlehelper[i].status != 3) continue;
-	    if (fabs(genparticlehelper[i].pdgId) == ID_to_find){
-	      TLorentzVector TLV_temp; 
-	      TLV_temp.SetPtEtaPhiM(genparticlehelper[i].pt,genparticlehelper[i].eta
-				    ,genparticlehelper[i].phi,genparticlehelper[i].mass);
-	      recoilsystem += TLV_temp;
-	    }
-	  }
-	  // get the pt of the recoil system, apply weights accordingly
-	  double pt_ISR = recoilsystem.Pt();
-	  if (pt_ISR <= 120){
-	    w_ISR_nominal = 1.;
-	    w_ISR_down = 1.;
-	  } else if (pt_ISR <= 150){
-	    w_ISR_nominal = 0.95;
-	    w_ISR_down = 0.9;
-	  } else if (pt_ISR <= 250){
-	    w_ISR_nominal = 0.9;
-	    w_ISR_down = 0.8;
-	  } else {
-	    w_ISR_nominal = 0.8;
-	    w_ISR_down = 0.6;
-	  }
-	}
-      h_totalISRweight_nominal->Fill(1,w_ISR_nominal);
-      h_totalISRweight_up->Fill(1,w_ISR_up);
-      h_totalISRweight_down->Fill(1,w_ISR_down);
-
-      // Need to think when to apply these weights
-      if (doISRreweighting)
-	w = w*w_ISR_nominal;
-     
-      ofile.count("ISR",w);
-      if(isTTallhad)
-	TTallhad->Fill("ISR",w);
-      else if(isTTsemilep)
-	TTsemilep->Fill("ISR",w);
-      else if(isTTdilep)
-	TTdilep->Fill("ISR",w);
-      
-      // **************************************************************
-      // ***  Top Pt Reweighting recipe for Madgraph TTbar samples  ***
-      // **************************************************************
-      // per event weights to apply
-      double w_TopPt_nominal = 1.;
-      double w_TopPt_up = 1.; 
-      double w_TopPt_down = 1.; // always stays 1, i.e. no reweighting     
-      if(doTopPtreweighting){
-	for (unsigned int i=0; i<genparticlehelper.size(); i++) {
-	  if (genparticlehelper[i].status != 3) continue;
-	  if (fabs(genparticlehelper[i].pdgId) == 6){
-	    double wtemp = GetTopPtScaleFactor(genparticlehelper[i].pt);
-	    //cout << "wtemp: " << wtemp << endl;
-	    w_TopPt_nominal = w_TopPt_nominal * wtemp;
-	  }
-	}
-	w_TopPt_up = w_TopPt_nominal;
-	w_TopPt_nominal = sqrt(w_TopPt_nominal);
-      }
-      h_totalTopPTweight_nominal->Fill(1,w_TopPt_nominal);
-      h_totalTopPTweight_up->Fill(1,w_TopPt_up);
-      h_totalTopPTweight_down->Fill(1,w_TopPt_down);
-
-
-      // GEN Z selection
-
-      std::vector<genparticlehelper_s> genZ;      
-      for (unsigned int i=0; i<genparticlehelper.size(); i++) {
-        if (genparticlehelper[i].status != 3) continue;
-        if (!(fabs(genparticlehelper[i].pdgId) == 23) ) continue;
-	genZ.push_back(genparticlehelper[i]);
-      }
-
-      // GEN muon selection (to be used for dimuon acceptance)
-      // We select status 1 particles, because in our DY sample, there seem to be
-      // no extra muons...
-
-      std::vector<genparticlehelper_s> genmu;
-      std::vector<genparticlehelper_s> sgenmu;
-      std::vector<TLorentzVector> LVsgenmu;
-      for (unsigned int i=0; i<genparticlehelper.size(); i++) {
-        if (!(fabs(genparticlehelper[i].pdgId) == 13) ) continue;
-        if (!(genparticlehelper[i].status != 1) ) continue;
-	genmu.push_back(genparticlehelper[i]);
-	if (!(genparticlehelper[i].pt > 10.) ) continue;
-	if (!(fabs(genparticlehelper[i].eta) < 2.4) ) continue;
-	//cout << genparticlehelper[i].status << " " << genparticlehelper[i].pt << " " 
-	//     << genparticlehelper[i].eta << endl;
-	sgenmu.push_back(genparticlehelper[i]);
-	TLorentzVector lvmu;
-	lvmu.SetPtEtaPhiM(genparticlehelper[i].pt, genparticlehelper[i].eta,
-			  genparticlehelper[i].phi, genparticlehelper[i].mass);
-        LVsgenmu.push_back(lvmu);
-      }
-
+      ofile.count("Pileup",w);
 
       // ----------------------
       // -- object selection --
@@ -1600,7 +1427,7 @@ int main(int argc, char** argv)
       std::vector<TLorentzVector> LVsjet;
       std::vector<cmgpfjet_s> sbjet;
       std::vector<cmgpfjet_s> slbjet;
-      double HT=0;
+      double HT = 0;
       for (unsigned int i=0; i<cmgpfjet.size(); i++) {
 	if (!(cmgpfjet[i].pt > 30) ) continue;
 	if (!(fabs(cmgpfjet[i].eta) < 2.4) ) continue;
@@ -1638,7 +1465,6 @@ int main(int argc, char** argv)
       for (unsigned int i=0; i<jethelper4.size(); i++) {
         if (!(jethelper4[i].pt > 30) ) continue;
         if (!(fabs(jethelper4[i].eta) < 3) ) continue;
-
         h_jmass_jpt->Fill(jethelper4[i].mass, jethelper4[i].pt);
         h_d1pt_d2pt->Fill(jethelper4[i].daughter_0_pt, jethelper4[i].daughter_1_pt);
         h_d1m_d2m->Fill(jethelper4[i].daughter_0_mass, jethelper4[i].daughter_1_mass);
@@ -1648,7 +1474,6 @@ int main(int argc, char** argv)
 	sY.push_back(jethelper4[i]);
         h_d1ptsel_d2ptsel->Fill(jethelper4[i].daughter_0_pt, jethelper4[i].daughter_1_pt);
         h_d1msel_d2msel->Fill(jethelper4[i].daughter_0_mass, jethelper4[i].daughter_1_mass);
-        //cout << jethelper4[i].pt << endl;
         sjet2.push_back(jethelper4[i]);
         double massdrop = 1;
         double daughmass = -9;
@@ -1728,8 +1553,6 @@ int main(int argc, char** argv)
         sWAK5.push_back(jethelper4[i]);
       }
 
-
-
       // Muons - veto:
       // From https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMuonId#Tight_Muon
       std::vector<cmgmuon_s> vmuon;
@@ -1756,13 +1579,10 @@ int main(int argc, char** argv)
       }
 
       // Electrons - veto:
-      // Use the "veto" criteria
-      // From 
       std::vector<cmgelectron_s> velectron;
       for (unsigned int i=0; i<cmgelectron.size(); i++) {
 	if (!(cmgelectron[i].pt > 5) ) continue;
 	if (!(fabs(cmgelectron[i].eta) < 2.5) ) continue;
-	// veto 1.442 < |eta| < 1.556?
 	if (!(fabs(cmgelectron[i].eta) < 1.442 && fabs(cmgelectron[i].eta) < 1.556) ) continue;
 	velectron.push_back(cmgelectron[i]);
       }
@@ -1783,11 +1603,10 @@ int main(int argc, char** argv)
 	lvel.SetPtEtaPhiE(cmgelectron1[i].pt, cmgelectron1[i].eta,
 			  cmgelectron1[i].phi, cmgelectron1[i].energy);
         LVel.push_back(lvel);
-
       }
 
       // Taus - veto
-      // From supposed to behttps://twiki.cern.ch/twiki/bin/view/CMS/TauIDRecommendation#TauID
+      // From supposed to be https://twiki.cern.ch/twiki/bin/view/CMS/TauIDRecommendation#TauID
       // but since that twiki is so horrible, I just followed Will's multijet note.  Screw'em!
       std::vector<cmgtau_s> vtau;
       for (unsigned int i=0; i<cmgtau.size(); i++) {
@@ -1806,48 +1625,31 @@ int main(int argc, char** argv)
       }
 
 
-
+      // ---------------------------------------------------------------
+      // -- Now define some more variables, and fill a few histograms --
+      // ---------------------------------------------------------------
 
       // look at number of Ws and bs before any selection (besides cleaning and trigger)
       double nWs = sW.size();
       double nYs = sY.size();
       double nbs = sbjet.size();
 
-      h_nW_Cleaning->Fill(nWs, w);
-      h_nb_Cleaning->Fill(nbs, w);
-      h_nW_nb_Cleaning->Fill(nWs, nbs, w);
+      h_nW_Pileup->Fill(nWs, w);
+      h_nb_Pileup->Fill(nbs, w);
+      h_nW_nb_Pileup->Fill(nWs, nbs, w);
+      h_nWAK5_Pileup->Fill(sWAK5.size(), w);
 
-      h_nWAK5_Cleaning->Fill(sWAK5.size(), w);
+      h_met_Pileup->Fill(cmgbasemet2[0].et, w);
+      if (sjet.size() > 0)
+        h_j1pt_Pileup->Fill(sjet[0].pt, w);
+      h_nj_Pileup->Fill(sjet.size(), w);
 
-      double w_temp = 1.;
-      if (sjet.size()>0){
-	if (eventhelper_isRealData==0) {
-	  for (int i=1; i<h_hlteff->GetNbinsX()+1; i++) {
-	    double xmin = h_hlteff->GetXaxis()->GetBinLowEdge(i);
-	    double xmax = h_hlteff->GetXaxis()->GetBinUpEdge(i);
-	    if (!(HT >= xmin && HT < xmax)) continue;
-	    for (int j=1; j<h_hlteff->GetNbinsY()+1; j++) {
-	      double ymin = h_hlteff->GetYaxis()->GetBinLowEdge(j);
-	      double ymax = h_hlteff->GetYaxis()->GetBinUpEdge(j);
-	      if (sjet[0].pt >= ymin && sjet[0].pt < ymax) {
-		w_temp = h_hlteff->GetBinContent(i, j);
-		//cout << xmin << " " << MR << " " << xmax << " " << ymin << " " << R2 << " " << ymax << " " << whlt << endl;
-		break;
-	      }
-	    }
-	  }
-	}
-	h_PV_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_temp); // Included Trigger, But No PU weights, ISR weights or top pt weights
-	h_PV_reweighted_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w*w_temp); // current weight, includes Trigger, PU, ISR, top pt reweighting
-	h_HT_jet1pt_nosel->Fill(HT,sjet[0].pt,w*w_temp);
-	h_HT_jet1pt_nosel_notrigw->Fill(HT,sjet[0].pt,w);
-      }
       
-      // ---------------------
-      // -- Razor variables --
-      // ---------------------
+      // -------------------------------
+      // -- Calculate Razor variables --
+      // -------------------------------
 
-      // Calculate MR and R2 ignoring muons
+      // Calculate MR and R2 ignoring leptons -- DEFAULT
       TVector3 V3met;
       V3met.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
       TLorentzVector met;
@@ -1860,12 +1662,12 @@ int main(int argc, char** argv)
       if (LVhemis.size() == 2) {
 	MR = CalcMR(LVhemis[0], LVhemis[1]);
 	if (MR != MR) continue;
-	h_MR_Cleaning->Fill(MR, w);
+	h_MR_Pileup->Fill(MR, w);
 	MTR = CalcMTR(LVhemis[0], LVhemis[1], V3met);
 	R2 = pow((MTR / MR),2);
-	h_R2_Cleaning->Fill(R2, w);
-	h_MR_R2_Cleaning->Fill(MR, R2, w);
-	h_met_R2_Cleaning->Fill(cmgbasemet2[0].et, R2, w);
+	h_R2_Pileup->Fill(R2, w);
+	h_MR_R2_Pileup->Fill(MR, R2, w);
+	h_met_R2_Pileup->Fill(cmgbasemet2[0].et, R2, w);
       }
       
       // Calculate MR and R2 adding mus to MET
@@ -1874,16 +1676,16 @@ int main(int argc, char** argv)
       for (unsigned int i=0; i<V3mu.size(); i++) {
         V3metmu += V3mu[i];
       }
-      h_metmu_Cleaning->Fill(V3metmu.Pt(), w);
+      h_metmu_Pileup->Fill(V3metmu.Pt(), w);
 
       double MTRmetmu = -9999;
       double R2metmu = -9999;
       if (LVhemis.size() == 2) {
         MTRmetmu = CalcMTR(LVhemis[0], LVhemis[1], V3metmu);
         R2metmu = pow((MTRmetmu / MR),2);
-        h_R2metmu_Cleaning->Fill(R2metmu, w);
-        h_MR_R2metmu_Cleaning->Fill(MR, R2, w);
-        h_metmu_R2metmu_Cleaning->Fill(V3metmu.Pt(), R2, w);
+        h_R2metmu_Pileup->Fill(R2metmu, w);
+        h_MR_R2metmu_Pileup->Fill(MR, R2, w);
+        h_metmu_R2metmu_Pileup->Fill(V3metmu.Pt(), R2, w);
       }
 
       // Calculate MR and R2 adding electrons to MET
@@ -1892,29 +1694,250 @@ int main(int argc, char** argv)
       for (unsigned int i=0; i<V3el.size(); i++) {
         V3metel += V3el[i];
       }
-      h_metel_Cleaning->Fill(V3metel.Pt(), w);
+      h_metel_Pileup->Fill(V3metel.Pt(), w);
 
       double MTRmetel = -9999;
       double R2metel = -9999;
       if (LVhemis.size() == 2) {
         MTRmetel = CalcMTR(LVhemis[0], LVhemis[1], V3metel);
         R2metel = pow((MTRmetel / MR),2);
-        h_R2metel_Cleaning->Fill(R2metel, w);
-        h_MR_R2metel_Cleaning->Fill(MR, R2, w);
-        h_metel_R2metel_Cleaning->Fill(V3metel.Pt(), R2, w);
+        h_R2metel_Pileup->Fill(R2metel, w);
+        h_MR_R2metel_Pileup->Fill(MR, R2, w);
+        h_metel_R2metel_Pileup->Fill(V3metel.Pt(), R2, w);
       }
      
 
-      // ---------------------
-      // -- fill histograms --
-      // ---------------------
+      // --------------------------------------------------------
+      // -- Everything computed from generator level particles --
+      // --------------------------------------------------------
 
-
-      h_met_Cleaning->Fill(cmgbasemet2[0].et, w);
-      if (sjet.size() > 0) {
-        h_j1pt_Cleaning->Fill(sjet[0].pt, w);
+      // find the tops and Ws and plot some basic quantities
+      std::vector<genparticlehelper_s> tops;
+      std::vector<genparticlehelper_s> Ws;      
+      for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+        if (genparticlehelper[i].status != 3) continue;
+        if (fabs(genparticlehelper[i].pdgId) == 6) {
+          std::vector<genparticlehelper_s> topdaughters;
+          int id1 = genparticlehelper[i].firstDaughter;
+          int id2 = genparticlehelper[i].lastDaughter;
+          topdaughters.push_back(genparticlehelper[id1]);
+          topdaughters.push_back(genparticlehelper[id2]);
+          if ((fabs(topdaughters[0].pdgId) == 5 ||
+               fabs(topdaughters[0].pdgId) == 24) &&
+              (fabs(topdaughters[1].pdgId) == 5 ||
+               fabs(topdaughters[1].pdgId) == 24)   
+              ) {
+            tops.push_back(genparticlehelper[i]);
+	    h_gen_toppt->Fill(genparticlehelper[i].pt);
+            double dRWb = fdeltaR(genparticlehelper[id1].eta, genparticlehelper[id1].phi,
+				  genparticlehelper[id2].eta, genparticlehelper[id2].phi);
+	    h_gen_dRWb->Fill(dRWb);
+            h_gen_toppt_dRWb->Fill(genparticlehelper[i].pt, dRWb);
+            for (unsigned int j=0; j<topdaughters.size(); j++) {
+              if (fabs(topdaughters[j].pdgId)==24) {
+                Ws.push_back(topdaughters[j]);
+                h_gen_Wpt->Fill(topdaughters[j].pt);
+	      }
+            }
+          }
+	}
       }
-      h_nj_Cleaning->Fill(sjet.size(), w);
+ 
+      // also get the composition of the decays of ttbar
+      bool isTTallhad = false;
+      bool isTTsemilep = false;
+      bool isTTdilep = false;
+
+      if (Ws.size() == 2) {
+	int nlep = 0;
+	for (unsigned int i=0; i<Ws.size(); i++) {
+	  int iWd1 = Ws[i].firstDaughter;
+	  int iWd2 = Ws[i].lastDaughter;
+	  if (fabs(genparticlehelper[iWd1].pdgId) < 5 ||
+	      fabs(genparticlehelper[iWd2].pdgId) < 5 ) {
+	    double dRqq = fdeltaR(genparticlehelper[iWd1].eta, genparticlehelper[iWd1].phi,
+				  genparticlehelper[iWd2].eta, genparticlehelper[iWd2].phi);
+	    h_gen_dRqq->Fill(dRqq);
+            h_gen_Wpt_dRqq->Fill(Ws[i].pt, dRqq);
+	  } else {
+	    nlep++;
+	  }
+	}
+	if (nlep==0)
+	  isTTallhad = true;
+	else if(nlep==1)
+	  isTTsemilep = true;
+	else if(nlep==2)
+	  isTTdilep = true;
+      }
+      if(isTTallhad)
+	TTallhad->Fill("Pileup",w);
+      else if(isTTsemilep)
+	TTsemilep->Fill("Pileup",w);
+      else if(isTTdilep)
+	TTdilep->Fill("Pileup",w);
+
+      // ------------------------------------
+      // -- Pick up trigger weights for MC --
+      // ------------------------------------
+
+      double w_trigger = 1.;
+      if (eventhelper_isRealData==0) {
+	if (sjet.size() > 0){ // need at least one jet
+	  for (int i=1; i<h_hlteff->GetNbinsX()+1; i++) {
+	    double xmin = h_hlteff->GetXaxis()->GetBinLowEdge(i);
+	    double xmax = h_hlteff->GetXaxis()->GetBinUpEdge(i);
+	    if (!(HT >= xmin && HT < xmax)) continue;
+	    for (int j=1; j<h_hlteff->GetNbinsY()+1; j++) {
+	      double ymin = h_hlteff->GetYaxis()->GetBinLowEdge(j);
+	      double ymax = h_hlteff->GetYaxis()->GetBinUpEdge(j);
+	      if (sjet[0].pt >= ymin && sjet[0].pt < ymax) {
+		w_trigger = h_hlteff->GetBinContent(i, j);
+		//cout << xmin << " " << MR << " " << xmax << " " << ymin << " " << R2 << " " << ymax << " " << whlt << endl;
+		break;
+	      }
+	    }
+	  }
+	  h_PV_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger); // Included Trigger, But No PU weights
+	  h_PV_reweighted_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w*w_trigger); // current weight, includes Trigger, PU
+	  h_HT_jet1pt_nosel->Fill(HT,sjet[0].pt,w*w_trigger);
+	  h_HT_jet1pt_nosel_notrigw->Fill(HT,sjet[0].pt,w);
+	}
+      }
+      
+      // *****************************************************
+      // ***  ISR Reweighting recipe for Madgraph samples  ***
+      // *****************************************************
+
+      // per event weights to apply
+      double w_ISR_nominal = 1.;
+      double w_ISR_up = 1.; // always stays 1, i.e. no reweighting
+      double w_ISR_down = 1.;
+      if (doISRreweighting)
+	{
+	  // recipe can be found at https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMST2ccMadgraph8TeV
+	  // find system recoiling against ISR: 
+	  TLorentzVector recoilsystem(0,0,0,0); 
+	  int ID_to_find = -1;
+	  if (sample == "T2tt")
+	    ID_to_find = 1000006;
+	  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t" )
+	    ID_to_find = 1000021;
+	  if (sample == "TTJets")
+	    ID_to_find = 6;
+	  if (sample == "WJets")
+	    ID_to_find = 24;
+	  if (sample == "ZJets")
+	    ID_to_find = 23;
+	  for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+	    if (genparticlehelper[i].status != 3) continue;
+	    if (fabs(genparticlehelper[i].pdgId) == ID_to_find){
+	      TLorentzVector TLV_temp; 
+	      TLV_temp.SetPtEtaPhiM(genparticlehelper[i].pt,genparticlehelper[i].eta
+				    ,genparticlehelper[i].phi,genparticlehelper[i].mass);
+	      recoilsystem += TLV_temp;
+	    }
+	  }
+	  // get the pt of the recoil system, apply weights accordingly
+	  double pt_ISR = recoilsystem.Pt();
+	  if (pt_ISR <= 120){
+	    w_ISR_nominal = 1.;
+	    w_ISR_down = 1.;
+	  } else if (pt_ISR <= 150){
+	    w_ISR_nominal = 0.95;
+	    w_ISR_down = 0.9;
+	  } else if (pt_ISR <= 250){
+	    w_ISR_nominal = 0.9;
+	    w_ISR_down = 0.8;
+	  } else {
+	    w_ISR_nominal = 0.8;
+	    w_ISR_down = 0.6;
+	  }
+	}
+      h_totalISRweight_nominal->Fill(1,w_ISR_nominal);
+      h_totalISRweight_up->Fill(1,w_ISR_up);
+      h_totalISRweight_down->Fill(1,w_ISR_down);
+      
+      if (doISRreweighting)
+	w = w*w_ISR_nominal;
+     
+      ofile.count("ISR",w);
+      if(isTTallhad)
+	TTallhad->Fill("ISR",w);
+      else if(isTTsemilep)
+	TTsemilep->Fill("ISR",w);
+      else if(isTTdilep)
+	TTdilep->Fill("ISR",w);
+      
+      // **************************************************************
+      // ***  Top Pt Reweighting recipe for Madgraph TTbar samples  ***
+      // **************************************************************
+
+      // per event weights to apply
+      double w_TopPt_nominal = 1.;
+      double w_TopPt_up = 1.; 
+      double w_TopPt_down = 1.; // always stays 1, i.e. no reweighting     
+      if(doTopPtreweighting){
+	for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+	  if (genparticlehelper[i].status != 3) continue;
+	  if (fabs(genparticlehelper[i].pdgId) == 6){
+	    double wtemp = GetTopPtScaleFactor(genparticlehelper[i].pt);
+	    //cout << "wtemp: " << wtemp << endl;
+	    w_TopPt_nominal = w_TopPt_nominal * wtemp;
+	  }
+	}
+	w_TopPt_up = w_TopPt_nominal;
+	w_TopPt_nominal = sqrt(w_TopPt_nominal);
+      }
+      h_totalTopPTweight_nominal->Fill(1,w_TopPt_nominal);
+      h_totalTopPTweight_up->Fill(1,w_TopPt_up);
+      h_totalTopPTweight_down->Fill(1,w_TopPt_down);
+      
+      if(doTopPtreweighting)
+	w = w*w_TopPt_nominal;
+
+      ofile.count("TopPt",w);
+      if(isTTallhad)
+	TTallhad->Fill("TopPt",w);
+      else if(isTTsemilep)
+	TTsemilep->Fill("TopPt",w);
+      else if(isTTdilep)
+	TTdilep->Fill("TopPt",w);
+
+
+      // -------------------------------
+      // -- Stuff for Zinv estimation --
+      // -------------------------------
+
+      // GEN Z selection
+      std::vector<genparticlehelper_s> genZ;      
+      for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+        if (genparticlehelper[i].status != 3) continue;
+        if (!(fabs(genparticlehelper[i].pdgId) == 23) ) continue;
+	genZ.push_back(genparticlehelper[i]);
+      }
+
+      // GEN muon selection (to be used for dimuon acceptance)
+      // We select status 1 particles, because in our DY sample, there seem to be
+      // no extra muons...
+      std::vector<genparticlehelper_s> genmu;
+      std::vector<genparticlehelper_s> sgenmu;
+      std::vector<TLorentzVector> LVsgenmu;
+      for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+        if (!(fabs(genparticlehelper[i].pdgId) == 13) ) continue;
+        if (!(genparticlehelper[i].status != 1) ) continue;
+	genmu.push_back(genparticlehelper[i]);
+	if (!(genparticlehelper[i].pt > 10.) ) continue;
+	if (!(fabs(genparticlehelper[i].eta) < 2.4) ) continue;
+	//cout << genparticlehelper[i].status << " " << genparticlehelper[i].pt << " " 
+	//     << genparticlehelper[i].eta << endl;
+	sgenmu.push_back(genparticlehelper[i]);
+	TLorentzVector lvmu;
+	lvmu.SetPtEtaPhiM(genparticlehelper[i].pt, genparticlehelper[i].eta,
+			  genparticlehelper[i].phi, genparticlehelper[i].mass);
+        LVsgenmu.push_back(lvmu);
+      }
+
 
       // ---------------------
       // -- event selection --
@@ -1922,30 +1945,33 @@ int main(int argc, char** argv)
 
       // dimuon selections for the muon acceptance and efficiency - for no cuts
       if (genmu.size() == 2 && genZ.size() == 1) {
-	if (!(genmu[0].charge == -genmu[1].charge)) continue;
-	ofile.count("NoCuts2genallmu", w);
-	if(isTTallhad)
-	  TTallhad->Fill("NoCuts2genallmu", w);
-	else if(isTTsemilep)
-	  TTsemilep->Fill("NoCuts2genallmu", w);
-	else if(isTTdilep)
-	  TTdilep->Fill("NoCuts2genallmu", w);
+	if (genmu[0].charge == -genmu[1].charge){
+	  ofile.count("NoCuts2genallmu", w);
+	  if(isTTallhad)
+	    TTallhad->Fill("NoCuts2genallmu", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("NoCuts2genallmu", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("NoCuts2genallmu", w);
+	}
       }
       if (sgenmu.size() == 2) {
-	if (!(genmu[0].charge == -genmu[1].charge)) continue;
-	TLorentzVector LVZcand;
-	for (unsigned int m=0; m<LVsgenmu.size(); m++) {
-	  LVZcand += LVsgenmu[m];
+	if (genmu[0].charge == -genmu[1].charge){
+	  TLorentzVector LVZcand;
+	  for (unsigned int m=0; m<LVsgenmu.size(); m++) {
+	    LVZcand += LVsgenmu[m];
+	  }
+	  double Zmass = LVZcand.M();
+	  if (Zmass >= 60 && Zmass <= 120){
+	    ofile.count("NoCuts2genmu", w);
+	    if(isTTallhad)
+	      TTallhad->Fill("NoCuts2genmu", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("NoCuts2genmu", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("NoCuts2genmu", w);
+	  }
 	}
-	double Zmass = LVZcand.M();
-	if (!(Zmass >= 60 && Zmass <= 120)) continue;
-	ofile.count("NoCuts2genmu", w);
-	if(isTTallhad)
-	  TTallhad->Fill("NoCuts2genmu", w);
-	else if(isTTsemilep)
-	  TTsemilep->Fill("NoCuts2genmu", w);
-	else if(isTTdilep)
-	  TTdilep->Fill("NoCuts2genmu", w);
       }
       if (smuon.size() == 2) {
 	TLorentzVector LVZcand;
@@ -1953,14 +1979,15 @@ int main(int argc, char** argv)
 	  LVZcand += LVmu[m];
 	}
 	double Zmass = LVZcand.M();
-	if (!(Zmass >= 60 && Zmass <= 120)) continue;
-	ofile.count("NoCuts2mu", w);
-	if(isTTallhad)
-	  TTallhad->Fill("NoCuts2mu", w);
-	else if(isTTsemilep)
-	  TTsemilep->Fill("NoCuts2mu", w);
-	else if(isTTdilep)
-	  TTdilep->Fill("NoCuts2mu", w);
+	if (Zmass >= 60 && Zmass <= 120){
+	  ofile.count("NoCuts2mu", w);
+	  if(isTTallhad)
+	    TTallhad->Fill("NoCuts2mu", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("NoCuts2mu", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("NoCuts2mu", w);
+	}
       }
 
       // Additional HCAL noise cleaning
@@ -2003,48 +2030,10 @@ int main(int argc, char** argv)
       else if(isTTdilep)
 	TTdilep->Fill("njetge3", w);
       
-      // Calculate the HLT weight and include it in the total weight:
-      double whlt = 1;
+      // Apply HLT weight and include it in the total weight:
       double w_nohlt = w;
-      /*
-      if (eventhelper_isRealData==0) {
-	for (int i=1; i<h_hlteff->GetNbinsX()+1; i++) {
-	  double xmin = h_hlteff->GetXaxis()->GetBinLowEdge(i);
-	  double xmax = h_hlteff->GetXaxis()->GetBinUpEdge(i);
-	  if (!(MR >= xmin && MR < xmax)) continue;
-	  for (int j=1; j<h_hlteff->GetNbinsY()+1; j++) {
-	    double ymin = h_hlteff->GetYaxis()->GetBinLowEdge(j);
-	    double ymax = h_hlteff->GetYaxis()->GetBinUpEdge(j);
-	    if (R2 >= ymin && R2 < ymax) {
-	      whlt = h_hlteff->GetBinContent(i, j);
-	      //cout << xmin << " " << MR << " " << xmax << " " << ymin << " " << R2 << " " << ymax << " " << whlt << endl;
-	      break;
-	    }
-	  }
-	}
-	
-	w = w*whlt;
-      }
-      */
-      if (eventhelper_isRealData==0) {
-	for (int i=1; i<h_hlteff->GetNbinsX()+1; i++) {
-	  double xmin = h_hlteff->GetXaxis()->GetBinLowEdge(i);
-	  double xmax = h_hlteff->GetXaxis()->GetBinUpEdge(i);
-	  if (!(HT >= xmin && HT < xmax)) continue;
-	  for (int j=1; j<h_hlteff->GetNbinsY()+1; j++) {
-	    double ymin = h_hlteff->GetYaxis()->GetBinLowEdge(j);
-	    double ymax = h_hlteff->GetYaxis()->GetBinUpEdge(j);
-	    if (sjet[0].pt >= ymin && sjet[0].pt < ymax) {
-	      whlt = h_hlteff->GetBinContent(i, j);
-	      //cout << xmin << " " << MR << " " << xmax << " " << ymin << " " << R2 << " " << ymax << " " << whlt << endl;
-	      break;
-	    }
-	  }
-	}
-	
-	w = w*whlt;
-      }
-      //w = w*whlt;
+      w = w*w_trigger;
+ 
       ofile.count("HLT", w);
       h_MR_HLT->Fill(MR, w);
       h_R2_HLT->Fill(R2, w);
@@ -2056,11 +2045,9 @@ int main(int argc, char** argv)
       else if(isTTdilep)
 	TTdilep->Fill("HLT", w);
 
-      if (w_pileup != 0)
-	h_PV->Fill(eventhelperextra_numberOfPrimaryVertices,w/w_pileup);
-      h_PV_reweighted->Fill(eventhelperextra_numberOfPrimaryVertices,w);
-
-
+      h_PV_HLT->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger*w_TopPt_nominal*w_ISR_nominal);
+      h_PV_reweighted_HLT->Fill(eventhelperextra_numberOfPrimaryVertices,w);
+      
       // Compute the minDeltaPhi variable, taking the first three jets into account
       // Compute the minDeltaPhiHat variable, taking the first three jets into account
       double minDeltaPhi = 99.;
@@ -2082,7 +2069,7 @@ int main(int argc, char** argv)
 	if (mdphihat < minDeltaPhiHat)
 	  minDeltaPhiHat = mdphihat;
       }
-
+      
       h_minDeltaPhi_HLT->Fill(minDeltaPhi, w);
       h_MR_minDeltaPhi_HLT->Fill(MR, minDeltaPhi, w);
       h_R2_minDeltaPhi_HLT->Fill(R2, minDeltaPhi, w);
@@ -2157,8 +2144,7 @@ int main(int argc, char** argv)
 	h_HT_jet1pt_SIG->Fill(HT,sjet[0].pt,w);
 	h_HT_jet1pt_SIG_notrigw->Fill(HT,sjet[0].pt,w_nohlt);
 
-	if (w_pileup != 0)
-	  h_PV_SIG->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*whlt);
+	h_PV_SIG->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger*w_TopPt_nominal*w_ISR_nominal);
 	h_PV_reweighted_SIG->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 	
 	if(isTTallhad)
@@ -2595,8 +2581,7 @@ int main(int argc, char** argv)
 		h_jet3pt_g1Mbg1W1LlmT100->Fill(sjet[2].pt,w);
 		h_leptonpt_g1Mbg1W1LlmT100->Fill(lepton.Pt(),w);
 		h_HT_g1Mbg1W1LlmT100->Fill(HT,w);
-		if (w_pileup != 0)
-		  h_PV_g1Mbg1W1LlmT100->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*whlt);
+		h_PV_g1Mbg1W1LlmT100->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger*w_TopPt_nominal*w_ISR_nominal);
 		h_PV_reweighted_g1Mbg1W1LlmT100->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 		if(isTTallhad)
 		  TTallhad->Fill("g1Mbg1W1LlmT100", w);
