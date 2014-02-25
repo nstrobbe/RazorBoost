@@ -5,16 +5,11 @@ from ROOT import TFile
 
 import plotTools
 
-if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/estimate_20140204/"
-
-    sigregion = "g2Mbg1W1LlmT100"
-    cregion = "1Mbg1W1LlmT100"
-
-    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/summary/rzrBoostMC_data.root" # data histograms
-    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/rzrBoostMC_bg.root" # data histograms
-    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/estimate_20140204/BGestimate_simple_"+sigregion+"_from_"+cregion+".root" # bg estimate histograms
+def makeplot(sigregion, cregion, basedir, estdir, outputdir, MConly=True):
+    inputfile_data = basedir + "/summary/rzrBoostMC_data.root" # data histograms
+    inputfile_totalbg = basedir + "/rzrBoostMC_bg.root" # data histograms
+    inputfile_estimate = estdir + "/BGestimate_simple_"+sigregion+"_from_"+cregion+".root" # bg estimate histograms
 
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
@@ -26,9 +21,6 @@ if __name__ == '__main__':
 
     # Integrated luminosity in fb-1s
     intlumi = 19.789 # ABCD
-
-    # set root styles
-    plotTools.SetBoostStyle()
     
     vars = ["MR","R2"]
 
@@ -57,8 +49,9 @@ if __name__ == '__main__':
                                             name="Full MC BG estimate", color=rt.kRed+2,
                                             title=htitle, drawoption="E0", fillstyle=3002,
                                             appear_in_ratio="Yes", xtitle=var)
-        #hdictlist=[hdict_estimate,hdict_bg,hdict_data]
         hdictlist=[hdict_estimate,hdict_data]
+        if MConly:
+            hdictlist=[hdict_estimate,hdict_bg,hdict_data]
         canvasname = var+"_comparison_data_estimate_"+sigregion+"_from_"+cregion
         rtitle = "#frac{BG estimate}{Data}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,
@@ -66,3 +59,17 @@ if __name__ == '__main__':
         
     
     outfile.Close()
+
+
+if __name__ == '__main__':
+
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140224_noISR/"
+    estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140225/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140225/"
+
+    # set root styles
+    plotTools.SetBoostStyle()
+
+    makeplot("g1Mbg1W1LlmT100", "0Lbg1Y1LlmT", basedir, estdir, outputdir)
+    makeplot("1Mbg1W1LlmT100", "0Lbg1Y1LlmT", basedir, estdir, outputdir)
+    makeplot("g2Mbg1W1LlmT100", "1Mbg1W1LlmT100", basedir, estdir, outputdir)

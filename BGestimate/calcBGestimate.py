@@ -1,5 +1,6 @@
 from ROOT import *
 
+### for Zinv estimation
 def get_Zll_acceptance(rootfilename,selection):
     f = TFile.Open(rootfilename)
     h = f.Get("counts")
@@ -71,7 +72,9 @@ def get_Zvv_estimation(CR, selection_for_sf, fdataname, infodict):
     outfile.cd()
     h_est.Write()
     outfile.Close()
-    
+
+
+### For usual simple estimation
 def make_info_dict(base,
                    QCD_CR="MC",TTJets_CR="MC",WJetsToLNu_CR="MC",Top_CR="MC",
                    ZJetsToNuNu_CR="MC",DYJetsToLL_CR="MC",VV_CR="MC",
@@ -222,6 +225,7 @@ def doBGestimate(region,infodict,fdata,extra_info=""):
     BGestimate.Write()
     outfile.Close()
 
+### Use only one (total) bg histogram instead of summing over different components
 def simple_estimate(sigregion,cregion,fdataname,fbgname):
     outfile = TFile.Open("BGestimate_simple_"+sigregion+"_from_"+cregion+".root","RECREATE")
 
@@ -252,8 +256,8 @@ if __name__ == "__main__":
 
     # directory containing all the raw histograms
     #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109_v2/summary/" 
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/summary/" 
-    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/" 
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140224_noISR/summary/" 
+    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140224_noISR/" 
 
     # analyzer name
     analyzer = "rzrBoostMC"
@@ -270,6 +274,12 @@ if __name__ == "__main__":
                                   WJetsToLNu_CR="0Lbg1Y1LlmT"
                                   )
     
+    SIG_dphig4_info = make_info_dict(inputdir+analyzer+"_",
+                                    QCD_CR="0Lbg1uW0Ll_mdPhiHat4",QCD_binbybin=True,
+                                    TTJets_CR="g1Mbg1W1LlmT100",
+                                    WJetsToLNu_CR="0Lbg1Y1LlmT"
+                                    )
+    
     SIG_dphi4_info = make_info_dict(inputdir+analyzer+"_",
                                     QCD_CR="0Lbg1uW0Ll_mdPhiHat4",QCD_binbybin=True,
                                     TTJets_CR="g1Mbg1W1LlmT100",
@@ -280,8 +290,8 @@ if __name__ == "__main__":
     #                          ZJetsToNuNu_CR="0Lbg1Y2mu0el",ZJetsToNuNu_binbybin=False)
     QCD_info = make_info_dict(inputdir+analyzer+"_")
 
-    WJ_info = make_info_dict(inputdir+analyzer+"_",
-                             QCD_CR="0Lbg1uW0Ll_mdPhiHat4"
+    WJ_info = make_info_dict(inputdir+analyzer+"_"
+                             #,QCD_CR="0Lbg1uW0Ll_mdPhiHat4"
                              )
 
     TTJ_info = make_info_dict(inputdir+analyzer+"_",
@@ -293,19 +303,27 @@ if __name__ == "__main__":
 
                                 
     # put all this in one big dictionary:
+    # for signal region estimation
     info = {"g1Mbg1W0Ll":SIG_info,
             "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
             "g1Mbg1W1LlmT100":TTJ_info,
             "0Lbg1Y1LlmT": WJ_info
             }
 
+    # for signal like region estimation
     info2 = {"g1Mb0Wg1uW0Ll":SIGlike_info,
              "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
              "g1Mbg1W1LlmT100":TTJ_info,
              "0Lbg1Y1LlmT": WJ_info
              }
 
-    info_dphi4 = {"g1Mbg1W0Ll_mdPhiHatg4":SIG_dphi4_info,
+    info_dphig4 = {"g1Mbg1W0Ll_mdPhiHatg4":SIG_dphig4_info,
+                   "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
+                   "g1Mbg1W1LlmT100":TTJ_info,
+                   "0Lbg1Y1LlmT": WJ_info
+                   }
+
+    info_dphi4 = {"g1Mbg1W0Ll_mdPhiHat4":SIG_dphi4_info,
                   "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
                   "g1Mbg1W1LlmT100":TTJ_info,
                   "0Lbg1Y1LlmT": WJ_info
@@ -314,8 +332,7 @@ if __name__ == "__main__":
     #doBGestimate(region,infodict,fdata,extra_info)
 
     #doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb5") # BG estimate for signal region, using bin-by-bin ratio
-    #doBGestimate("g1Mb0Wg1uW0Ll",info2,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb5") # BG estimate for signal region, using bin-by-bin ratio
-    #doBGestimate("g1Mbg1W0Ll_mdPhiHatg4",info_dphi4,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb5") # BG estimate for signal region, using bin-by-bin ratio
+    #doBGestimate("g1Mbg1W0Ll_mdPhiHatg4",info_dphig4,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb5") # BG estimate for signal region, using bin-by-bin ratio
 
     #doBGestimate("g1Mbg1W0Ll",info,inputdir+analyzer+"_data.root","global") # BG estimate for signal region, using global MC ratio
 
@@ -328,9 +345,25 @@ if __name__ == "__main__":
     #Zinv_info = make_info_dict(inputdir+analyzer+"_")
     #get_Zvv_estimation("g1Mbg1Y2mu0el", "", inputdir+analyzer+"_data.root", Zinv_info)
 
-    
-    #simple_estimate("g1Mbg1W1LlmT100","0Lbg1Y1LlmT",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
-    #simple_estimate("0Lbg1Y1LlmT","g1Mbg1W1LlmT100",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    ###############################################################################
+    ##  Perform some closure tests doing the full estimation on several regions  ##
+    ###############################################################################
 
+    # signal-like region
+    doBGestimate("g1Mb0Wg1uW0Ll",info2,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb25") 
+
+    # signal region mdphihat<4
+    doBGestimate("g1Mbg1W0Ll_mdPhiHat4",info_dphi4,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb25") 
+ 
+
+
+
+    ############################################################
+    ##  Perform some closure tests using the simple estimate  ##
+    ############################################################
+
+    # TTJ and WJ composition
+    simple_estimate("g1Mbg1W1LlmT100","0Lbg1Y1LlmT",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    # Btag modeling
     simple_estimate("1Mbg1W1LlmT100","0Lbg1Y1LlmT",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
     simple_estimate("g2Mbg1W1LlmT100","1Mbg1W1LlmT100",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")

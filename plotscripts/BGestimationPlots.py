@@ -7,13 +7,14 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/estimate_20140204/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140225/"
 
-    region = "g1Mb0Wg1uW0Ll"
+    #region = "g1Mb0Wg1uW0Ll"
+    region = "g1Mbg1W0Ll_mdPhiHat4"
 
-    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/summary/rzrBoostMC_data.root" # data histograms
-    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140204/rzrBoostMC_bg.root" # data histograms
-    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/estimate_20140204/BGestimate_"+region+"_QCDWJTTJ_Feb5.root" # bg estimate histograms
+    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140224_noISR/summary/rzrBoostMC_data.root" # data histograms
+    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140224_noISR/rzrBoostMC_bg.root" # data histograms
+    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140225/BGestimate_"+region+"_QCDWJTTJ_Feb25.root" # bg estimate histograms
 
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
