@@ -232,15 +232,21 @@ int main(int argc, char** argv)
   // Histograms for pileup reweighting
   TH1D* h_TrueNumVertices = new TH1D("h_TrueNumVertices","h_TrueNumVertices",100,0,100);
   TH1D* h_TrueNumVertices_reweighted = new TH1D("h_TrueNumVertices_reweighted","h_TrueNumVertices_reweighted",100,0,100);
+  TH1D* h_TrueNumVertices_reweighted_withtrigger = new TH1D("h_TrueNumVertices_reweighted_withtrigger","h_TrueNumVertices_reweighted_withtrigger",100,0,100);
 
-  TH1D* h_PV_HLT = new TH1D("h_PV_HLT","h_PV_HLT",50,0,50);
-  TH1D* h_PV_reweighted_HLT = new TH1D("h_PV_reweighted_HLT","h_PV_reweighted_HLT",50,0,50);
   TH1D* h_PV_nosel = new TH1D("h_PV_nosel","h_PV_nosel",50,0,50);
   TH1D* h_PV_reweighted_nosel = new TH1D("h_PV_reweighted_nosel","h_PV_reweighted_nosel",50,0,50);
+  TH1D* h_PV_1j = new TH1D("h_PV_1j","h_PV_1j",50,0,50);
+  TH1D* h_PV_reweighted_1j = new TH1D("h_PV_reweighted_1j","h_PV_reweighted_1j",50,0,50);
+  TH1D* h_PV_HLT = new TH1D("h_PV_HLT","h_PV_HLT",50,0,50);
+  TH1D* h_PV_reweighted_HLT = new TH1D("h_PV_reweighted_HLT","h_PV_reweighted_HLT",50,0,50);
   TH1D* h_PV_SIG = new TH1D("h_PV_SIG","h_PV_SIG",50,0,50);
   TH1D* h_PV_reweighted_SIG = new TH1D("h_PV_reweighted_SIG","h_PV_reweighted_SIG",50,0,50);
   TH1D* h_PV_g1Mbg1W1LlmT100 = new TH1D("h_PV_g1Mbg1W1LlmT100","h_PV_g1Mbg1W1LlmT100",50,0,50);
   TH1D* h_PV_reweighted_g1Mbg1W1LlmT100 = new TH1D("h_PV_reweighted_g1Mbg1W1LlmT100","h_PV_reweighted_g1Mbg1W1LlmT100",50,0,50);
+
+  TH2D* h_PV_HT_nosel = new TH2D("h_PV_HT_nosel","h_PV_HT_nosel",50,0,50, 50,0,2000);
+  TH2D* h_PV_HT_reweighted_nosel = new TH2D("h_PV_HT_reweighted_nosel","h_PV_HT_reweighted_nosel",50,0,50, 50,0,2000);
 
   // Cross check plots for trigger weights
   TH2D * h_HT_jet1pt_nosel = new TH2D("h_HT_jet1pt_nosel", "h_HT_jet1pt_nosel", nbn_HT, bn_HT, nbn_j1pt, bn_j1pt);
@@ -1798,12 +1804,18 @@ int main(int argc, char** argv)
 	      }
 	    }
 	  }
-	  h_PV_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger); // Included Trigger, But No PU weights
-	  h_PV_reweighted_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w*w_trigger); // current weight, includes Trigger, PU
+	  h_PV_1j->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger); // Included Trigger, But No PU weights
+	  h_PV_reweighted_1j->Fill(eventhelperextra_numberOfPrimaryVertices,w*w_trigger); // current weight, includes Trigger, PU
 	  h_HT_jet1pt_nosel->Fill(HT,sjet[0].pt,w*w_trigger);
 	  h_HT_jet1pt_nosel_notrigw->Fill(HT,sjet[0].pt,w);
+	  h_TrueNumVertices_reweighted_withtrigger->Fill(num_vertices,w*w_trigger);
 	}
       }
+      h_PV_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w_old); // No PU or trigger weights
+      h_PV_reweighted_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w); // current weight, includes PU
+      
+      h_PV_HT_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,HT,w_old); // No PU or trigger weights
+      h_PV_HT_reweighted_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,HT,w); // current weight, includes PU
       
       // *****************************************************
       // ***  ISR Reweighting recipe for Madgraph samples  ***
