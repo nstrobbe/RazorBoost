@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140224_newtrigger_noISR"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140224_noISR/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140303_noISR"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140303_noISR/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -169,10 +169,17 @@ if __name__ == '__main__':
     hnames = ["h_PV","h_PV_reweighted"
               , "h_PV_nosel", "h_PV_reweighted_nosel"
               , "h_PV_1j", "h_PV_reweighted_1j"
+              , "h_PV_HLT", "h_PV_reweighted_HLT"
               , "h_PV_SIG", "h_PV_reweighted_SIG" 
               , "h_PV_g1Mbg1W1LlmT100", "h_PV_reweighted_g1Mbg1W1LlmT100"
               ]
     htitle = "Data/MC comparison plot"
+    sels = ["","",
+            "No Selection", "No Selection",
+            "njets >= 1", "njets >= 1",
+            "njets >= 3", "njets >= 3",
+            "SIG", "SIG",
+            "g1Mbg1W1LlmT100", "g1Mbg1W1LlmT100"]
     for hname in hnames:
         var = hname.split("_")[1]
         
@@ -191,13 +198,13 @@ if __name__ == '__main__':
         hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
 
         plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
-                             cname="DataMC_"+hname.replace("h_",""), plotinfo="HLT + njets >= 3",
+                             cname="DataMC_"+hname.replace("h_",""), plotinfo=sels[hnames.index(hname)],
                              ratiotitle="Data/MC", logscale=True, scale="No")
 
 
     vars = ["njets","nbjets","met","jet1pt","jet2pt","jet3pt",
             "leptonpt","lepton1pt","lepton2pt",
-            "HT"]
+            "HT","PV"]
 
     cuts = ["SIG","g1Mbg1W0Ll","g1Mb0Wg1uW0Ll",
             "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5",
@@ -255,6 +262,32 @@ if __name__ == '__main__':
 
             # now make the actual plot
             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd2,outputdir=outputdir, outfile=outfile,
+                                 cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
+                                 ratiotitle="Data/MC", logscale=True, scale="No")
+
+
+    vars = ["minDeltaPhiHat"]
+    cuts = ["g1Mbg1W0Ll"]
+    for cut in cuts:
+        for var in vars:
+            hname = "h_%s_%s" % (var,cut)
+            htitle = "Data/MC comparison plot"
+            hlist = []
+            for i in range(len(mc_datasets)):
+                if not flist[i]: continue
+                hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle)
+                hlist.append(hdict)
+        
+            hsiglist = []
+            for i in range(len(sig_datasets)):
+                if not fsiglist[i]: continue
+                hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle)
+                hsiglist.append(hdict)
+
+            hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
+
+            # now make the actual plot
+            plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                                  cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="No")
 

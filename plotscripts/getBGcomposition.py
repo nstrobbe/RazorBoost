@@ -105,7 +105,8 @@ Cut & QCD & TTJets & WJets & VV & T & Zinv & Zll & VVV & TTX & Wbb & DYhad & Tot
     table.close()
 
 def allcuts():
-    cuts = ["NoCuts","Cleaning","HCAL_noise","vertexg0","njetge3","HLT","jet1ptg200",
+    cuts = ["NoCuts","Cleaning","Pileup","ISR","TopPt",
+            "HCAL_noise","vertexg0","njetge3","HLT","jet1ptg200",
             "SIG","neleeq0","nmueq0","trackIso",
             "g1Mb0Ll","g1Mbg1W0Ll","1Mbg1W0Ll","g2Mbg1W0Ll","g1Mbg1W0Ll_mdPhiHat4","g1Mbg1W0Ll_mdPhiHatg4","g1Mb0Wg1uW0Ll",
             "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5","0Lbg1W0Ll",
@@ -136,7 +137,7 @@ if __name__ == '__main__':
     intlumi = 19.789
 
     # input information
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140213"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140303_noISR"
     analyzer = "rzrBoostMC"
     signame = "T1ttcc_325_300"
     sigxs = 0.0243547

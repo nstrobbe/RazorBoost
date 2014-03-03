@@ -415,7 +415,8 @@ int main(int argc, char** argv)
   TH1D * h_dphimegajets_g1Mbg1W0Ll = new TH1D("h_dphimegajets_g1Mbg1W0Ll","h_dphimegajets_g1Mbg1W0Ll",40,0,4);
   TH1D * h_dphijet1jet2_g1Mbg1W0Ll = new TH1D("h_dphijet1jet2_g1Mbg1W0Ll","h_dphijet1jet2_g1Mbg1W0Ll",40,0,4);
   TH1D * h_HT_g1Mbg1W0Ll = new TH1D("h_HT_g1Mbg1W0Ll", "h_HT_g1Mbg1W0Ll", 100, 0, 2000);
-  TH1D* h_PV_g1Mbg1W0Ll = new TH1D("h_PV_g1Mbg1W0Ll", "h_PV_g1Mbg1W0Ll", 50, 0, 50);
+  TH1D * h_PV_g1Mbg1W0Ll = new TH1D("h_PV_g1Mbg1W0Ll", "h_PV_g1Mbg1W0Ll", 50, 0, 50);
+  TH1D * h_minDeltaPhiHat_g1Mbg1W0Ll = new TH1D("h_minDeltaPhiHat_g1Mbg1W0Ll", "h_minDeltaPhiHat_g1Mbg1W0Ll", 30, 0, 15);
 
   // separate 1b and >=2b plots
   TH1D * h_MR_1Mbg1W0Ll = new TH1D("h_MR_1Mbg1W0Ll", "h_MR_1Mbg1W0Ll", nbins_MR, bins_MR);
@@ -498,6 +499,11 @@ int main(int argc, char** argv)
   TH1D * h_MR_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhiHat4", "h_MR_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR);
   TH1D * h_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhiHat4", "h_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", "h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
+  // also get the complement for closure tests
+  TH1D * h_MR_0Lbg1uW0Ll_mdPhiHatg4 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhiHatg4", "h_MR_0Lbg1uW0Ll_mdPhiHatg4", nbins_MR, bins_MR);
+  TH1D * h_R2_0Lbg1uW0Ll_mdPhiHatg4 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhiHatg4", "h_R2_0Lbg1uW0Ll_mdPhiHatg4", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhiHatg4 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhiHatg4", "h_MR_R2_0Lbg1uW0Ll_mdPhiHatg4", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D * h_njets_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_njets_0Lbg1uW0Ll_mdPhiHat4","h_njets_0Lbg1uW0Ll_mdPhiHat4",15,0,15);
   TH1D * h_met_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_met_0Lbg1uW0Ll_mdPhiHat4","h_met_0Lbg1uW0Ll_mdPhiHat4",20,0,1000);
@@ -2347,6 +2353,7 @@ int main(int argc, char** argv)
 		  h_dphijet1jet2_g1Mbg1W0Ll->Fill(fdeltaPhi(sjet[0].phi,sjet[1].phi),w);
 		  h_HT_g1Mbg1W0Ll->Fill(HT,w);
 		  h_PV_g1Mbg1W0Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
+		  h_minDeltaPhiHat_g1Mbg1W0Ll->Fill(minDeltaPhiHat, w);
 		  if(isTTallhad)
 		    TTallhad->Fill("g1Mbg1W0Ll", w);
 		  else if(isTTsemilep)
@@ -2522,6 +2529,11 @@ int main(int argc, char** argv)
 		    else if(isTTdilep)
 		      TTdilep->Fill("0Lbg1uW0Ll_mdPhiHat4", w);
 		  } // end of minDeltaPhiHat < 4
+		  else {
+		    h_MR_0Lbg1uW0Ll_mdPhiHatg4->Fill(MR, w);
+		    h_R2_0Lbg1uW0Ll_mdPhiHatg4->Fill(R2, w);
+		    h_MR_R2_0Lbg1uW0Ll_mdPhiHatg4->Fill(MR, R2, w);
+		  } // end of minDeltaPhiHat > 4
 
 		  if (minDeltaPhiHat < 5){
 		    ofile.count("0Lbg1uW0Ll_mdPhiHat5",w);
