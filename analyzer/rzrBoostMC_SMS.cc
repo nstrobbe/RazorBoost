@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------------
 #include "rzrBTanalyzercmd.h"
 #include "utils.h"
+#include "btagutils.h"
 #include <math.h>
 
 #include "TLorentzVector.h"
@@ -22,15 +23,16 @@ int main(int argc, char** argv)
 {
 
   // Get the trigger histogram:
-  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
+  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
   if (!fhlt){
-    fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/extr_eff0_sm2.root");
+    fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
   }
   if (!fhlt){
     cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
     return 1;
   }
-  TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
+  //TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
+  TH2D* h_hlteff = (TH2D*)fhlt->Get("h_HT_j1pt_0_effph");
     
   // Get file list and histogram filename from command line
   commandLine cmdline;
@@ -118,8 +120,11 @@ int main(int argc, char** argv)
 
   // Get the pileup histogram:
   TString pileupname = "pileup_weights.root";
-  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+  if (sample == "T1ttcc_old" || sample == "T2tt" ){
     pileupname = "pileup_weights_sig52X.root";
+  }
+  if (sample == "T1ttcc" || sample == "T1t1t"){
+    pileupname = "pileup_weights_sig53X.root";
   }
   TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
   if (!fpileup){
@@ -136,6 +141,8 @@ int main(int argc, char** argv)
   //---------------------------------------------------------------------------
   // Declare histograms
   //---------------------------------------------------------------------------
+
+  TH1::SetDefaultSumw2();
 
   // set the ranges and nbins according to which sample we are using
   // declare variables and give some random default values
@@ -178,6 +185,7 @@ int main(int argc, char** argv)
   TH2D* h_mstop_mLSP_NoCuts = new TH2D("h_mstop_mLSP_NoCuts","h_mstop_mLSP_NoCuts",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_Cleaning = new TH2D("h_mstop_mLSP_Cleaning","h_mstop_mLSP_Cleaning",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_Pileup = new TH2D("h_mstop_mLSP_Pileup","h_mstop_mLSP_Pileup",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_ISR = new TH2D("h_mstop_mLSP_ISR","h_mstop_mLSP_ISR",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_HCAL_noise = new TH2D("h_mstop_mLSP_HCAL_noise","h_mstop_mLSP_HCAL_noise",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_vertexg0 = new TH2D("h_mstop_mLSP_vertexg0","h_mstop_mLSP_vertexg0",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_njetge3 = new TH2D("h_mstop_mLSP_njetge3","h_mstop_mLSP_njetge3",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
@@ -190,6 +198,10 @@ int main(int argc, char** argv)
   TH2D* h_mstop_mLSP_trackIso = new TH2D("h_mstop_mLSP_trackIso","h_mstop_mLSP_trackIso",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mb0Ll = new TH2D("h_mstop_mLSP_g1Mb0Ll","h_mstop_mLSP_g1Mb0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W0Ll = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll","h_mstop_mLSP_g1Mbg1W0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_1Mbg1W0Ll = new TH2D("h_mstop_mLSP_1Mbg1W0Ll","h_mstop_mLSP_1Mbg1W0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g2Mbg1W0Ll = new TH2D("h_mstop_mLSP_g2Mbg1W0Ll","h_mstop_mLSP_g2Mbg1W0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4","h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4","h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mb0Wg1uW0Ll = new TH2D("h_mstop_mLSP_g1Mb0Wg1uW0Ll","h_mstop_mLSP_g1Mb0Wg1uW0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
  
   TH2D* h_mstop_mLSP_0Lb0Ll = new TH2D("h_mstop_mLSP_0Lb0Ll","h_mstop_mLSP_0Lb0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
@@ -204,6 +216,8 @@ int main(int argc, char** argv)
   TH2D* h_mstop_mLSP_g1Mb1Ll = new TH2D("h_mstop_mLSP_g1Mb1Ll","h_mstop_mLSP_g1Mb1Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W1Ll = new TH2D("h_mstop_mLSP_g1Mbg1W1Ll","h_mstop_mLSP_g1Mbg1W1Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_g1Mbg1W1LlmT100","h_mstop_mLSP_g1Mbg1W1LlmT100",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_1Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_1Mbg1W1LlmT100","h_mstop_mLSP_1Mbg1W1LlmT100",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g2Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_g2Mbg1W1LlmT100","h_mstop_mLSP_g2Mbg1W1LlmT100",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W1LlmT = new TH2D("h_mstop_mLSP_g1Mbg1W1LlmT","h_mstop_mLSP_g1Mbg1W1LlmT",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
 
   TH2D* h_mstop_mLSP_0Lb1Ll = new TH2D("h_mstop_mLSP_0Lb1Ll","h_mstop_mLSP_0Lb1Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
@@ -234,10 +248,6 @@ int main(int argc, char** argv)
   TH2D* h_mstop_mLSP_g1Mb2l0ol = new TH2D("h_mstop_mLSP_g1Mb2l0ol","h_mstop_mLSP_g1Mb2l0ol",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_0Lbg1Y2l0ol = new TH2D("h_mstop_mLSP_0Lbg1Y2l0ol","h_mstop_mLSP_0Lbg1Y2l0ol",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1Y2l0ol = new TH2D("h_mstop_mLSP_g1Mbg1Y2l0ol","h_mstop_mLSP_g1Mbg1Y2l0ol",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-
-
-  TH1::SetDefaultSumw2();
-
 
 
   //---------------------------------------------------------------------------
@@ -322,239 +332,6 @@ int main(int argc, char** argv)
 
       h_mstop_mLSP_Pileup->Fill(mt1,mz1,w);
 
-      // -------------------------
-      // -- Trigger requirement --
-      // -------------------------
-
-      if (eventhelper_isRealData==1) { 
-	// Run2012A:
-	if ( eventhelper_run >= 190456 && eventhelper_run < 190762 ) {
-	  if (fsample.find("_Jet_") < fsample.length()) {
-	    if (!
-		(triggerresultshelper_HLT_PFJet320_v3 == 1 ||
-		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
-		 //triggerresultshelper_HLT_PFHT650_v5 == 1 ||
-		 //triggerresultshelper_HLT_HT750_v1 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
-		 )) continue;
-	  } else if (fsample.find("_HT_") < fsample.length()) {
-	    if (!
-		(triggerresultshelper_HLT_PFJet320_v3 == 0 &&
-		 (triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
-		  triggerresultshelper_HLT_PFHT650_v5 == 1) &&
-		  //triggerresultshelper_HLT_HT750_v1 == 1 &&
-		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 0 
-		 )) continue;
-	  } else {
-	    if (!
-		(triggerresultshelper_HLT_PFJet320_v3 == 1 ||
-		 triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
-		 triggerresultshelper_HLT_PFHT650_v5 == 1 ||
-		 //triggerresultshelper_HLT_HT750_v1 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
-		 ) ) continue;
-	  }
-	}
-
-	if ( eventhelper_run >= 190762 && eventhelper_run < 191512 ) {
-	  if (fsample.find("_Jet_") < fsample.length()) {
-	    if (!
-		(triggerresultshelper_HLT_PFJet320_v4 == 1 ||
-		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
-		 //triggerresultshelper_HLT_PFHT650_v6 == 1 ||
-		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
-		 )) continue;
-	  } else if (fsample.find("_HT_") < fsample.length()) {
-	    if (!
-		(triggerresultshelper_HLT_PFJet320_v4 == 0 &&
-		 (triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
-		  triggerresultshelper_HLT_PFHT650_v6 == 1) &&
-		 //triggerresultshelper_HLT_HT750_v2 == 1 &&
-		 triggerresultshelper_HLT_DiPFJetAve320_v4 == 0
-		 )) continue;
-	  } else {
-	    if (!
-		(triggerresultshelper_HLT_PFJet320_v4 == 1 ||
-		 triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
-		 triggerresultshelper_HLT_PFHT650_v6 == 1 ||
-		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
-		 ) ) continue;
-	  }
-	}
-
-	if ( eventhelper_run >= 191512 && eventhelper_run < 193746 ) {
-	  if (fsample.find("_Jet_") < fsample.length()) {
-	    if (!
-		(triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
-		 //triggerresultshelper_HLT_PFHT650_v7 == 1 ||
-		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
-		 )) continue;
-	  } else if (fsample.find("_HT_") < fsample.length()) {
-	    if (!
-		(triggerresultshelper_HLT_PFJet320_v5 == 0 &&
-		 (triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
-		  triggerresultshelper_HLT_PFHT650_v7 == 1) &&
-		 //triggerresultshelper_HLT_HT750_v2 == 1 &&
-		 triggerresultshelper_HLT_DiPFJetAve320_v5 == 0
-		 )) continue;
-	  } else {
-	    if (!
-		(triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-		 triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
-		 triggerresultshelper_HLT_PFHT650_v7 == 1 ||
-		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
-		 ) ) continue;
-	  }
-	}
-
-	// 2012B
-	if ( eventhelper_run >= 193746 && eventhelper_run < 196039) {
-	  if (!
-              (triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v5 == 1 ||
-	       triggerresultshelper_HLT_PFHT650_v8 == 1 ||
-	       //triggerresultshelper_HLT_HT750_v3 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
-	       ) ) continue;
-	}
-
-	if ( eventhelper_run >= 196039 && eventhelper_run < 197770 ) {
-	  if (!
-              (triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v6 == 1 ||
-	       triggerresultshelper_HLT_PFHT650_v9 == 1 ||
-	       //triggerresultshelper_HLT_HT750_v4 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
-	       ) ) continue;
-	}
-
-	// Run2012C:
-	if ( eventhelper_run >= 197770 && eventhelper_run < 199648 ) {
-	  if (!
-              (triggerresultshelper_HLT_PFJet400_v6 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v7 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v1 == 1 ||
-	       //triggerresultshelper_HLT_HT750_v5 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v7 == 1
-	       ) ) continue;
-	}
-
-	if ( eventhelper_run >= 199648 && eventhelper_run < 202807 ) {
-	  if (!
-              (triggerresultshelper_HLT_PFJet320_v8 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v9 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v3 == 1 ||
-	       //triggerresultshelper_HLT_HT750_v7 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v9 == 1
-	       ) ) continue;
-	}
-
-	if ( eventhelper_run >= 202807 && eventhelper_run < 203734 ) {
-	  if (!
-              (triggerresultshelper_HLT_PFJet320_v9 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 ||
-	       //triggerresultshelper_HLT_HT750_v7 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
-	       ) ) continue;
-	}
-
-	// Run2012D:
-	if ( eventhelper_run >= 203734 && eventhelper_run < 208940 ) {
-	  if (!
-              (triggerresultshelper_HLT_PFJet320_v9 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 ||
-	       //triggerresultshelper_HLT_HT750_v7 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
-	       ) ) continue;
-	}
-      }
-
-      // ---------------------------------------------
-      // -- First look at generator level particles --
-      // ---------------------------------------------
-
- 
-      // *****************************************************
-      // ***  ISR Reweighting recipe for Madgraph samples  ***
-      // *****************************************************
-      // per event weights to apply
-      double w_ISR_nominal = 1.;
-      double w_ISR_up = 1.; // always stays 1, i.e. no reweighting
-      double w_ISR_down = 1.;
-      if (doISRreweighting)
-	{
-	  // recipe can be found at https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMST2ccMadgraph8TeV
-	  // find system recoiling against ISR: 
-	  TLorentzVector recoilsystem(0,0,0,0); 
-	  int ID_to_find = -1;
-	  if (sample == "T2tt")
-	    ID_to_find = 1000006;
-	  if (sample == "T1ttcc" || sample == "T1t1t")
-	    ID_to_find = 1000021;
-	  if (sample == "TTJets")
-	    ID_to_find = 6;
-	  if (sample == "WJets")
-	    ID_to_find = 24;
-	  if (sample == "ZJets")
-	    ID_to_find = 23;
-	  for (unsigned int i=0; i<genparticlehelper.size(); i++) {
-	    if (genparticlehelper[i].status != 3) continue;
-	    if (fabs(genparticlehelper[i].pdgId) == ID_to_find){
-	      TLorentzVector TLV_temp; 
-	      TLV_temp.SetPtEtaPhiM(genparticlehelper[i].pt,genparticlehelper[i].eta
-				    ,genparticlehelper[i].phi,genparticlehelper[i].mass);
-	      recoilsystem += TLV_temp;
-	    }
-	  }
-	  // get the pt of the recoil system, apply weights accordingly
-	  double pt_ISR = recoilsystem.Pt();
-	  if (pt_ISR <= 120){
-	    w_ISR_nominal = 1.;
-	    w_ISR_down = 1.;
-	  } else if (pt_ISR <= 150){
-	    w_ISR_nominal = 0.95;
-	    w_ISR_down = 0.9;
-	  } else if (pt_ISR <= 250){
-	    w_ISR_nominal = 0.9;
-	    w_ISR_down = 0.8;
-	  } else {
-	    w_ISR_nominal = 0.8;
-	    w_ISR_down = 0.6;
-	  }
-	}
-
-
-      // Need to think when to apply these weights
-      //if (doISRreweighting)
-      //w = w*w_ISR_nominal;
-     
-      // **************************************************************
-      // ***  Top Pt Reweighting recipe for Madgraph TTbar samples  ***
-      // **************************************************************
-      // per event weights to apply
-      double w_TopPt_nominal = 1.;
-      double w_TopPt_up = 1.; 
-      double w_TopPt_down = 1.; // always stays 1, i.e. no reweighting     
-      if(doTopPtreweighting){
-	for (unsigned int i=0; i<genparticlehelper.size(); i++) {
-	  if (genparticlehelper[i].status != 3) continue;
-	  if (fabs(genparticlehelper[i].pdgId) == 6){
-	    double wtemp = GetTopPtScaleFactor(genparticlehelper[i].pt);
-	    //cout << "wtemp: " << wtemp << endl;
-	    w_TopPt_nominal = w_TopPt_nominal * wtemp;
-	  }
-	}
-	w_TopPt_up = w_TopPt_nominal;
-	w_TopPt_nominal = sqrt(w_TopPt_nominal);
-      }
-
 
       // ----------------------
       // -- object selection --
@@ -580,6 +357,7 @@ int main(int argc, char** argv)
       std::vector<TLorentzVector> LVsjet;
       std::vector<cmgpfjet_s> sbjet;
       std::vector<cmgpfjet_s> slbjet;
+      double HT = 0;
       for (unsigned int i=0; i<cmgpfjet.size(); i++) {
 	if (!(cmgpfjet[i].pt > 30) ) continue;
 	if (!(fabs(cmgpfjet[i].eta) < 2.4) ) continue;
@@ -594,6 +372,7 @@ int main(int argc, char** argv)
 	if (!(cmgpfjet[i].component_2_fraction < 0.99) ) continue;
 	//}
 	sjet.push_back(cmgpfjet[i]);
+	HT += cmgpfjet[i].pt;
 	if (cmgpfjet[i].combinedSecondaryVertexBJetTags > 0.679) {
 	  sbjet.push_back(cmgpfjet[i]);
 	}
@@ -604,6 +383,11 @@ int main(int argc, char** argv)
 	jl.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
 			cmgpfjet[i].phi, cmgpfjet[i].energy);
 	LVsjet.push_back(jl);
+        double SFbFl, dSFbFl, SFbFs, dSFbFs;
+        btagCSVMEEFull(cmgpfjet[i].partonFlavour, cmgpfjet[i].pt, 
+                       cmgpfjet[i].eta, SFbFl, dSFbFl);
+        btagCSVMEEFast(cmgpfjet[i].partonFlavour, cmgpfjet[i].pt, 
+                       cmgpfjet[i].eta, SFbFs, dSFbFs);
       }
 
 
@@ -727,7 +511,6 @@ int main(int argc, char** argv)
       for (unsigned int i=0; i<cmgelectron.size(); i++) {
 	if (!(cmgelectron[i].pt > 5) ) continue;
 	if (!(fabs(cmgelectron[i].eta) < 2.5) ) continue;
-	// veto 1.442 < |eta| < 1.556?
 	if (!(fabs(cmgelectron[i].eta) < 1.442 && fabs(cmgelectron[i].eta) < 1.556) ) continue;
 	velectron.push_back(cmgelectron[i]);
       }
@@ -771,16 +554,14 @@ int main(int argc, char** argv)
       }
 
 
-
-
       // look at number of Ws and bs before any selection (besides cleaning and trigger)
       double nWs = sW.size();
       double nYs = sY.size();
       double nbs = sbjet.size();
 
-      // ---------------------
-      // -- Razor variables --
-      // ---------------------
+      // -------------------------------
+      // -- Calculate Razor variables --
+      // -------------------------------
 
       // Calculate MR and R2 ignoring muons
       TVector3 V3met;
@@ -827,9 +608,89 @@ int main(int argc, char** argv)
         R2metel = pow((MTRmetel / MR),2);
       }
 
-      // ---------------------
-      // -- fill histograms --
-      // ---------------------
+
+      // --------------------------------------------------------
+      // -- Everything computed from generator level particles --
+      // --------------------------------------------------------
+
+ 
+      // *****************************************************
+      // ***  ISR Reweighting recipe for Madgraph samples  ***
+      // *****************************************************
+      // per event weights to apply
+      double w_ISR_nominal = 1.;
+      double w_ISR_up = 1.; // always stays 1, i.e. no reweighting
+      double w_ISR_down = 1.;
+      if (doISRreweighting)
+	{
+	  // recipe can be found at https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMST2ccMadgraph8TeV
+	  // find system recoiling against ISR: 
+	  TLorentzVector recoilsystem(0,0,0,0); 
+	  int ID_to_find = -1;
+	  if (sample == "T2tt")
+	    ID_to_find = 1000006;
+	  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t")
+	    ID_to_find = 1000021;
+	  if (sample == "TTJets")
+	    ID_to_find = 6;
+	  if (sample == "WJets")
+	    ID_to_find = 24;
+	  if (sample == "ZJets")
+	    ID_to_find = 23;
+	  for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+	    if (genparticlehelper[i].status != 3) continue;
+	    if (fabs(genparticlehelper[i].pdgId) == ID_to_find){
+	      TLorentzVector TLV_temp; 
+	      TLV_temp.SetPtEtaPhiM(genparticlehelper[i].pt,genparticlehelper[i].eta
+				    ,genparticlehelper[i].phi,genparticlehelper[i].mass);
+	      recoilsystem += TLV_temp;
+	    }
+	  }
+	  // get the pt of the recoil system, apply weights accordingly
+	  double pt_ISR = recoilsystem.Pt();
+	  if (pt_ISR <= 120){
+	    w_ISR_nominal = 1.;
+	    w_ISR_down = 1.;
+	  } else if (pt_ISR <= 150){
+	    w_ISR_nominal = 0.95;
+	    w_ISR_down = 0.9;
+	  } else if (pt_ISR <= 250){
+	    w_ISR_nominal = 0.9;
+	    w_ISR_down = 0.8;
+	  } else {
+	    w_ISR_nominal = 0.8;
+	    w_ISR_down = 0.6;
+	  }
+	}
+
+      if (doISRreweighting) {
+	w = w*w_ISR_nominal;
+      }
+
+      h_mstop_mLSP_ISR->Fill(mt1,mz1,w);  
+
+
+      // **************************************************************
+      // ***  Top Pt Reweighting recipe for Madgraph TTbar samples  ***
+      // **************************************************************
+      // per event weights to apply
+      double w_TopPt_nominal = 1.;
+      double w_TopPt_up = 1.; 
+      double w_TopPt_down = 1.; // always stays 1, i.e. no reweighting     
+      if(doTopPtreweighting){
+	for (unsigned int i=0; i<genparticlehelper.size(); i++) {
+	  if (genparticlehelper[i].status != 3) continue;
+	  if (fabs(genparticlehelper[i].pdgId) == 6){
+	    double wtemp = GetTopPtScaleFactor(genparticlehelper[i].pt);
+	    //cout << "wtemp: " << wtemp << endl;
+	    w_TopPt_nominal = w_TopPt_nominal * wtemp;
+	  }
+	}
+	w_TopPt_up = w_TopPt_nominal;
+	w_TopPt_nominal = sqrt(w_TopPt_nominal);
+      }
+
+
 
       // ---------------------
       // -- event selection --
@@ -854,21 +715,19 @@ int main(int argc, char** argv)
 	for (int i=1; i<h_hlteff->GetNbinsX()+1; i++) {
 	  double xmin = h_hlteff->GetXaxis()->GetBinLowEdge(i);
 	  double xmax = h_hlteff->GetXaxis()->GetBinUpEdge(i);
-	  if (!(MR >= xmin && MR < xmax)) continue;
+	  if (!(HT >= xmin && HT < xmax)) continue;
 	  for (int j=1; j<h_hlteff->GetNbinsY()+1; j++) {
 	    double ymin = h_hlteff->GetYaxis()->GetBinLowEdge(j);
 	    double ymax = h_hlteff->GetYaxis()->GetBinUpEdge(j);
-	    if (R2 >= ymin && R2 < ymax) {
+	    if (sjet[0].pt >= ymin && sjet[0].pt < ymax) {
 	      whlt = h_hlteff->GetBinContent(i, j);
 	      //cout << xmin << " " << MR << " " << xmax << " " << ymin << " " << R2 << " " << ymax << " " << whlt << endl;
 	      break;
 	    }
 	  }
 	}
-	
-	w = w*whlt;
       }
-      //w = w*whlt;
+      w = w*whlt;
       h_mstop_mLSP_HLT->Fill(mt1,mz1,w);
 
       // pt of first jet greater than 200 GeV
@@ -932,7 +791,19 @@ int main(int argc, char** argv)
 		// g1Mb g1W 0Ll -- SIGNAL region
 		if( sW.size() > 0){
 		  h_mstop_mLSP_g1Mbg1W0Ll->Fill(mt1,mz1,w);
+		  
+		  if (nmediumbs == 1){
+		    h_mstop_mLSP_1Mbg1W0Ll->Fill(mt1,mz1,w); 
+		  } else {
+		    h_mstop_mLSP_g2Mbg1W0Ll->Fill(mt1,mz1,w); 
+		  }
 
+		  if (minDeltaPhiHat > 4){
+		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4->Fill(mt1,mz1,w);
+		  } else {
+		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4->Fill(mt1,mz1,w);
+		  }
+		  
 		} // end of sW.size() > 0
 		else if (aW.size() > 0){
 		  h_mstop_mLSP_g1Mb0Wg1uW0Ll->Fill(mt1,mz1,w);
@@ -994,6 +865,12 @@ int main(int argc, char** argv)
 	      // TTJets Control region
 	      if (mT < 100){
 		h_mstop_mLSP_g1Mbg1W1LlmT100->Fill(mt1,mz1,w);
+
+		if (nmediumbs == 1){
+		  h_mstop_mLSP_1Mbg1W1LlmT100->Fill(mt1,mz1,w);
+		} else {
+		  h_mstop_mLSP_g2Mbg1W1LlmT100->Fill(mt1,mz1,w);
+		}
 		
 		// mT window
 		if (mT > 30){
