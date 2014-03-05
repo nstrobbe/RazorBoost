@@ -122,7 +122,8 @@ int main(int argc, char** argv)
   bool doTopPtreweighting = false;
   if (sample == "TTJets" && TopPt == "TopPt_True"){
     doTopPtreweighting = true;
-    cout << "Will do top pt reweighting" << endl;
+    doISRreweighting = false; // Never do both ISR and TopPt reweighting
+    cout << "Will do top pt reweighting and no ISR reweighting" << endl;
   }
   bool doPileupReweighting = false;
   if (sample != "Data" && Pileup == "Pileup_True"){
