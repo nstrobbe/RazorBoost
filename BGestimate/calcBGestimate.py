@@ -255,8 +255,8 @@ if __name__ == "__main__":
     print "Will perform the background estimate"
 
     # directory containing all the raw histograms
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140303_noISR/summary/" 
-    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140303_noISR/" 
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/summary/" 
+    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/" 
 
     # analyzer name
     analyzer = "rzrBoostMC"
@@ -370,4 +370,8 @@ if __name__ == "__main__":
     simple_estimate("g2Mbg1W1LlmT100","1Mbg1W1LlmT100",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
     # Modeling of minDeltaPhiHat
     simple_estimate("0Lbg1uW0Ll_mdPhiHatg4","0Lbg1uW0Ll_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    # Modeling of minDeltaPhiHat
+    simple_estimate("g1Mbg1W1LlmT100_mdPhiHatg4","g1Mbg1W1LlmT100_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    # Modeling of minDeltaPhiHat
+    simple_estimate("0Lbg1Y1LlmT_mdPhiHatg4","0Lbg1Y1LlmT_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
 
