@@ -160,6 +160,39 @@ int main(int argc, char** argv)
   }
   TH1D* h_pileup = (TH1D*)fpileup->Get("pileup_weight");
 
+  // ----------------------------------
+  // -- Get the btag eff histograms: --
+  // ----------------------------------
+
+  TFile* fbeff;
+
+  if (sample == "TTJets" or sample == "Top" or sample == "TTX") {
+    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_TTJets.root");
+  } else if (sample == "T1ttcc") {
+    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
+  } else {
+    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_QCD.root");
+  }
+  TH1D* h_pt_b_CSVMeff = (TH1D*)fbeff->Get("h_pt_b_CSVMeff");
+  TH1D* h_pt_c_CSVMeff = (TH1D*)fbeff->Get("h_pt_c_CSVMeff");
+  //TH1D* h_pt_l_CSVMeff = (TH1D*)fbeff->Get("h_pt_l_CSVMeff");
+  TH1D* h_pt_lc_CSVMeff = (TH1D*)fbeff->Get("h_pt_lc_CSVMeff");
+
+  TH1D* h_pt_b_CSVLeff = (TH1D*)fbeff->Get("h_pt_b_CSVLeff");
+  TH1D* h_pt_c_CSVLeff = (TH1D*)fbeff->Get("h_pt_c_CSVLeff");
+  //TH1D* h_pt_l_CSVLeff = (TH1D*)fbeff->Get("h_pt_l_CSVLeff");
+  TH1D* h_pt_lc_CSVLeff = (TH1D*)fbeff->Get("h_pt_lc_CSVLeff");
+
+  //TH2D* h_pt_eta_b_CSVMeff = (TH2D*)fbeff->Get("h_pt_eta_b_CSVMeff");
+  //TH2D* h_pt_eta_c_CSVMeff = (TH2D*)fbeff->Get("h_pt_eta_c_CSVMeff");
+  TH2D* h_pt_eta_l_CSVMeff = (TH2D*)fbeff->Get("h_pt_eta_l_CSVMeff");
+  //TH2D* h_pt_eta_lc_CSVMeff = (TH2D*)fbeff->Get("h_pt_eta_lc_CSVMeff");
+
+  //TH2D* h_pt_eta_b_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_b_CSVLeff");
+  //TH2D* h_pt_eta_c_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_c_CSVLeff");
+  TH2D* h_pt_eta_l_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_l_CSVLeff");
+  //TH2D* h_pt_eta_lc_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_lc_CSVLeff");
+
   // -----------------------------
   // -- Get the systemtics file --
   // -----------------------------
@@ -1493,6 +1526,13 @@ int main(int argc, char** argv)
       std::vector<cmgpfjet_s> sbjet;
       std::vector<cmgpfjet_s> slbjet;
       double HT = 0;
+      // btag probabilities
+      double PCSVLsim = 1.0;
+      double PCSVLdata = 1.0;
+      double PCSVMsim = 1.0;
+      double PCSVMdata = 1.0;
+      double sigmaSFFl = 0.0;
+      double sigmaSFFs = 0.0;
       for (unsigned int i=0; i<cmgpfjet.size(); i++) {
 	if (!(cmgpfjet[i].pt > 30) ) continue;
 	if (!(fabs(cmgpfjet[i].eta) < 2.4) ) continue;
@@ -1508,26 +1548,78 @@ int main(int argc, char** argv)
 	//}
 	sjet.push_back(cmgpfjet[i]);
 	HT += cmgpfjet[i].pt;
-	if (cmgpfjet[i].combinedSecondaryVertexBJetTags > 0.679) {
-	  sbjet.push_back(cmgpfjet[i]);
+
+	// btag SF mess
+        double SFCSVMFl, dSFCSVMFl, SFCSVMFs, dSFCSVMFs;
+        double SFCSVLFl, dSFCSVLFl, SFCSVLFs, dSFCSVLFs;
+	double pt = cmgpfjet[i].pt;
+	double eta = cmgpfjet[i].eta;
+	double partonFlavour = cmgpfjet[i].partonFlavour;
+        btagCSVMEEFull(partonFlavour, pt, eta, SFCSVMFl, dSFCSVMFl);
+        btagCSVMEEFast(partonFlavour, pt, eta, SFCSVMFs, dSFCSVMFs);
+
+        btagCSVLEEFull(partonFlavour, pt, eta, SFCSVLFl, dSFCSVLFl);
+        btagCSVLEEFast(partonFlavour, pt, eta, SFCSVLFs, dSFCSVLFs);
+
+	double eCSVM = 0, eCSVL = 0;
+	double SFCSVM, SFCSVL;
+	// FastSim:
+	if (sample == "T1ttcc") {
+	  if (fabs(partonFlavour) == 5) {
+	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
+	    eCSVL = geteff1D(h_pt_b_CSVLeff, pt);
+	  }
+	  if (fabs(partonFlavour) == 4) {
+	    eCSVM = geteff1D(h_pt_c_CSVMeff, pt);
+	    eCSVL = geteff1D(h_pt_c_CSVLeff, pt);
+	  }
+	  if (fabs(partonFlavour) != 4 and fabs(partonFlavour != 5)) {
+	    eCSVM = geteff2D(h_pt_eta_l_CSVMeff, pt, eta);
+	    eCSVL = geteff2D(h_pt_eta_l_CSVLeff, pt, eta);
+	  }
+	  SFCSVL = (SFCSVLFl + sigmaSFFl*dSFCSVLFl)*(SFCSVLFs + sigmaSFFs*dSFCSVLFs);
+	  SFCSVM = (SFCSVMFl + sigmaSFFl*dSFCSVMFl)*(SFCSVMFs + sigmaSFFs*dSFCSVMFs);
+	} else { // FullSim
+	  if (fabs(partonFlavour) == 5) {
+	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
+	    eCSVL = geteff1D(h_pt_b_CSVLeff, pt);
+	  }
+	  if (partonFlavour != 5) {
+	    eCSVM = geteff1D(h_pt_lc_CSVMeff, pt);
+	    eCSVL = geteff1D(h_pt_lc_CSVLeff, pt);
+	  }
+	  SFCSVL = (SFCSVLFl + sigmaSFFl*dSFCSVLFl);
+	  SFCSVM = (SFCSVMFl + sigmaSFFs*dSFCSVMFl);
 	}
+
+	// CSVM
+	if (cmgpfjet[i].combinedSecondaryVertexBJetTags > 0.679) {
+	  sbjet.push_back(cmgpfjet[i]);	  
+	  PCSVMsim *= eCSVM;
+	  PCSVMdata *= (eCSVM * SFCSVM);
+	} else {
+	  PCSVMsim *= (1 - eCSVM);
+	  PCSVMdata *= (1 - eCSVM * SFCSVM);
+	}
+	// CSVL
 	if (cmgpfjet[i].combinedSecondaryVertexBJetTags > 0.244) {
 	  slbjet.push_back(cmgpfjet[i]);
+	  PCSVLsim *= eCSVL;
+	  PCSVLdata *= (eCSVL * SFCSVL);
+	} else {
+	  PCSVLsim *= (1 - eCSVL);
+	  PCSVLdata *= (1 - eCSVL * SFCSVL);
 	}
+
 	TLorentzVector jl;
 	jl.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
 			cmgpfjet[i].phi, cmgpfjet[i].energy);
 	LVsjet.push_back(jl);
-        double SFbFl, dSFbFl, SFbFs, dSFbFs;
-        btagCSVMEEFull(cmgpfjet[i].partonFlavour, cmgpfjet[i].pt, 
-                       cmgpfjet[i].eta, SFbFl, dSFbFl);
-        btagCSVMEEFast(cmgpfjet[i].partonFlavour, cmgpfjet[i].pt, 
-                       cmgpfjet[i].eta, SFbFs, dSFbFs);
-	// cout << i << " " << cmgpfjet[i].partonFlavour << " " << cmgpfjet[i].pt
-        //     << " " << cmgpfjet[i].eta << " " << SFbFl << " " << dSFbFl
-        //     << " " << SFbFs << " " << dSFbFs << endl;
       }
 
+      // event weights to be applied according to the selection later
+      double wCSVM = PCSVMdata / PCSVMsim;
+      double wCSVL = PCSVLdata / PCSVLsim;
 
       // CA8
       // W selection:
@@ -2295,6 +2387,10 @@ int main(int argc, char** argv)
 	      h_PV_0Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 
 	      if (nmediumbs > 0){
+		// apply btag weight if not data
+		if (eventhelper_isRealData!=1) {
+		  w = w*wCSVM;
+		}
 		ofile.count("g1Mb0Ll", w);
 		h_MR_g1Mb0Ll->Fill(MR, w);
 		h_R2_g1Mb0Ll->Fill(R2, w);
@@ -2460,6 +2556,9 @@ int main(int argc, char** argv)
 	      } // end of nmediumbs > 0
 	      
 	      if (nloosebs == 0){
+		if (eventhelper_isRealData!=1) {
+		  w = w*wCSVL;
+		}
 		ofile.count("0Lb0Ll", w);
 		h_MR_0Lb0Ll->Fill(MR, w);
 		h_R2_0Lb0Ll->Fill(R2, w);
@@ -2624,6 +2723,9 @@ int main(int argc, char** argv)
 	    TTdilep->Fill("1Ll", w);
 	  
 	  if (nmediumbs > 0){
+	    if (eventhelper_isRealData!=1) {
+	      w = w*wCSVM;
+	    }
 	    ofile.count("g1Mb1Ll",w);
 	    h_MR_g1Mb1Ll->Fill(MR, w);
 	    h_R2_g1Mb1Ll->Fill(R2, w);
@@ -2753,6 +2855,9 @@ int main(int argc, char** argv)
 
 
 	  if (nloosebs == 0){
+	    if (eventhelper_isRealData!=1) {
+	      w = w*wCSVL;
+	    }
 	    ofile.count("0Lb1Ll",w);
 	    h_MR_0Lb1Ll->Fill(MR, w);
 	    h_R2_0Lb1Ll->Fill(R2, w);
@@ -3062,6 +3167,9 @@ int main(int argc, char** argv)
 	      TTdilep->Fill("2l0ol", w);
 	    
 	    if (nloosebs == 0){
+	      if (eventhelper_isRealData!=1) {
+		w = w*wCSVL;
+	      }
 	      ofile.count("0Lb2mu0el",w);
 	      h_MR_0Lb2mu0el->Fill(MR, w);
 	      h_R2_0Lb2mu0el->Fill(R2metmu, w);
@@ -3138,6 +3246,9 @@ int main(int argc, char** argv)
 	    }// end nloosebs == 0
 
 	    if (nmediumbs >= 1){
+	      if (eventhelper_isRealData!=1) {
+		w = w*wCSVM;
+	      }
 	      ofile.count("g1Mb2mu0el",w);
 	      h_MR_g1Mb2mu0el->Fill(MR, w);
 	      h_R2_g1Mb2mu0el->Fill(R2metmu, w);
@@ -3326,6 +3437,9 @@ int main(int argc, char** argv)
 	      TTdilep->Fill("2l0ol", w);
 	    
 	    if (nloosebs == 0){
+	      if (eventhelper_isRealData!=1) {
+		w = w*wCSVL;
+	      }
 	      ofile.count("0Lb2el0mu",w);
 	      h_MR_0Lb2el0mu->Fill(MR, w);
 	      h_R2_0Lb2el0mu->Fill(R2metel, w);
@@ -3401,6 +3515,9 @@ int main(int argc, char** argv)
 	    }// end nloosebs == 0
 	    
 	    if (nmediumbs >= 1){
+	      if (eventhelper_isRealData!=1) {
+		w = w*wCSVM;
+	      }
 	      ofile.count("g1Mb2el0mu",w);
 	      h_MR_g1Mb2el0mu->Fill(MR, w);
 	      h_R2_g1Mb2el0mu->Fill(R2metel, w);
@@ -3487,6 +3604,8 @@ int main(int argc, char** argv)
     } // end event loop
   
   fhlt->Close();
+  fpileup->Close();
+  fbeff->Close();
   stream.close();
   ofile.close();
   return 0;
