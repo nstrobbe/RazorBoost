@@ -6,6 +6,76 @@
 using namespace std;
 
 // btag efficiencies and errors for FullSim:
+void btagCSVLEEFull(int flavor, double pt, double eta, double& SFb, double& dSFb)
+{
+
+  const int n = 16;
+
+  SFb = 0;
+  dSFb = 0;
+  
+  // pt bins:
+  float _ptmin[n] = {20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600};
+  float _ptmax[n] = {30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600, 800};
+
+  // btag for b jets
+  if (abs(flavor) == 5) {
+    double _SFb_error[n] = {
+      0.033299,
+      0.0146768,
+      0.013803,
+      0.0170145,
+      0.0166976,
+      0.0137879,
+      0.0149072,
+      0.0153068,
+      0.0133077,  
+      0.0123737,
+      0.0157152,
+      0.0175161,
+      0.0209241,
+      0.0278605,
+      0.0346928,
+      0.0350099 };
+
+    if (pt >= 20 and pt <= 800) {
+      SFb = 0.997942*((1.+(0.00923753*pt))/(1.+(0.0096119*pt)));
+      for (int i=0; i<n; i++) {
+	if (pt >= _ptmin[i] and pt < _ptmax[i]) {
+	  dSFb = _SFb_error[i];
+	}
+      }
+    } else if (pt < 20) {
+      pt = 20;
+      SFb = 0.997942*((1.+(0.00923753*pt))/(1.+(0.0096119*pt)));
+      dSFb = 2.*_SFb_error[0];
+    } else if (pt > 800) {
+      pt = 800;
+      SFb = 0.997942*((1.+(0.00923753*pt))/(1.+(0.0096119*pt)));
+      dSFb = 2.*_SFb_error[n-1];
+    }
+  } 
+  // light jets
+  else {
+    double x = pt;
+    if (pt < 20) x = 20;
+    if (pt > 800) x = 800;
+    if (eta >= 0.0 and eta < 0.5) {
+      SFb = ((1.01177+(0.0023066*x))+(-4.56052e-06*(x*x)))+(2.57917e-09*(x*(x*x)));
+    } else if (eta >= 0.5 and eta < 1.0) {
+      SFb = ((0.975966+(0.00196354*x))+(-3.83768e-06*(x*x)))+(2.17466e-09*(x*(x*x)));
+    } else if (eta >= 1.0 and eta < 1.5) {
+      SFb = ((0.93821+(0.00180935*x))+(-3.86937e-06*(x*x)))+(2.43222e-09*(x*(x*x)));
+    } else {
+      SFb = ((1.00022+(0.0010998*x))+(-3.10672e-06*(x*x)))+(2.35006e-09*(x*(x*x)));
+    }
+    dSFb = 0.;
+  }
+
+  
+}
+
+
 void btagCSVMEEFull(int flavor, double pt, double eta, double& SFb, double& dSFb)
 {
 
@@ -54,14 +124,23 @@ void btagCSVMEEFull(int flavor, double pt, double eta, double& SFb, double& dSFb
       SFb = (0.938887+(0.00017124*pt))+(-2.76366e-07*(pt*pt));
       dSFb = 2.*_SFb_error[n-1];
     }
-
-  } 
-  //else {
-  //}
-
+  }
+  // light jets
+  else {
+    double x = pt;
+    if (pt < 20) x = 20;
+    if (pt > 800) x = 800;
+    if (eta >= 0.0 and eta < 0.8) {
+      SFb = ((1.07541+(0.00231827*x))+(-4.74249e-06*(x*x)))+(2.70862e-09*(x*(x*x)));
+    } else if (eta >= 0.8 and eta < 1.6) {
+      SFb = ((1.05613+(0.00114031*x))+(-2.56066e-06*(x*x)))+(1.67792e-09*(x*(x*x)));
+    } else {
+      SFb = ((1.05625+(0.000487231*x))+(-2.22792e-06*(x*x)))+(1.70262e-09*(x*(x*x)));
+    }
+    dSFb = 0.;
+  }
   
 }
-
 
 
 

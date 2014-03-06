@@ -1,4 +1,4 @@
-tnm_group%/SingleElectron/Run2012D-22Jan2013-v1/AOD/PAT_CMG_V5_16_0/NTUPLE_Feb15 data
-tnm_group%/SingleElectron/Run2012A-22Jan2013-v1/AOD/PAT_CMG_V5_16_0/NTUPLE_Feb15 data
-tnm_group%/SingleElectron/Run2012B-22Jan2013-v1/AOD/PAT_CMG_V5_16_0/NTUPLE_Feb15 data
-tnm_group%/SingleElectron/Run2012C-22Jan2013-v1/AOD/PAT_CMG_V5_16_0/NTUPLE_Feb15 data
+#tnm_group%/SingleElectron/Run2012D-22Jan2013-v1/AOD/PAT_CMG_V5_16_0/NTUPLE_Aug1 data
+#tnm_group%/SingleElectron/Run2012A-22Jan2013-v1/AOD/PAT_CMG_V5_16_0/NTUPLE_Aug1 data
+#tnm_group%/SingleElectron/Run2012B-22Jan2013-v1/AOD/PAT_CMG_V5_16_0/NTUPLE_Aug1 data
+tnm_group%/SingleElectron/Run2012C-22Jan2013-v1/AOD/PAT_CMG_V5_16_0/NTUPLE_Aug1 data

@@ -136,3 +136,37 @@ Double_t* getVariableBinEdges(int num_entries, Double_t* tmp_array)
   }
    return my_array;
 }
+
+// Get efficiency from a 1D histogram
+double geteff1D(TH1D* h, double x)
+{
+  double eff = 0.0;
+  for (int i=1; i<h->GetNbinsX()+1; i++) {
+    double xmin = h->GetXaxis()->GetBinLowEdge(i);
+    double xmax = h->GetXaxis()->GetBinUpEdge(i);
+    if (!(x >= xmin and x < xmax)) continue;
+    eff = h->GetBinContent(i);
+    break;
+  }
+  return eff;
+}
+
+// Get efficiency from a 2D histogram
+double geteff2D(TH2D* h, double x, double y)
+{
+  double eff = 0.0;
+  for (int i=1; i<h->GetNbinsX()+1; i++) {
+    double xmin = h->GetXaxis()->GetBinLowEdge(i);
+    double xmax = h->GetXaxis()->GetBinUpEdge(i);
+    if (!(x >= xmin and x < xmax)) continue;
+    for (int j=1; j<h->GetNbinsY()+1; j++) {
+      double ymin = h->GetYaxis()->GetBinLowEdge(j);
+      double ymax = h->GetYaxis()->GetBinUpEdge(j);
+      if (y >= ymin && y < ymax) {
+	eff = h->GetBinContent(i, j);
+	break;
+      }
+    }
+  }
+  return eff;
+}

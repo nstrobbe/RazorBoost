@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------------
 // File:        rzrBTanalyzer.cc
 // Description: Analyzer for ntuples created by TheNtupleMaker
@@ -33,7 +34,9 @@ int main(int argc, char** argv)
     return 1;
   }
   TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
-    
+
+
+
   // Get file list and histogram filename from command line
   commandLine cmdline;
   decodeCommandLine(argc, argv, cmdline);
@@ -142,6 +145,38 @@ int main(int argc, char** argv)
     return 1;
   }
   TH1D* h_pileup = (TH1D*)fpileup->Get("pileup_weight");
+
+
+  // Get the btag eff histograms:
+  TFile* fbeff;
+
+  if (sample == "TTJets" or sample == "Top" or sample == "TTX") {
+    fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/btageff_TTJets.root");
+  } else if (sample == "T1ttcc") {
+    fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
+  } else {
+    fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/btageff_QCD.root");
+  }
+  TH1D* h_pt_b_CSVMeff = (TH1D*)fbeff->Get("h_pt_b_CSVMeff");
+  TH1D* h_pt_c_CSVMeff = (TH1D*)fbeff->Get("h_pt_c_CSVMeff");
+  //TH1D* h_pt_l_CSVMeff = (TH1D*)fbeff->Get("h_pt_l_CSVMeff");
+  TH1D* h_pt_lc_CSVMeff = (TH1D*)fbeff->Get("h_pt_lc_CSVMeff");
+
+  TH1D* h_pt_b_CSVLeff = (TH1D*)fbeff->Get("h_pt_b_CSVLeff");
+  TH1D* h_pt_c_CSVLeff = (TH1D*)fbeff->Get("h_pt_c_CSVLeff");
+  //TH1D* h_pt_l_CSVLeff = (TH1D*)fbeff->Get("h_pt_l_CSVLeff");
+  TH1D* h_pt_lc_CSVLeff = (TH1D*)fbeff->Get("h_pt_lc_CSVLeff");
+
+  //TH2D* h_pt_eta_b_CSVMeff = (TH2D*)fbeff->Get("h_pt_eta_b_CSVMeff");
+  //TH2D* h_pt_eta_c_CSVMeff = (TH2D*)fbeff->Get("h_pt_eta_c_CSVMeff");
+  TH2D* h_pt_eta_l_CSVMeff = (TH2D*)fbeff->Get("h_pt_eta_l_CSVMeff");
+  //TH2D* h_pt_eta_lc_CSVMeff = (TH2D*)fbeff->Get("h_pt_eta_lc_CSVMeff");
+
+  //TH2D* h_pt_eta_b_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_b_CSVLeff");
+  //TH2D* h_pt_eta_c_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_c_CSVLeff");
+  TH2D* h_pt_eta_l_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_l_CSVLeff");
+  //TH2D* h_pt_eta_lc_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_lc_CSVLeff");
+
 
   // Calculate the normalization factor for the event weights
   // The original MC weight will be divided by this quantity
@@ -1495,6 +1530,13 @@ int main(int argc, char** argv)
       std::vector<TLorentzVector> LVsjet;
       std::vector<cmgpfjet_s> sbjet;
       std::vector<cmgpfjet_s> slbjet;
+      // btag probabilities
+      double PCSVLsim = 1.0;
+      double PCSVLdata = 1.0;
+      double PCSVMsim = 1.0;
+      double PCSVMdata = 1.0;
+      double sigmaSFFl = 0.0;
+      double sigmaSFFs = 0.0;
       for (unsigned int i=0; i<cmgpfjet.size(); i++) {
 	if (!(cmgpfjet[i].pt > 30) ) continue;
 	if (!(fabs(cmgpfjet[i].eta) < 2.4) ) continue;
@@ -1509,26 +1551,79 @@ int main(int argc, char** argv)
 	if (!(cmgpfjet[i].component_2_fraction < 0.99) ) continue;
 	//}
 	sjet.push_back(cmgpfjet[i]);
-	if (cmgpfjet[i].combinedSecondaryVertexBJetTags > 0.679) {
-	  sbjet.push_back(cmgpfjet[i]);
+
+	// btag SF mess
+        double SFCSVMFl, dSFCSVMFl, SFCSVMFs, dSFCSVMFs;
+        double SFCSVLFl, dSFCSVLFl, SFCSVLFs, dSFCSVLFs;
+	double pt = cmgpfjet[i].pt;
+	double eta = cmgpfjet[i].eta;
+	double partonFlavour = cmgpfjet[i].partonFlavour;
+        btagCSVMEEFull(partonFlavour, pt, eta, SFCSVMFl, dSFCSVMFl);
+        btagCSVMEEFast(partonFlavour, pt, eta, SFCSVMFs, dSFCSVMFs);
+
+        btagCSVLEEFull(partonFlavour, pt, eta, SFCSVLFl, dSFCSVLFl);
+        btagCSVLEEFast(partonFlavour, pt, eta, SFCSVLFs, dSFCSVLFs);
+
+	double eCSVM = 0, eCSVL = 0;
+	double SFCSVM, SFCSVL;
+	// FastSim:
+	if (sample == "T1ttcc") {
+	  if (fabs(partonFlavour) == 5) {
+	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
+	    eCSVL = geteff1D(h_pt_b_CSVLeff, pt);
+	  }
+	  if (fabs(partonFlavour) == 4) {
+	    eCSVM = geteff1D(h_pt_c_CSVMeff, pt);
+	    eCSVL = geteff1D(h_pt_c_CSVLeff, pt);
+	  }
+	  if (fabs(partonFlavour) != 4 and fabs(partonFlavour != 5)) {
+	    eCSVM = geteff2D(h_pt_eta_l_CSVMeff, pt, eta);
+	    eCSVL = geteff2D(h_pt_eta_l_CSVLeff, pt, eta);
+	  }
+	  SFCSVL = (SFCSVLFl + sigmaSFFl*dSFCSVLFl)*(SFCSVLFs + sigmaSFFs*dSFCSVLFs);
+	  SFCSVM = (SFCSVMFl + sigmaSFFl*dSFCSVMFl)*(SFCSVMFs + sigmaSFFs*dSFCSVMFs);
+	} else { // FullSim
+	  if (fabs(partonFlavour) == 5) {
+	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
+	    eCSVL = geteff1D(h_pt_b_CSVLeff, pt);
+	  }
+	  if (partonFlavour != 5) {
+	    eCSVM = geteff1D(h_pt_lc_CSVMeff, pt);
+	    eCSVL = geteff1D(h_pt_lc_CSVLeff, pt);
+	  }
+	  SFCSVL = (SFCSVLFl + sigmaSFFl*dSFCSVLFl);
+	  SFCSVM = (SFCSVMFl + sigmaSFFs*dSFCSVMFl);
 	}
+
+	// CSVM
+	if (cmgpfjet[i].combinedSecondaryVertexBJetTags > 0.679) {
+	  sbjet.push_back(cmgpfjet[i]);	  
+	  PCSVMsim *= eCSVM;
+	  PCSVMdata *= (eCSVM * SFCSVM);
+	} else {
+	  PCSVMsim *= (1 - eCSVM);
+	  PCSVMdata *= (1 - eCSVM * SFCSVM);
+	}
+	// CSVL
 	if (cmgpfjet[i].combinedSecondaryVertexBJetTags > 0.244) {
 	  slbjet.push_back(cmgpfjet[i]);
+	  PCSVLsim *= eCSVL;
+	  PCSVLdata *= (eCSVL * SFCSVL);
+	} else {
+	  PCSVLsim *= (1 - eCSVL);
+	  PCSVLdata *= (1 - eCSVL * SFCSVL);
 	}
 	TLorentzVector jl;
 	jl.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
 			cmgpfjet[i].phi, cmgpfjet[i].energy);
 	LVsjet.push_back(jl);
-        double SFbFl, dSFbFl, SFbFs, dSFbFs;
-        btagCSVMEEFull(cmgpfjet[i].partonFlavour, cmgpfjet[i].pt, 
-                       cmgpfjet[i].eta, SFbFl, dSFbFl);
-        btagCSVMEEFast(cmgpfjet[i].partonFlavour, cmgpfjet[i].pt, 
-                       cmgpfjet[i].eta, SFbFs, dSFbFs);
-        cout << i << " " << cmgpfjet[i].partonFlavour << " " << cmgpfjet[i].pt
-             << " " << cmgpfjet[i].eta << " " << SFbFl << " " << dSFbFl
-             << " " << SFbFs << " " << dSFbFs << endl;
       }
 
+      double wCSVM = PCSVMdata / PCSVMsim;
+      double wCSVL = PCSVLdata / PCSVLsim;
+
+      cout << sbjet.size() << " " << wCSVM << " " << slbjet.size() << " " << wCSVL << endl;
+      continue;
 
       // CA8
       // W selection:

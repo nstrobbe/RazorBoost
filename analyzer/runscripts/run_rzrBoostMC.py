@@ -15,7 +15,8 @@ parser.add_option("--AB", action="store_true", dest="RunsAB", default=False, hel
 
 anl = 'rzrBoostMC'
 
-dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
+#dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
+dwork = '/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/'
 dflist = dwork+'filelists/'
 dflisttmp = dwork+'fileliststmp/'
 druns = dwork+'runs/'
