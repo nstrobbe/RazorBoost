@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140303_noISR"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140303_noISR/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140305_noISR_TTJwithTopPt"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR_TTJwithTopPt/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -49,8 +49,10 @@ if __name__ == '__main__':
             "SIG","neleeq0","nmueq0","trackIso",
             "g1Mb0Ll","g1Mbg1W0Ll","1Mbg1W0Ll","g2Mbg1W0Ll","g1Mbg1W0Ll_mdPhiHatg4","g1Mbg1W0Ll_mdPhiHat4","g1Mb0Wg1uW0Ll",
             "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5","0Lbg1W0Ll",
-            "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100","1Mbg1W1LlmT100","g2Mbg1W1LlmT100","g1Mbg1W1LlmT",
+            "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100",
+            "1Mbg1W1LlmT100","g2Mbg1W1LlmT100","g1Mbg1W1LlmT","g1Mbg1W1LlmT100_mdPhiHatg4","g1Mbg1W1LlmT100_mdPhiHat4",
             "0Lb1Ll","0Lbg1Y1Ll","0Lbg1Y1LlmT100","0Lbg1Y1LlmT",
+            "0Lbg1Y1LlmT_mdPhiHatg4","0Lbg1Y1LlmT_mdPhiHat4",
             "2munoZmass","2mu","2mu0el","0Lb2mu0el","0Lbg1Y2mu0el","g1Mb2mu0el","g1Mbg1Y2mu0el",
             "2elnoZmass","2el","2el0mu","0Lb2el0mu","0Lbg1Y2el0mu","g1Mb2el0mu","g1Mbg1Y2el0mu",
             "2lnoZmass","2l","2l0ol","0Lb2l0ol","0Lbg1Y2l0ol","g1Mb2l0ol","g1Mbg1Y2l0ol",
@@ -275,13 +277,13 @@ if __name__ == '__main__':
             hlist = []
             for i in range(len(mc_datasets)):
                 if not flist[i]: continue
-                hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle)
+                hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle,xtitle=var,ytitle="Events")
                 hlist.append(hdict)
         
             hsiglist = []
             for i in range(len(sig_datasets)):
                 if not fsiglist[i]: continue
-                hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle)
+                hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle,xtitle=var,ytitle="Events")
                 hsiglist.append(hdict)
 
             hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
@@ -291,6 +293,52 @@ if __name__ == '__main__':
                                  cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="No")
 
+    for cut in cuts:
+        for var in vars:
+            hname = "h_%s_%s" % (var,cut)
+            htitle = "MC composition plot"
+            hlist = []
+            for i in range(len(mc_datasets)):
+                if not flist[i]: continue
+                hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle,xtitle=var,ytitle="Events")
+                hlist.append(hdict)
+        
+            hsiglist = []
+            for i in range(len(sig_datasets)):
+                if not fsiglist[i]: continue
+                hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle,xtitle=var,ytitle="Events")
+                hsiglist.append(hdict)
+
+            hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
+            plotTools.PlotDataMC(hlist,0,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
+                                 cname="DataMC_%s_%s_nodata"%(var,cut), plotinfo="Selection %s"%(cut),
+                                 ratiotitle="Data/MC", logscale=False, scale="No")
+
+
+    # Make plot of signal region without data
+    vars = ["MR","R2"]
+    cuts = ["g1Mbg1W0Ll_mdPhiHatg4"]
+    sf = [100,0.01]
+    for cut in cuts:
+        for vi,var in enumerate(vars):
+            hname = "h_%s_%s" % (var,cut)
+            htitle = "MC composition plot"
+            hlist = []
+            for i in range(len(mc_datasets)):
+                if not flist[i]: continue
+                hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle,xtitle=var,ytitle="Events/(%s GeV)"%(sf[vi]))
+                hlist.append(hdict)
+        
+            hsiglist = []
+            for i in range(len(sig_datasets)):
+                if not fsiglist[i]: continue
+                hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle,xtitle=var,ytitle="Events/(%s GeV)"%(sf[vi]))
+                hsiglist.append(hdict)
+
+            hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
+            plotTools.PlotDataMC(hlist,0,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
+                                 cname="DataMC_%s_%s_width_nodata"%(var,cut), plotinfo="Selection %s"%(cut),
+                                 ratiotitle="Data/MC", logscale=True, scale="Width", scalefactor=sf[vi])
 
 
     outfile.Close()

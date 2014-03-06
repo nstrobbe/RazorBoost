@@ -63,9 +63,9 @@ def makeplot(sigregion, cregion, basedir, estdir, outputdir, MConly=True):
 
 if __name__ == '__main__':
 
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140303_noISR/"
-    estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140304/"
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140304/"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/"
+    estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140305/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140305/"
 
     # set root styles
     plotTools.SetBoostStyle()
@@ -74,3 +74,5 @@ if __name__ == '__main__':
     makeplot("1Mbg1W1LlmT100", "0Lbg1Y1LlmT", basedir, estdir, outputdir)
     makeplot("g2Mbg1W1LlmT100", "1Mbg1W1LlmT100", basedir, estdir, outputdir)
     makeplot("0Lbg1uW0Ll_mdPhiHatg4","0Lbg1uW0Ll_mdPhiHat4", basedir, estdir, outputdir)
+    makeplot("g1Mbg1W1LlmT100_mdPhiHatg4","g1Mbg1W1LlmT100_mdPhiHat4", basedir, estdir, outputdir)
+    makeplot("0Lbg1Y1LlmT_mdPhiHatg4","0Lbg1Y1LlmT_mdPhiHat4", basedir, estdir, outputdir)
