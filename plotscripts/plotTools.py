@@ -518,12 +518,15 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
         h.Sumw2()
         h.SetFillColor(hdict["color"])
         h.SetLineColor(hdict["color"])
+        h.GetYaxis().SetTitle(hdict["ytitle"])
+        h.GetXaxis().SetTitle(hdict["xtitle"])
+        h.SetTitle(hdict["title"])
         histos.append(h)
         if "QCD" in hdict["name"]:
             hQCD_index = i
 
-    hdata = 0
     # Get data histogram
+    hdata = 0
     if hdict_data == 0:
         print "Will make plots without data"
     else:
@@ -630,14 +633,22 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     if htotal.GetMaximum() > maxi:
         maxi = htotal.GetMaximum()
 
-    # Make the canvas, which will have two pads
+    # Make the canvas, which will have two pads if we have data, and only one if there is no data
     canvas = rt.TCanvas(cname,"")
-    pad1 = rt.TPad("pad1","",0,0.25,1,1)
-    pad1.SetBottomMargin(0)
-    if logscale:
-        pad1.SetLogy(1)
-    pad1.Draw()
-    pad1.cd()
+    pad1 = 0
+    if hdata != 0:
+        pad1 = rt.TPad("pad1","",0,0.25,1,1)
+        pad1.SetBottomMargin(0)
+        if logscale:
+            pad1.SetLogy(1)
+        pad1.Draw()
+        pad1.cd()
+    else:
+        if logscale:
+            canvas.SetLogy(1)
+        canvas.SetBottomMargin(0.12)
+        canvas.SetLeftMargin(0.12)
+        canvas.cd()
 
     if hdata != 0:
         hdata.GetYaxis().SetTitleSize(0.055)
@@ -650,57 +661,65 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
         hdata.Draw("EP")
     else:
         mc.Draw()
-        mc.GetYaxis().SetTitleSize(0.055)
-        mc.GetYaxis().SetTitleOffset(0.8)
-        mc.GetYaxis().SetLabelSize(0.05)
-        mc.SetMaximum(2.*maxi)
+        mc.SetTitle(hdictlist_bg[0]["title"])
+        mc.GetYaxis().SetTitleSize(0.05)
+        mc.GetYaxis().SetTitleOffset(1)
+        mc.GetYaxis().SetLabelSize(0.045)
+        mc.GetXaxis().SetTitleSize(0.05)
+        mc.GetXaxis().SetTitleOffset(1)
+        mc.GetXaxis().SetLabelSize(0.045)
+        mc.GetYaxis().SetTitle(hdictlist_bg[0]["ytitle"])
+        mc.GetXaxis().SetTitle(hdictlist_bg[0]["xtitle"])
+        mc.SetMaximum(1.5*maxi)
         if logscale:
             mc.SetMaximum(5.*maxi)
             mc.SetMinimum(0.007)
         
     mc.Draw("same")
+    mc.Draw("axis same")
     if hdata != 0:
         hdata.Draw("EPsame")
     legend.Draw("same")
     t = '#scale[1.1]{%s}' % (plotinfo)
-    tex = rt.TLatex(0.52,0.82,t)
+    if len(plotinfo) > 20:
+        tex = rt.TLatex(0.32,0.82,t)
+    else:
+        tex = rt.TLatex(0.52,0.82,t)
     tex.SetNDC();
     tex.Draw("same");
 
 
-    # Make the second pad, with the ratios
-    canvas.cd()
-    pad2 = rt.TPad("pad2","",0,0,1,0.25)
-    pad2.SetBottomMargin(0.35)#0.25
-    pad2.SetTopMargin(0)#0.05
-    pad2.SetGridy(1)
-    pad2.Draw()
-    pad2.cd()
-
-    ratio = rt.TH1D()
+    # Make the second pad, with the ratios; only if hdata!=0
     if hdata != 0:
+        canvas.cd()
+        pad2 = rt.TPad("pad2","",0,0,1,0.25)
+        pad2.SetBottomMargin(0.35)#0.25
+        pad2.SetTopMargin(0)#0.05
+        pad2.SetGridy(1)
+        pad2.Draw()
+        pad2.cd()
+
+        ratio = rt.TH1D()
         ratio = hdata.Clone()
         ratio.Divide(htotal)
-    ratio.SetTitle("")
-    ratio.SetName("histoRatio")
-    ratio.GetYaxis().SetRangeUser(0,2.2)
-    ratio.GetYaxis().SetNdivisions(4,8,0)
-    ratio.GetYaxis().SetLabelSize(0.14)
-    ratio.GetYaxis().SetTitleSize(0.15)
-    ratio.GetYaxis().SetTitle(ratiotitle)
-    ratio.GetYaxis().SetTitleOffset(0.22)
-    ratio.GetXaxis().SetLabelSize(0.13)
-    ratio.GetXaxis().SetTitleSize(0.15)
-    ratio.GetXaxis().SetTickLength(0.1)
-    if hdata != 0:
+        ratio.SetTitle("")
+        ratio.SetName("histoRatio")
+        ratio.GetYaxis().SetRangeUser(0,2.2)
+        ratio.GetYaxis().SetNdivisions(4,8,0)
+        ratio.GetYaxis().SetLabelSize(0.14)
+        ratio.GetYaxis().SetTitleSize(0.15)
+        ratio.GetYaxis().SetTitle(ratiotitle)
+        ratio.GetYaxis().SetTitleOffset(0.22)
+        ratio.GetXaxis().SetLabelSize(0.13)
+        ratio.GetXaxis().SetTitleSize(0.15)
+        ratio.GetXaxis().SetTickLength(0.1)
         ratio.GetXaxis().SetTitle(hdict_data["xtitle"])
-    else:
-        ratio.GetXaxis().SetTitle(hdictlist_bg[0]["xtitle"])
-    ratio.SetStats(0)
-    ratio.Draw("pe")
 
-    rt.SetOwnership(pad1, False) # to avoid seg fault
-    rt.SetOwnership(pad2, False) # to avoid seg fault
+        ratio.SetStats(0)
+        ratio.Draw("pe")
+
+        rt.SetOwnership(pad1, False) # to avoid seg fault
+        rt.SetOwnership(pad2, False) # to avoid seg fault
     
     canvas.cd()
     canvas.SaveAs(outputdir+"/"+cname+".pdf")

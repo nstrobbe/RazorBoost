@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------------
 #include "rzrBTanalyzercmd.h"
 #include "utils.h"
+#include "btagutils.h"
 #include <math.h>
 
 #include "TLorentzVector.h"
@@ -121,7 +122,8 @@ int main(int argc, char** argv)
   bool doTopPtreweighting = false;
   if (sample == "TTJets" && TopPt == "TopPt_True"){
     doTopPtreweighting = true;
-    cout << "Will do top pt reweighting" << endl;
+    doISRreweighting = false; // Never do both ISR and TopPt reweighting
+    cout << "Will do top pt reweighting and no ISR reweighting" << endl;
   }
   bool doPileupReweighting = false;
   if (sample != "Data" && Pileup == "Pileup_True"){
@@ -157,6 +159,19 @@ int main(int argc, char** argv)
     return 1;
   }
   TH1D* h_pileup = (TH1D*)fpileup->Get("pileup_weight");
+
+  // -----------------------------
+  // -- Get the systemtics file --
+  // -----------------------------
+  /*
+  ifstream systFile("systematics_nominal.txt");
+  if ( !systFile.good() ) error("unable to open systematics file");
+  std::vector<double> vsyst;
+  double syst;
+  while (systFile >> syst)
+    cout << "Systematic: " << syst << endl;
+    vsyst.push_back(syst);
+  */
 
   // --------------------------------------------------------------
   // -- Calculate the normalization factor for the event weights --
@@ -292,6 +307,7 @@ int main(int argc, char** argv)
   TH1D* h_MR_Pileup = new TH1D("h_MR_Pileup", "h_MR_Pileup", nbins_MR, bins_MR);
   TH1D* h_R2_Pileup = new TH1D("h_R2_Pileup", "h_R2_Pileup", nbins_R2, bins_R2);
   TH2D* h_MR_R2_Pileup = new TH2D("h_MR_R2_Pileup", "h_MR_R2_Pileup", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_Pileup = new TH1D("h_PV_Pileup", "h_PV_Pileup", 50, 0, 50);
 
   TH1D* h_R2metmu_Pileup = new TH1D("h_R2metmu_Pileup", "h_R2metmu_Pileup", nbins_R2, bins_R2);
   TH2D* h_MR_R2metmu_Pileup = new TH2D("h_MR_R2metmu_Pileup", "h_MR_R2metmu_Pileup", nbins_MR, bins_MR, nbins_R2, bins_R2);
@@ -301,14 +317,17 @@ int main(int argc, char** argv)
   TH1D* h_MR_HCAL_noise = new TH1D("h_MR_HCAL_noise", "h_MR_HCAL_noise", nbins_MR, bins_MR);
   TH1D* h_R2_HCAL_noise = new TH1D("h_R2_HCAL_noise", "h_R2_HCAL_noise", nbins_R2, bins_R2);
   TH2D* h_MR_R2_HCAL_noise = new TH2D("h_MR_R2_HCAL_noise", "h_MR_R2_HCAL_noise", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_HCAL_noise = new TH1D("h_PV_HCAL_noise", "h_PV_HCAL_noise", 50, 0, 50);
 
   TH1D* h_MR_vertexg0 = new TH1D("h_MR_vertexg0", "h_MR_vertexg0", nbins_MR, bins_MR);
   TH1D* h_R2_vertexg0 = new TH1D("h_R2_vertexg0", "h_R2_vertexg0", nbins_R2, bins_R2);
   TH2D* h_MR_R2_vertexg0 = new TH2D("h_MR_R2_vertexg0", "h_MR_R2_vertexg0", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_vertexg0 = new TH1D("h_PV_vertexg0", "h_PV_vertexg0", 50, 0, 50);
 
   TH1D* h_MR_njetge3 = new TH1D("h_MR_njetge3", "h_MR_njetge3", nbins_MR, bins_MR);
   TH1D* h_R2_njetge3 = new TH1D("h_R2_njetge3", "h_R2_njetge3", nbins_R2, bins_R2);
   TH2D* h_MR_R2_njetge3 = new TH2D("h_MR_R2_njetge3", "h_MR_R2_njetge3", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_njetge3 = new TH1D("h_PV_njetge3", "h_PV_njetge3", 50, 0, 50);
 
   TH1D* h_MR_HLT = new TH1D("h_MR_HLT", "h_MR_HLT", nbins_MR, bins_MR);
   TH1D* h_R2_HLT = new TH1D("h_R2_HLT", "h_R2_HLT", nbins_R2, bins_R2);
@@ -324,6 +343,7 @@ int main(int argc, char** argv)
   TH1D* h_MR_jet1ptg200 = new TH1D("h_MR_jet1ptg200", "h_MR_jet1ptg200", nbins_MR, bins_MR);
   TH1D* h_R2_jet1ptg200 = new TH1D("h_R2_jet1ptg200", "h_R2_jet1ptg200", nbins_R2, bins_R2);
   TH2D* h_MR_R2_jet1ptg200 = new TH2D("h_MR_R2_jet1ptg200", "h_MR_R2_jet1ptg200", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_jet1ptg200 = new TH1D("h_PV_jet1ptg200", "h_PV_jet1ptg200", 50, 0, 50);
 
   TH1D * h_minDeltaPhi_jet1ptg200 = new TH1D("h_minDeltaPhi_jet1ptg200", "h_minDeltaPhi_jet1ptg200", 50, 0, 5);
   TH2D * h_MR_minDeltaPhi_jet1ptg200 = new TH2D("h_MR_minDeltaPhi_jet1ptg200", "h_MR_minDeltaPhi_jet1ptg200", nbins_MR, bins_MR, 50, 0, 5);
@@ -373,11 +393,13 @@ int main(int argc, char** argv)
   TH1D * h_minDeltaPhiHat_0Ll = new TH1D("h_minDeltaPhiHat_0Ll", "h_minDeltaPhiHat_0Ll", 30, 0, 15);
   TH2D * h_MR_minDeltaPhiHat_0Ll = new TH2D("h_MR_minDeltaPhiHat_0Ll", "h_MR_minDeltaPhiHat_0Ll", nbins_MR, bins_MR, 30, 0, 15);
   TH2D * h_R2_minDeltaPhiHat_0Ll = new TH2D("h_R2_minDeltaPhiHat_0Ll", "h_R2_minDeltaPhiHat_0Ll", nbins_R2, bins_R2, 30, 0, 15);
+  TH1D* h_PV_0Ll = new TH1D("h_PV_0Ll", "h_PV_0Ll", 50, 0, 50);
 
   // g1Mb 0Ll
   TH1D * h_MR_g1Mb0Ll = new TH1D("h_MR_g1Mb0Ll", "h_MR_g1Mb0Ll", nbins_MR, bins_MR);
   TH1D * h_R2_g1Mb0Ll = new TH1D("h_R2_g1Mb0Ll", "h_R2_g1Mb0Ll", nbins_R2, bins_R2);
   TH2D * h_MR_R2_g1Mb0Ll = new TH2D("h_MR_R2_g1Mb0Ll", "h_MR_R2_g1Mb0Ll", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_g1Mb0Ll = new TH1D("h_PV_g1Mb0Ll", "h_PV_g1Mb0Ll", 50, 0, 50);
 
   // g1Mb g1W 0Ll ; Signal box: >= 1 Mb; >= 1 W; 0 Ll
   TH1D * h_MR_g1Mbg1W0Ll = new TH1D("h_MR_g1Mbg1W0Ll", "h_MR_g1Mbg1W0Ll", nbins_MR, bins_MR);
@@ -394,6 +416,8 @@ int main(int argc, char** argv)
   TH1D * h_dphimegajets_g1Mbg1W0Ll = new TH1D("h_dphimegajets_g1Mbg1W0Ll","h_dphimegajets_g1Mbg1W0Ll",40,0,4);
   TH1D * h_dphijet1jet2_g1Mbg1W0Ll = new TH1D("h_dphijet1jet2_g1Mbg1W0Ll","h_dphijet1jet2_g1Mbg1W0Ll",40,0,4);
   TH1D * h_HT_g1Mbg1W0Ll = new TH1D("h_HT_g1Mbg1W0Ll", "h_HT_g1Mbg1W0Ll", 100, 0, 2000);
+  TH1D * h_PV_g1Mbg1W0Ll = new TH1D("h_PV_g1Mbg1W0Ll", "h_PV_g1Mbg1W0Ll", 50, 0, 50);
+  TH1D * h_minDeltaPhiHat_g1Mbg1W0Ll = new TH1D("h_minDeltaPhiHat_g1Mbg1W0Ll", "h_minDeltaPhiHat_g1Mbg1W0Ll", 30, 0, 15);
 
   // separate 1b and >=2b plots
   TH1D * h_MR_1Mbg1W0Ll = new TH1D("h_MR_1Mbg1W0Ll", "h_MR_1Mbg1W0Ll", nbins_MR, bins_MR);
@@ -424,11 +448,13 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_g1Mb0Wg1uW0Ll = new TH1D("h_jet1pt_g1Mb0Wg1uW0Ll","h_jet1pt_g1Mb0Wg1uW0Ll",20,0,1000);
   TH1D * h_jet2pt_g1Mb0Wg1uW0Ll = new TH1D("h_jet2pt_g1Mb0Wg1uW0Ll","h_jet2pt_g1Mb0Wg1uW0Ll",20,0,1000);
   TH1D * h_jet3pt_g1Mb0Wg1uW0Ll = new TH1D("h_jet3pt_g1Mb0Wg1uW0Ll","h_jet3pt_g1Mb0Wg1uW0Ll",20,0,1000);
+  TH1D* h_PV_g1Mb0Wg1uW0Ll = new TH1D("h_PV_g1Mb0Wg1uW0Ll", "h_PV_g1Mb0Wg1uW0Ll", 50, 0, 50);
 
   // 0Lb 0Ll
   TH1D * h_MR_0Lb0Ll = new TH1D("h_MR_0Lb0Ll", "h_MR_0Lb0Ll", nbins_MR, bins_MR);
   TH1D * h_R2_0Lb0Ll = new TH1D("h_R2_0Lb0Ll", "h_R2_0Lb0Ll", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lb0Ll = new TH2D("h_MR_R2_0Lb0Ll", "h_MR_R2_0Lb0Ll", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_0Lb0Ll = new TH1D("h_PV_0Lb0Ll", "h_PV_0Lb0Ll", 50, 0, 50);
 
   TH1D * h_minDeltaPhi_0Lb0Ll = new TH1D("h_minDeltaPhi_0Lb0Ll", "h_minDeltaPhi_0Lb0Ll", 50, 0, 5);
   TH2D * h_MR_minDeltaPhi_0Lb0Ll = new TH2D("h_MR_minDeltaPhi_0Lb0Ll", "h_MR_minDeltaPhi_0Lb0Ll", nbins_MR, bins_MR, 50, 0, 5);
@@ -442,6 +468,7 @@ int main(int argc, char** argv)
   TH1D * h_MR_0Lbg1uW0Ll = new TH1D("h_MR_0Lbg1uW0Ll", "h_MR_0Lbg1uW0Ll", nbins_MR, bins_MR);
   TH1D * h_R2_0Lbg1uW0Ll = new TH1D("h_R2_0Lbg1uW0Ll", "h_R2_0Lbg1uW0Ll", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lbg1uW0Ll = new TH2D("h_MR_R2_0Lbg1uW0Ll", "h_MR_R2_0Lbg1uW0Ll", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_0Lbg1uW0Ll = new TH1D("h_PV_0Lbg1uW0Ll", "h_PV_0Lbg1uW0Ll", 50, 0, 50);
 
   TH1D * h_minDeltaPhi_0Lbg1uW0Ll = new TH1D("h_minDeltaPhi_0Lbg1uW0Ll", "h_minDeltaPhi_0Lbg1uW0Ll", 50, 0, 5);
   TH2D * h_MR_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhi_0Lbg1uW0Ll", "h_MR_minDeltaPhi_0Lbg1uW0Ll", nbins_MR, bins_MR, 50, 0, 5);
@@ -474,6 +501,11 @@ int main(int argc, char** argv)
   TH1D * h_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhiHat4", "h_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", "h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
+  // also get the complement for closure tests
+  TH1D * h_MR_0Lbg1uW0Ll_mdPhiHatg4 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhiHatg4", "h_MR_0Lbg1uW0Ll_mdPhiHatg4", nbins_MR, bins_MR);
+  TH1D * h_R2_0Lbg1uW0Ll_mdPhiHatg4 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhiHatg4", "h_R2_0Lbg1uW0Ll_mdPhiHatg4", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhiHatg4 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhiHatg4", "h_MR_R2_0Lbg1uW0Ll_mdPhiHatg4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
   TH1D * h_njets_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_njets_0Lbg1uW0Ll_mdPhiHat4","h_njets_0Lbg1uW0Ll_mdPhiHat4",15,0,15);
   TH1D * h_met_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_met_0Lbg1uW0Ll_mdPhiHat4","h_met_0Lbg1uW0Ll_mdPhiHat4",20,0,1000);
   TH1D * h_jet1pt_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_jet1pt_0Lbg1uW0Ll_mdPhiHat4","h_jet1pt_0Lbg1uW0Ll_mdPhiHat4",20,0,1000);
@@ -503,11 +535,13 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_1Ll = new TH2D("h_MR_R2_1Ll", "h_MR_R2_1Ll", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D * h_HT_1Ll = new TH1D("h_HT_1Ll", "h_HT_1Ll", 100, 0, 2000);
+  TH1D* h_PV_1Ll = new TH1D("h_PV_1Ll", "h_PV_1Ll", 50, 0, 50);
 
   // g1Mb1Ll
   TH1D * h_MR_g1Mb1Ll = new TH1D("h_MR_g1Mb1Ll", "h_MR_g1Mb1Ll", nbins_MR, bins_MR);
   TH1D * h_R2_g1Mb1Ll = new TH1D("h_R2_g1Mb1Ll", "h_R2_g1Mb1Ll", nbins_R2, bins_R2);
   TH2D * h_MR_R2_g1Mb1Ll = new TH2D("h_MR_R2_g1Mb1Ll", "h_MR_R2_g1Mb1Ll", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_g1Mb1Ll = new TH1D("h_PV_g1Mb1Ll", "h_PV_g1Mb1Ll", 50, 0, 50);
 
   TH1D * h_mT_g1Mb1Ll = new TH1D("h_mT_g1Mb1Ll", "h_mT_g1Mb1Ll", 50, 0, 500);
   TH1D * h_njets_g1Mb1Ll = new TH1D("h_njets_g1Mb1Ll","h_njets_g1Mb1Ll",15,0,15);
@@ -559,6 +593,16 @@ int main(int argc, char** argv)
   TH1D * h_R2_g2Mbg1W1LlmT100 = new TH1D("h_R2_g2Mbg1W1LlmT100", "h_R2_g2Mbg1W1LlmT100", nbins_R2, bins_R2);
   TH2D * h_MR_R2_g2Mbg1W1LlmT100 = new TH2D("h_MR_R2_g2Mbg1W1LlmT100", "h_MR_R2_g2Mbg1W1LlmT100", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
+  // mdPhiHatg4
+  TH1D * h_MR_g1Mbg1W1LlmT100_mdPhiHatg4 = new TH1D("h_MR_g1Mbg1W1LlmT100_mdPhiHatg4", "h_MR_g1Mbg1W1LlmT100_mdPhiHatg4", nbins_MR, bins_MR);
+  TH1D * h_R2_g1Mbg1W1LlmT100_mdPhiHatg4 = new TH1D("h_R2_g1Mbg1W1LlmT100_mdPhiHatg4", "h_R2_g1Mbg1W1LlmT100_mdPhiHatg4", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_g1Mbg1W1LlmT100_mdPhiHatg4 = new TH2D("h_MR_R2_g1Mbg1W1LlmT100_mdPhiHatg4", "h_MR_R2_g1Mbg1W1LlmT100_mdPhiHatg4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  
+  // mdPhiHat4
+  TH1D * h_MR_g1Mbg1W1LlmT100_mdPhiHat4 = new TH1D("h_MR_g1Mbg1W1LlmT100_mdPhiHat4", "h_MR_g1Mbg1W1LlmT100_mdPhiHat4", nbins_MR, bins_MR);
+  TH1D * h_R2_g1Mbg1W1LlmT100_mdPhiHat4 = new TH1D("h_R2_g1Mbg1W1LlmT100_mdPhiHat4", "h_R2_g1Mbg1W1LlmT100_mdPhiHat4", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_g1Mbg1W1LlmT100_mdPhiHat4 = new TH2D("h_MR_R2_g1Mbg1W1LlmT100_mdPhiHat4", "h_MR_R2_g1Mbg1W1LlmT100_mdPhiHat4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
   // g1Mbg1W1LlmT ; TTj control region: >= 1 Mb; >= 1 W; 1 Ll; 30<mT<100
   TH1D * h_MR_g1Mbg1W1LlmT = new TH1D("h_MR_g1Mbg1W1LlmT", "h_MR_g1Mbg1W1LlmT", nbins_MR, bins_MR);
   TH1D * h_R2_g1Mbg1W1LlmT = new TH1D("h_R2_g1Mbg1W1LlmT", "h_R2_g1Mbg1W1LlmT", nbins_R2, bins_R2);
@@ -573,6 +617,7 @@ int main(int argc, char** argv)
   TH1D * h_MR_0Lb1Ll = new TH1D("h_MR_0Lb1Ll", "h_MR_0Lb1Ll", nbins_MR, bins_MR);
   TH1D * h_R2_0Lb1Ll = new TH1D("h_R2_0Lb1Ll", "h_R2_0Lb1Ll", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lb1Ll = new TH2D("h_MR_R2_0Lb1Ll", "h_MR_R2_0Lb1Ll", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_0Lb1Ll = new TH1D("h_PV_0Lb1Ll", "h_PV_0Lb1Ll", 50, 0, 50);
 
   TH1D * h_mT_0Lb1Ll = new TH1D("h_mT_0Lb1Ll", "h_mT_0Lb1Ll", 50, 0, 500);
   TH2D * h_MR_mT_0Lb1Ll = new TH2D("h_MR_mT_0Lb1Ll", "h_MR_mT_0Lb1Ll", nbins_MR, bins_MR, 50, 0, 500);
@@ -589,6 +634,7 @@ int main(int argc, char** argv)
   TH1D * h_MR_0Lbg1Y1Ll = new TH1D("h_MR_0Lbg1Y1Ll", "h_MR_0Lbg1Y1Ll", nbins_MR, bins_MR);
   TH1D * h_R2_0Lbg1Y1Ll = new TH1D("h_R2_0Lbg1Y1Ll", "h_R2_0Lbg1Y1Ll", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lbg1Y1Ll = new TH2D("h_MR_R2_0Lbg1Y1Ll", "h_MR_R2_0Lbg1Y1Ll", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D* h_PV_0Lbg1Y1Ll = new TH1D("h_PV_0Lbg1Y1Ll", "h_PV_0Lbg1Y1Ll", 50, 0, 50);
 
   TH1D * h_mT_0Lbg1Y1Ll = new TH1D("h_mT_0Lbg1Y1Ll", "h_mT_0Lbg1Y1Ll", 50, 0, 500);
   TH2D * h_MR_mT_0Lbg1Y1Ll = new TH2D("h_MR_mT_0Lbg1Y1Ll", "h_MR_mT_0Lbg1Y1Ll", nbins_MR, bins_MR, 50, 0, 500);
@@ -630,6 +676,17 @@ int main(int argc, char** argv)
   TH1D * h_leptonpt_0Lbg1Y1LlmT = new TH1D("h_leptonpt_0Lbg1Y1LlmT","h_leptonpt_0Lbg1Y1LlmT",25,0,500);
   TH1D * h_HT_0Lbg1Y1LlmT = new TH1D("h_HT_0Lbg1Y1LlmT", "h_HT_0Lbg1Y1LlmT", 100, 0, 2000);
 
+  // mdPhiHatg4 
+  TH1D * h_MR_0Lbg1Y1LlmT_mdPhiHatg4 = new TH1D("h_MR_0Lbg1Y1LlmT_mdPhiHatg4", "h_MR_0Lbg1Y1LlmT_mdPhiHatg4", nbins_MR, bins_MR);
+  TH1D * h_R2_0Lbg1Y1LlmT_mdPhiHatg4 = new TH1D("h_R2_0Lbg1Y1LlmT_mdPhiHatg4", "h_R2_0Lbg1Y1LlmT_mdPhiHatg4", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_0Lbg1Y1LlmT_mdPhiHatg4 = new TH2D("h_MR_R2_0Lbg1Y1LlmT_mdPhiHatg4", "h_MR_R2_0Lbg1Y1LlmT_mdPhiHatg4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
+  // mdPhiHat4
+  TH1D * h_MR_0Lbg1Y1LlmT_mdPhiHat4 = new TH1D("h_MR_0Lbg1Y1LlmT_mdPhiHat4", "h_MR_0Lbg1Y1LlmT_mdPhiHat4", nbins_MR, bins_MR);
+  TH1D * h_R2_0Lbg1Y1LlmT_mdPhiHat4 = new TH1D("h_R2_0Lbg1Y1LlmT_mdPhiHat4", "h_R2_0Lbg1Y1LlmT_mdPhiHat4", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_0Lbg1Y1LlmT_mdPhiHat4 = new TH2D("h_MR_R2_0Lbg1Y1LlmT_mdPhiHat4", "h_MR_R2_0Lbg1Y1LlmT_mdPhiHat4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
+
   // dimuon trajectory
   TH1D * h_Zmass_2mu = new TH1D("h_Zmass_2mu", "h_Zmass_2mu", 20, 50, 130);
   TH2D * h_R2_Zmass_2mu = new TH2D("h_R2_Zmass_2mu", "h_R2_Zmass_2mu", 20, 50, 130, nbins_MR, bins_MR);
@@ -648,6 +705,7 @@ int main(int argc, char** argv)
   TH1D * h_MR_2mu0el = new TH1D("h_MR_2mu0el", "h_MR_2mu0el", nbins_MR, bins_MR);
   TH1D * h_R2_2mu0el = new TH1D("h_R2_2mu0el", "h_R2_2mu0el", nbins_R2, bins_R2);
   TH2D * h_MR_R2_2mu0el = new TH2D("h_MR_R2_2mu0el", "h_MR_R2_2mu0el", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D * h_PV_2mu0el = new TH1D("h_PV_2mu0el", "h_PV_2mu0el", 50, 0, 50);
   
   TH1D * h_njets_2mu0el = new TH1D("h_njets_2mu0el","h_njets_2mu0el",15,0,15);
   TH1D * h_nbjets_2mu0el = new TH1D("h_nbjets_2mu0el","h_nbjets_2mu0el",6,0,6);
@@ -730,6 +788,7 @@ int main(int argc, char** argv)
   TH1D * h_MR_2el0mu = new TH1D("h_MR_2el0mu", "h_MR_2el0mu", nbins_MR, bins_MR);
   TH1D * h_R2_2el0mu = new TH1D("h_R2_2el0mu", "h_R2_2el0mu", nbins_R2, bins_R2);
   TH2D * h_MR_R2_2el0mu = new TH2D("h_MR_R2_2el0mu", "h_MR_R2_2el0mu", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D * h_PV_2el0mu = new TH1D("h_PV_2el0mu", "h_PV_2el0mu", 50, 0, 50);
   
   TH1D * h_njets_2el0mu = new TH1D("h_njets_2el0mu","h_njets_2el0mu",15,0,15);
   TH1D * h_nbjets_2el0mu = new TH1D("h_nbjets_2el0mu","h_nbjets_2el0mu",6,0,6);
@@ -1459,6 +1518,14 @@ int main(int argc, char** argv)
 	jl.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
 			cmgpfjet[i].phi, cmgpfjet[i].energy);
 	LVsjet.push_back(jl);
+        double SFbFl, dSFbFl, SFbFs, dSFbFs;
+        btagCSVMEEFull(cmgpfjet[i].partonFlavour, cmgpfjet[i].pt, 
+                       cmgpfjet[i].eta, SFbFl, dSFbFl);
+        btagCSVMEEFast(cmgpfjet[i].partonFlavour, cmgpfjet[i].pt, 
+                       cmgpfjet[i].eta, SFbFs, dSFbFs);
+	// cout << i << " " << cmgpfjet[i].partonFlavour << " " << cmgpfjet[i].pt
+        //     << " " << cmgpfjet[i].eta << " " << SFbFl << " " << dSFbFl
+        //     << " " << SFbFs << " " << dSFbFs << endl;
       }
 
 
@@ -1782,6 +1849,7 @@ int main(int argc, char** argv)
 	TTsemilep->Fill("Pileup",w);
       else if(isTTdilep)
 	TTdilep->Fill("Pileup",w);
+      h_PV_Pileup->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 
       // ------------------------------------
       // -- Pick up trigger weights for MC --
@@ -1809,6 +1877,13 @@ int main(int argc, char** argv)
 	  h_HT_jet1pt_nosel->Fill(HT,sjet[0].pt,w*w_trigger);
 	  h_HT_jet1pt_nosel_notrigw->Fill(HT,sjet[0].pt,w);
 	  h_TrueNumVertices_reweighted_withtrigger->Fill(num_vertices,w*w_trigger);
+	}
+      }
+
+      if (eventhelper_isRealData!=0) {
+	if (sjet.size() > 0){
+	  h_PV_1j->Fill(eventhelperextra_numberOfPrimaryVertices,w); 
+	  h_PV_reweighted_1j->Fill(eventhelperextra_numberOfPrimaryVertices,w); 
 	}
       }
       h_PV_nosel->Fill(eventhelperextra_numberOfPrimaryVertices,w_old); // No PU or trigger weights
@@ -2009,6 +2084,7 @@ int main(int argc, char** argv)
       h_MR_HCAL_noise->Fill(MR, w);
       h_R2_HCAL_noise->Fill(R2, w);
       h_MR_R2_HCAL_noise->Fill(MR, R2, w);
+      h_PV_HCAL_noise->Fill(eventhelperextra_numberOfPrimaryVertices,w);
       if(isTTallhad)
 	TTallhad->Fill("HCAL_noise", w);
       else if(isTTsemilep)
@@ -2022,6 +2098,7 @@ int main(int argc, char** argv)
       h_MR_vertexg0->Fill(MR, w);
       h_R2_vertexg0->Fill(R2, w);
       h_MR_R2_vertexg0->Fill(MR, R2, w);
+      h_PV_vertexg0->Fill(eventhelperextra_numberOfPrimaryVertices,w);
       if(isTTallhad)
 	TTallhad->Fill("vertexg0", w);
       else if(isTTsemilep)
@@ -2035,6 +2112,7 @@ int main(int argc, char** argv)
       h_MR_njetge3->Fill(MR, w);
       h_R2_njetge3->Fill(R2, w);
       h_MR_R2_njetge3->Fill(MR, R2, w);
+      h_PV_njetge3->Fill(eventhelperextra_numberOfPrimaryVertices,w);
       if(isTTallhad)
 	TTallhad->Fill("njetge3", w);
       else if(isTTsemilep)
@@ -2096,6 +2174,7 @@ int main(int argc, char** argv)
       h_MR_jet1ptg200->Fill(MR, w);
       h_R2_jet1ptg200->Fill(R2, w);
       h_MR_R2_jet1ptg200->Fill(MR, R2, w);
+      h_PV_jet1ptg200->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 
       h_njets_jet1ptg200->Fill(sjet.size(),w);
       h_nbjets_jet1ptg200->Fill(sbjet.size(),w);
@@ -2213,12 +2292,14 @@ int main(int argc, char** argv)
 	      h_MR_minDeltaPhiHat_0Ll->Fill(MR, minDeltaPhiHat, w);
 	      h_R2_minDeltaPhiHat_0Ll->Fill(R2, minDeltaPhiHat, w);
 
+	      h_PV_0Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 
 	      if (nmediumbs > 0){
 		ofile.count("g1Mb0Ll", w);
 		h_MR_g1Mb0Ll->Fill(MR, w);
 		h_R2_g1Mb0Ll->Fill(R2, w);
 		h_MR_R2_g1Mb0Ll->Fill(MR, R2, w);
+		h_PV_g1Mb0Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 		if(isTTallhad)
 		  TTallhad->Fill("g1Mb0Ll", w);
 		else if(isTTsemilep)
@@ -2293,6 +2374,8 @@ int main(int argc, char** argv)
 		  h_dphimegajets_g1Mbg1W0Ll->Fill(fdeltaPhi(LVhemis[0].Phi(),LVhemis[1].Phi()),w);
 		  h_dphijet1jet2_g1Mbg1W0Ll->Fill(fdeltaPhi(sjet[0].phi,sjet[1].phi),w);
 		  h_HT_g1Mbg1W0Ll->Fill(HT,w);
+		  h_PV_g1Mbg1W0Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
+		  h_minDeltaPhiHat_g1Mbg1W0Ll->Fill(minDeltaPhiHat, w);
 		  if(isTTallhad)
 		    TTallhad->Fill("g1Mbg1W0Ll", w);
 		  else if(isTTsemilep)
@@ -2364,6 +2447,7 @@ int main(int argc, char** argv)
 		    h_jet1pt_g1Mb0Wg1uW0Ll->Fill(sjet[0].pt,w);
 		    h_jet2pt_g1Mb0Wg1uW0Ll->Fill(sjet[1].pt,w);
 		    h_jet3pt_g1Mb0Wg1uW0Ll->Fill(sjet[2].pt,w);
+		    h_PV_g1Mb0Wg1uW0Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 		    
 		    if(isTTallhad)
 		      TTallhad->Fill("g1Mb0Wg1uW0Ll", w);
@@ -2389,6 +2473,7 @@ int main(int argc, char** argv)
 		h_MR_minDeltaPhiHat_0Lb0Ll->Fill(MR, minDeltaPhiHat, w);
 		h_R2_minDeltaPhiHat_0Lb0Ll->Fill(R2, minDeltaPhiHat, w);
 
+		h_PV_0Lb0Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 		if(isTTallhad)
 		  TTallhad->Fill("0Lb0Ll", w);
 		else if(isTTsemilep)
@@ -2402,6 +2487,7 @@ int main(int argc, char** argv)
 		  h_MR_0Lbg1uW0Ll->Fill(MR, w);
 		  h_R2_0Lbg1uW0Ll->Fill(R2, w);
 		  h_MR_R2_0Lbg1uW0Ll->Fill(MR, R2, w);
+		  h_PV_0Lbg1uW0Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 
 		  h_minDeltaPhi_0Lbg1uW0Ll->Fill(minDeltaPhi, w);
 		  h_MR_minDeltaPhi_0Lbg1uW0Ll->Fill(MR, minDeltaPhi, w);
@@ -2465,6 +2551,11 @@ int main(int argc, char** argv)
 		    else if(isTTdilep)
 		      TTdilep->Fill("0Lbg1uW0Ll_mdPhiHat4", w);
 		  } // end of minDeltaPhiHat < 4
+		  else {
+		    h_MR_0Lbg1uW0Ll_mdPhiHatg4->Fill(MR, w);
+		    h_R2_0Lbg1uW0Ll_mdPhiHatg4->Fill(R2, w);
+		    h_MR_R2_0Lbg1uW0Ll_mdPhiHatg4->Fill(MR, R2, w);
+		  } // end of minDeltaPhiHat > 4
 
 		  if (minDeltaPhiHat < 5){
 		    ofile.count("0Lbg1uW0Ll_mdPhiHat5",w);
@@ -2524,6 +2615,7 @@ int main(int argc, char** argv)
 	  h_R2_1Ll->Fill(R2, w);
 	  h_MR_R2_1Ll->Fill(MR, R2, w);
 	  h_HT_1Ll->Fill(HT,w);
+	  h_PV_1Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 	  if(isTTallhad)
 	    TTallhad->Fill("1Ll", w);
 	  else if(isTTsemilep)
@@ -2536,6 +2628,7 @@ int main(int argc, char** argv)
 	    h_MR_g1Mb1Ll->Fill(MR, w);
 	    h_R2_g1Mb1Ll->Fill(R2, w);
 	    h_MR_R2_g1Mb1Ll->Fill(MR, R2, w);
+	    h_PV_g1Mb1Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 
 	    h_mT_g1Mb1Ll->Fill(mT, w);
 	    h_njets_g1Mb1Ll->Fill(sjet.size(),w);
@@ -2627,6 +2720,17 @@ int main(int argc, char** argv)
 		    TTdilep->Fill("g2Mbg1W1LlmT100", w);
 		}
 		
+		// add cut on mindeltaphihat
+		if (minDeltaPhiHat > 4){
+		  h_MR_g1Mbg1W1LlmT100_mdPhiHatg4->Fill(MR, w);
+		  h_R2_g1Mbg1W1LlmT100_mdPhiHatg4->Fill(R2, w);
+		  h_MR_R2_g1Mbg1W1LlmT100_mdPhiHatg4->Fill(MR, R2, w);
+		} else {
+		  h_MR_g1Mbg1W1LlmT100_mdPhiHat4->Fill(MR, w);
+		  h_R2_g1Mbg1W1LlmT100_mdPhiHat4->Fill(R2, w);
+		  h_MR_R2_g1Mbg1W1LlmT100_mdPhiHat4->Fill(MR, R2, w);
+		}
+
 		// mT window
 		if (mT > 30){
 		  ofile.count("g1Mbg1W1LlmT",w);
@@ -2652,8 +2756,9 @@ int main(int argc, char** argv)
 	    ofile.count("0Lb1Ll",w);
 	    h_MR_0Lb1Ll->Fill(MR, w);
 	    h_R2_0Lb1Ll->Fill(R2, w);
-	    h_MR_R2_0Lb1Ll->Fill(MR, R2, w);
-	    
+	    h_MR_R2_0Lb1Ll->Fill(MR, R2, w);	
+	    h_PV_0Lb1Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
+    
 	    h_mT_0Lb1Ll->Fill(mT, w);
 	    h_MR_mT_0Lb1Ll->Fill(MR, mT, w);
 	    h_R2_mT_0Lb1Ll->Fill(R2, mT, w);
@@ -2677,6 +2782,7 @@ int main(int argc, char** argv)
 	      h_MR_0Lbg1Y1Ll->Fill(MR, w);
 	      h_R2_0Lbg1Y1Ll->Fill(R2, w);
 	      h_MR_R2_0Lbg1Y1Ll->Fill(MR, R2, w);
+	      h_PV_0Lbg1Y1Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 	      
 	      h_mT_0Lbg1Y1Ll->Fill(mT, w);
 	      h_MR_mT_0Lbg1Y1Ll->Fill(MR, mT, w);
@@ -2741,6 +2847,18 @@ int main(int argc, char** argv)
 		    TTsemilep->Fill("0Lbg1Y1LlmT", w);
 		  else if(isTTdilep)
 		    TTdilep->Fill("0Lbg1Y1LlmT", w);
+
+		  // add cut on mindeltaphihat
+		  if (minDeltaPhiHat > 4){
+		    h_MR_0Lbg1Y1LlmT_mdPhiHatg4->Fill(MR, w);
+		    h_R2_0Lbg1Y1LlmT_mdPhiHatg4->Fill(R2, w);
+		    h_MR_R2_0Lbg1Y1LlmT_mdPhiHatg4->Fill(MR, R2, w);
+		  } else {
+		    h_MR_0Lbg1Y1LlmT_mdPhiHat4->Fill(MR, w);
+		    h_R2_0Lbg1Y1LlmT_mdPhiHat4->Fill(R2, w);
+		    h_MR_R2_0Lbg1Y1LlmT_mdPhiHat4->Fill(MR, R2, w);
+		  }
+
 		} // end mT > 30
 	      } // end mT < 100
 	    } // end sY.size()
@@ -2758,30 +2876,32 @@ int main(int argc, char** argv)
 
       // dimuon selections for the muon acceptance and efficiency - after preselection
       if (genmu.size() == 2 && genZ.size() == 1) {
-	if (!(genmu[0].charge == -genmu[1].charge)) continue;
-	ofile.count("presel2genallmu", w);
-	if(isTTallhad)
-	  TTallhad->Fill("presel2genallmu", w);
-	else if(isTTsemilep)
-	  TTsemilep->Fill("presel2genallmu", w);
-	else if(isTTdilep)
-	  TTdilep->Fill("presel2genallmu", w);
+	if (genmu[0].charge == -genmu[1].charge){
+	  ofile.count("presel2genallmu", w);
+	  if(isTTallhad)
+	    TTallhad->Fill("presel2genallmu", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("presel2genallmu", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("presel2genallmu", w);
+	}
       }
       if (sgenmu.size() == 2) {
-	if (!(genmu[0].charge == -genmu[1].charge)) continue;
-	TLorentzVector LVZcand;
-	for (unsigned int m=0; m<LVsgenmu.size(); m++) {
-	  LVZcand += LVsgenmu[m];
+	if (genmu[0].charge == -genmu[1].charge){
+	  TLorentzVector LVZcand;
+	  for (unsigned int m=0; m<LVsgenmu.size(); m++) {
+	    LVZcand += LVsgenmu[m];
+	  }
+	  double Zmass = LVZcand.M();
+	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	  ofile.count("presel2genmu", w);
+	  if(isTTallhad)
+	    TTallhad->Fill("presel2genmu", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("presel2genmu", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("presel2genmu", w);
 	}
-	double Zmass = LVZcand.M();
-	if (!(Zmass >= 60 && Zmass <= 120)) continue;
-	ofile.count("presel2genmu", w);
-	if(isTTallhad)
-	  TTallhad->Fill("presel2genmu", w);
-	else if(isTTsemilep)
-	  TTsemilep->Fill("presel2genmu", w);
-	else if(isTTdilep)
-	  TTdilep->Fill("presel2genmu", w);
       }
       if (smuon.size() == 2) {
 	TLorentzVector LVZcand;
@@ -2789,14 +2909,15 @@ int main(int argc, char** argv)
 	  LVZcand += LVmu[m];
 	}
 	double Zmass = LVZcand.M();
-	if (!(Zmass >= 60 && Zmass <= 120)) continue;
-	ofile.count("presel2mu", w);
-	if(isTTallhad)
-	  TTallhad->Fill("presel2mu", w);
-	else if(isTTsemilep)
-	  TTsemilep->Fill("presel2mu", w);
-	else if(isTTdilep)
-	  TTdilep->Fill("presel2mu", w);
+	if (Zmass >= 60 && Zmass <= 120){
+	  ofile.count("presel2mu", w);
+	  if(isTTallhad)
+	    TTallhad->Fill("presel2mu", w);
+	  else if(isTTsemilep)
+	    TTsemilep->Fill("presel2mu", w);
+	  else if(isTTdilep)
+	    TTdilep->Fill("presel2mu", w);
+	}
       }
 
 
@@ -2804,30 +2925,32 @@ int main(int argc, char** argv)
       if (MR > 800 && R2metmu > 0.08){
 	// GEN
 	if (genmu.size() == 2 && genZ.size() == 1) {
-	  if (!(genmu[0].charge == -genmu[1].charge)) continue;
-	  ofile.count("2genallmu", w);
-	  if(isTTallhad)
-	    TTallhad->Fill("2genallmu", w);
-	  else if(isTTsemilep)
-	    TTsemilep->Fill("2genallmu", w);
-	  else if(isTTdilep)
-	    TTdilep->Fill("2genallmu", w);
+	  if (genmu[0].charge == -genmu[1].charge){
+	    ofile.count("2genallmu", w);
+	    if(isTTallhad)
+	      TTallhad->Fill("2genallmu", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("2genallmu", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("2genallmu", w);
+	  }
 	}
 	if (sgenmu.size() == 2) {
-	  if (!(genmu[0].charge == -genmu[1].charge)) continue;
-	  TLorentzVector LVZcand;
-	  for (unsigned int m=0; m<LVsgenmu.size(); m++) {
-	    LVZcand += LVsgenmu[m];
+	  if (genmu[0].charge == -genmu[1].charge) {
+	    TLorentzVector LVZcand;
+	    for (unsigned int m=0; m<LVsgenmu.size(); m++) {
+	      LVZcand += LVsgenmu[m];
+	    }
+	    double Zmass = LVZcand.M();
+	    if (!(Zmass >= 60 && Zmass <= 120)) continue;
+	    ofile.count("2genmu", w);
+	    if(isTTallhad)
+	      TTallhad->Fill("2genmu", w);
+	    else if(isTTsemilep)
+	      TTsemilep->Fill("2genmu", w);
+	    else if(isTTdilep)
+	      TTdilep->Fill("genmu", w);
 	  }
-	  double Zmass = LVZcand.M();
-	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
-	  ofile.count("2genmu", w);
-	  if(isTTallhad)
-	    TTallhad->Fill("2genmu", w);
-	  else if(isTTsemilep)
-	    TTsemilep->Fill("2genmu", w);
-	  else if(isTTdilep)
-	    TTdilep->Fill("genmu", w);
 	}
 
 	// reco
@@ -2910,7 +3033,8 @@ int main(int argc, char** argv)
 	    h_lepton1pt_2mu0el->Fill(smuon[0].pt,w);
 	    h_lepton2pt_2mu0el->Fill(smuon[1].pt,w);
 	    h_HT_2mu0el->Fill(HT,w);
-	      if(isTTallhad)
+	    h_PV_2mu0el->Fill(eventhelperextra_numberOfPrimaryVertices,w);
+	    if(isTTallhad)
 	      TTallhad->Fill("2mu0el", w);
 	    else if(isTTsemilep)
 	      TTsemilep->Fill("2mu0el", w);
@@ -3174,6 +3298,7 @@ int main(int argc, char** argv)
 	    h_lepton1pt_2el0mu->Fill(selectron[0].pt,w);
 	    h_lepton2pt_2el0mu->Fill(selectron[1].pt,w);
 	    h_HT_2el0mu->Fill(HT,w);
+	    h_PV_2el0mu->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 	    if(isTTallhad)
 	      TTallhad->Fill("2el0mu", w);
 	    else if(isTTsemilep)

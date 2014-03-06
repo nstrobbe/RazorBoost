@@ -255,9 +255,8 @@ if __name__ == "__main__":
     print "Will perform the background estimate"
 
     # directory containing all the raw histograms
-    #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140109_v2/summary/" 
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140224_noISR/summary/" 
-    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140224_noISR/" 
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/summary/" 
+    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/" 
 
     # analyzer name
     analyzer = "rzrBoostMC"
@@ -345,15 +344,17 @@ if __name__ == "__main__":
     #Zinv_info = make_info_dict(inputdir+analyzer+"_")
     #get_Zvv_estimation("g1Mbg1Y2mu0el", "", inputdir+analyzer+"_data.root", Zinv_info)
 
+
+
     ###############################################################################
     ##  Perform some closure tests doing the full estimation on several regions  ##
     ###############################################################################
 
     # signal-like region
-    doBGestimate("g1Mb0Wg1uW0Ll",info2,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb25") 
+    doBGestimate("g1Mb0Wg1uW0Ll",info2,inputdir+analyzer+"_data.root","_QCDWJTTJ") 
 
     # signal region mdphihat<4
-    doBGestimate("g1Mbg1W0Ll_mdPhiHat4",info_dphi4,inputdir+analyzer+"_data.root","_QCDWJTTJ_Feb25") 
+    doBGestimate("g1Mbg1W0Ll_mdPhiHat4",info_dphi4,inputdir+analyzer+"_data.root","_QCDWJTTJ") 
  
 
 
@@ -367,3 +368,10 @@ if __name__ == "__main__":
     # Btag modeling
     simple_estimate("1Mbg1W1LlmT100","0Lbg1Y1LlmT",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
     simple_estimate("g2Mbg1W1LlmT100","1Mbg1W1LlmT100",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    # Modeling of minDeltaPhiHat
+    simple_estimate("0Lbg1uW0Ll_mdPhiHatg4","0Lbg1uW0Ll_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    # Modeling of minDeltaPhiHat
+    simple_estimate("g1Mbg1W1LlmT100_mdPhiHatg4","g1Mbg1W1LlmT100_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    # Modeling of minDeltaPhiHat
+    simple_estimate("0Lbg1Y1LlmT_mdPhiHatg4","0Lbg1Y1LlmT_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+

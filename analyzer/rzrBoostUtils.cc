@@ -182,9 +182,9 @@ int main(int argc, char** argv)
       fillObjects();
 
       // Get rid of the events with wrong kinematics in the MadGraph samples
-      if (eventhelper_isRealData!=1) {
-        if (triggerresultshelper2_totalKinematicsFilterPath==0) continue;
-      }
+      //if (eventhelper_isRealData!=1) {
+      //  if (triggerresultshelper2_totalKinematicsFilterPath==0) continue;
+      //}
       h_totweight_filter->Fill(1,w);
 
       // Fill number of pileup interactions
