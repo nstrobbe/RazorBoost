@@ -110,6 +110,7 @@ int main(int argc, char** argv)
   bool doTopPtreweighting = false;
   if (sample == "TTJets" && TopPt == "TopPt_True"){
     doTopPtreweighting = true;
+    doISRreweighting = false;
     cout << "Will do top pt reweighting" << endl;
   }
   bool doPileupReweighting = false;
@@ -331,7 +332,6 @@ int main(int argc, char** argv)
       w = w*w_pileup;
 
       h_mstop_mLSP_Pileup->Fill(mt1,mz1,w);
-
 
       // ----------------------
       // -- object selection --
@@ -921,39 +921,32 @@ int main(int argc, char** argv)
 	  double Zmass = LVZcand.M();
 
 	  h_mstop_mLSP_2munoZmass->Fill(mt1,mz1,w);
-	
 	  h_mstop_mLSP_2lnoZmass->Fill(mt1,mz1,w);
 	  
 	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
 	  h_mstop_mLSP_2mu->Fill(mt1,mz1,w);
-	
 	  h_mstop_mLSP_2l->Fill(mt1,mz1,w);
 	  
 	  if (nlooseelectrons == 0){
 	    h_mstop_mLSP_2mu0el->Fill(mt1,mz1,w);
-	    
 	    h_mstop_mLSP_2l0ol->Fill(mt1,mz1,w);
 	    
 	    if (nloosebs == 0){
 	      h_mstop_mLSP_0Lb2mu0el->Fill(mt1,mz1,w);
-	      
 	      h_mstop_mLSP_0Lb2l0ol->Fill(mt1,mz1,w);
 	      
 	      if (nYs >= 1){ // Z no b, mu CR 
 		h_mstop_mLSP_0Lbg1Y2mu0el->Fill(mt1,mz1,w);
-	      
 		h_mstop_mLSP_0Lbg1Y2l0ol->Fill(mt1,mz1,w);
 	      }// nYs >= 1
 	    }// end nloosebs == 0
 
 	    if (nmediumbs >= 1){
 	      h_mstop_mLSP_g1Mb2mu0el->Fill(mt1,mz1,w);
-	      
 	      h_mstop_mLSP_g1Mb2l0ol->Fill(mt1,mz1,w);
 	      
 	      if (nYs >= 1){ // Z with b, mu CR
 		h_mstop_mLSP_g1Mbg1Y2mu0el->Fill(mt1,mz1,w);
-	      
 		h_mstop_mLSP_g1Mbg1Y2l0ol->Fill(mt1,mz1,w);
 	      } // end nYs >= 1
 	    } // end nmediumbs >= 1
@@ -1012,6 +1005,7 @@ int main(int argc, char** argv)
     } // end event loop
   
   fhlt->Close();
+  fpileup->Close();
   stream.close();
   ofile.close();
   return 0;
