@@ -144,7 +144,7 @@ double geteff1D(TH1D* h, double x)
   for (int i=1; i<h->GetNbinsX()+1; i++) {
     double xmin = h->GetXaxis()->GetBinLowEdge(i);
     double xmax = h->GetXaxis()->GetBinUpEdge(i);
-    if (!(x >= xmin and x < xmax)) continue;
+    if (!(x >= xmin && x < xmax)) continue;
     eff = h->GetBinContent(i);
     break;
   }
@@ -158,7 +158,7 @@ double geteff2D(TH2D* h, double x, double y)
   for (int i=1; i<h->GetNbinsX()+1; i++) {
     double xmin = h->GetXaxis()->GetBinLowEdge(i);
     double xmax = h->GetXaxis()->GetBinUpEdge(i);
-    if (!(x >= xmin and x < xmax)) continue;
+    if (!(x >= xmin && x < xmax)) continue;
     for (int j=1; j<h->GetNbinsY()+1; j++) {
       double ymin = h->GetYaxis()->GetBinLowEdge(j);
       double ymax = h->GetYaxis()->GetBinUpEdge(j);

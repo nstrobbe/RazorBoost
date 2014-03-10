@@ -7,14 +7,14 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140305/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140306_noISR_btag_TopPt/"
 
-    #region = "g1Mb0Wg1uW0Ll"
-    region = "g1Mbg1W0Ll_mdPhiHat4"
+    region = "g1Mb0Wg1uW0Ll"
+    #region = "g1Mbg1W0Ll_mdPhiHat4"
 
-    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/summary/rzrBoostMC_data.root" # data histograms
-    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/rzrBoostMC_bg.root" # data histograms
-    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140305/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
+    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag_TopPt/summary/rzrBoostMC_data.root" # data histograms
+    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag_TopPt/rzrBoostMC_bg.root" # data histograms
+    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140306_noISR_btag_TopPt/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
 
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
@@ -62,7 +62,8 @@ if __name__ == '__main__':
         canvasname = var+"_comparison_data_estimate_"+region
         rtitle = "#frac{BG estimate}{Data}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,
-                                  ratiotitle=rtitle,scale=False,legdict=leg)
+                                  ratiotitle=rtitle,scale=False,legdict=leg,
+                                  cdim=[696,550],ratiodim=0.3)
         
     
     outfile.Close()

@@ -55,7 +55,8 @@ def makeplot(sigregion, cregion, basedir, estdir, outputdir, MConly=True):
         canvasname = var+"_comparison_data_estimate_"+sigregion+"_from_"+cregion
         rtitle = "#frac{BG estimate}{Data}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,
-                                  ratiotitle=rtitle,scale=False,legdict=leg)
+                                  ratiotitle=rtitle,scale=False,legdict=leg,
+                                  cdim=[696,550],ratiodim=0.3)
         
     
     outfile.Close()
@@ -63,9 +64,9 @@ def makeplot(sigregion, cregion, basedir, estdir, outputdir, MConly=True):
 
 if __name__ == '__main__':
 
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/"
-    estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140305/"
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140305/"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag_TopPt/"
+    estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140306_noISR_btag_TopPt/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140306_noISR_btag_TopPt/"
 
     # set root styles
     plotTools.SetBoostStyle()

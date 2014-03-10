@@ -255,8 +255,8 @@ if __name__ == "__main__":
     print "Will perform the background estimate"
 
     # directory containing all the raw histograms
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/summary/" 
-    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR/" 
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag_TopPt/summary/" 
+    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag_TopPt/" 
 
     # analyzer name
     analyzer = "rzrBoostMC"

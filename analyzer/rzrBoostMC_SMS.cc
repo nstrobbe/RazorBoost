@@ -145,7 +145,7 @@ int main(int argc, char** argv)
 
   if (sample == "TTJets" or sample == "Top" or sample == "TTX") {
     fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_TTJets.root");
-  } else if (sample == "T1ttcc") {
+  } else if (sample == "T1ttcc" || sample == "T2tt") {
     fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
   } else {
     fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_QCD.root");
@@ -426,10 +426,11 @@ int main(int argc, char** argv)
         btagCSVLEEFull(partonFlavour, pt, eta, SFCSVLFl, dSFCSVLFl);
         btagCSVLEEFast(partonFlavour, pt, eta, SFCSVLFs, dSFCSVLFs);
 
-	double eCSVM = 0, eCSVL = 0;
+	double eCSVM = 0;
+	double eCSVL = 0;
 	double SFCSVM, SFCSVL;
 	// FastSim:
-	if (sample == "T1ttcc") {
+	if (sample == "T1ttcc" || sample == "T2tt") {
 	  if (fabs(partonFlavour) == 5) {
 	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
 	    eCSVL = geteff1D(h_pt_b_CSVLeff, pt);
@@ -438,10 +439,12 @@ int main(int argc, char** argv)
 	    eCSVM = geteff1D(h_pt_c_CSVMeff, pt);
 	    eCSVL = geteff1D(h_pt_c_CSVLeff, pt);
 	  }
-	  if (fabs(partonFlavour) != 4 and fabs(partonFlavour != 5)) {
-	    eCSVM = geteff2D(h_pt_eta_l_CSVMeff, pt, eta);
-	    eCSVL = geteff2D(h_pt_eta_l_CSVLeff, pt, eta);
+	  if (fabs(partonFlavour) != 4 && fabs(partonFlavour) != 5) {
+	    eCSVM = geteff2D(h_pt_eta_l_CSVMeff, pt, fabs(eta));
+	    eCSVL = geteff2D(h_pt_eta_l_CSVLeff, pt, fabs(eta));
 	  }
+	  if (eCSVM == 0 || eCSVL == 0)
+	    cout << "Problem is still there" << endl;
 	  SFCSVL = (SFCSVLFl + sigmaSFFl*dSFCSVLFl)*(SFCSVLFs + sigmaSFFs*dSFCSVLFs);
 	  SFCSVM = (SFCSVMFl + sigmaSFFl*dSFCSVMFl)*(SFCSVMFs + sigmaSFFs*dSFCSVMFs);
 	} else { // FullSim
@@ -449,7 +452,7 @@ int main(int argc, char** argv)
 	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
 	    eCSVL = geteff1D(h_pt_b_CSVLeff, pt);
 	  }
-	  if (partonFlavour != 5) {
+	  if (fabs(partonFlavour) != 5) {
 	    eCSVM = geteff1D(h_pt_lc_CSVMeff, pt);
 	    eCSVL = geteff1D(h_pt_lc_CSVLeff, pt);
 	  }

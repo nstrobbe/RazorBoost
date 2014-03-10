@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140305_noISR_TTJwithTopPt"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140305_noISR_TTJwithTopPt/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140306_noISR_btag"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):

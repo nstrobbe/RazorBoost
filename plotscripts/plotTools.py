@@ -223,7 +223,7 @@ def Plot2DRatio(hdict1,hdict2,outputdir="plots",outfile=0,
 # -- Plot routine for 1D comparison plots     -- #
 # ---------------------------------------------- # 
 def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
-                    ,ratiotitle="ratio",logscale=False,scale="No",scalefactor=1):
+                    ,ratiotitle="ratio",logscale=False,scale="No",scalefactor=1,cdim=[696,472],ratiodim=0.25):
     # First do some checks on the input
     if outfile == 0:
         print "You did not pass me a root file to store the plots. I will only produce pdf files."
@@ -239,8 +239,10 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
     h_ref = None
 
     # Make the canvas, which will have two pads
-    canvas = rt.TCanvas(cname,"")
+    canvas = rt.TCanvas(cname,"",cdim[0],cdim[1])
     pad1 = rt.TPad("pad1","",0,0.25,1,1)
+    if ratiodim != 0:
+        pad1 = rt.TPad("pad1","",0,ratiodim,1,1)        
     pad1.SetBottomMargin(0)
     if logscale:
         pad1.SetLogy(1)
@@ -328,7 +330,9 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
     # Make the second canvas, with the ratios
     canvas.cd()
     pad2 = rt.TPad("pad2","",0,0,1,0.25)
-    pad2.SetBottomMargin(0.35)#0.25
+    if ratiodim != 0:
+        pad2 = rt.TPad("pad2","",0,0,1,ratiodim)        
+    pad2.SetBottomMargin(0.35*0.25/ratiodim)#0.25
     pad2.SetTopMargin(0)#0.05
     pad2.SetGridy(1)
     pad2.Draw()
@@ -355,13 +359,13 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
         ratio.SetName("ratio"+str(firstB))
         ratio.GetYaxis().SetRangeUser(0,2.2)
         ratio.GetYaxis().SetNdivisions(4,8,0)
-        ratio.GetYaxis().SetLabelSize(0.14)
-        ratio.GetYaxis().SetTitleSize(0.1)
+        ratio.GetYaxis().SetLabelSize(0.14*0.25/ratiodim)
+        ratio.GetYaxis().SetTitleSize(0.1*0.25/ratiodim)
         ratio.GetYaxis().SetTitle(ratiotitle)
-        ratio.GetYaxis().SetTitleOffset(0.22)
-        ratio.GetXaxis().SetLabelSize(0.13)
-        ratio.GetXaxis().SetTitleSize(0.15)
-        ratio.GetXaxis().SetTickLength(0.1)
+        ratio.GetYaxis().SetTitleOffset(0.22*ratiodim/0.25)
+        ratio.GetXaxis().SetLabelSize(0.13*0.25/ratiodim)
+        ratio.GetXaxis().SetTitleSize(0.15*0.25/ratiodim)
+        ratio.GetXaxis().SetTickLength(0.1*0.25/ratiodim)
         ratio.GetXaxis().SetTitle(hdict["xtitle"])
         ratio.SetStats(0)
         drawoption="E P"
