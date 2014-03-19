@@ -420,11 +420,11 @@ int main(int argc, char** argv)
 	double pt = cmgpfjet[i].pt;
 	double eta = cmgpfjet[i].eta;
 	double partonFlavour = cmgpfjet[i].partonFlavour;
-        btagCSVMEEFull(partonFlavour, pt, eta, SFCSVMFl, dSFCSVMFl);
-        btagCSVMEEFast(partonFlavour, pt, eta, SFCSVMFs, dSFCSVMFs);
+        btagCSVMEEFull(partonFlavour, pt, fabs(eta), SFCSVMFl, dSFCSVMFl);
+        btagCSVMEEFast(partonFlavour, pt, fabs(eta), SFCSVMFs, dSFCSVMFs);
 
-        btagCSVLEEFull(partonFlavour, pt, eta, SFCSVLFl, dSFCSVLFl);
-        btagCSVLEEFast(partonFlavour, pt, eta, SFCSVLFs, dSFCSVLFs);
+        btagCSVLEEFull(partonFlavour, pt, fabs(eta), SFCSVLFl, dSFCSVLFl);
+        btagCSVLEEFast(partonFlavour, pt, fabs(eta), SFCSVLFs, dSFCSVLFs);
 
 	double eCSVM = 0;
 	double eCSVL = 0;

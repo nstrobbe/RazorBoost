@@ -788,11 +788,11 @@ int main(int argc, char** argv)
 	double pt = cmgpfjet[i].pt;
 	double eta = cmgpfjet[i].eta;
 	double partonFlavour = cmgpfjet[i].partonFlavour;
-        btagCSVMEEFull(partonFlavour, pt, eta, SFCSVMFl, dSFCSVMFl);
-        btagCSVMEEFast(partonFlavour, pt, eta, SFCSVMFs, dSFCSVMFs);
+        btagCSVMEEFull(partonFlavour, pt, fabs(eta), SFCSVMFl, dSFCSVMFl);
+        btagCSVMEEFast(partonFlavour, pt, fabs(eta), SFCSVMFs, dSFCSVMFs);
 
-        btagCSVLEEFull(partonFlavour, pt, eta, SFCSVLFl, dSFCSVLFl);
-        btagCSVLEEFast(partonFlavour, pt, eta, SFCSVLFs, dSFCSVLFs);
+        btagCSVLEEFull(partonFlavour, pt, fabs(eta), SFCSVLFl, dSFCSVLFl);
+        btagCSVLEEFast(partonFlavour, pt, fabs(eta), SFCSVLFs, dSFCSVLFs);
 
 	double eCSVM = 0, eCSVL = 0;
 	double SFCSVM, SFCSVL;
@@ -807,8 +807,8 @@ int main(int argc, char** argv)
 	    eCSVL = geteff1D(h_pt_c_CSVLeff, pt);
 	  }
 	  if (fabs(partonFlavour) != 4 and fabs(partonFlavour != 5)) {
-	    eCSVM = geteff2D(h_pt_eta_l_CSVMeff, pt, eta);
-	    eCSVL = geteff2D(h_pt_eta_l_CSVLeff, pt, eta);
+	    eCSVM = geteff2D(h_pt_eta_l_CSVMeff, pt, fabs(eta));
+	    eCSVL = geteff2D(h_pt_eta_l_CSVLeff, pt, fabs(eta));
 	  }
 	  SFCSVL = (SFCSVLFl + sigmaSFFl*dSFCSVLFl)*(SFCSVLFs + sigmaSFFs*dSFCSVLFs);
 	  SFCSVM = (SFCSVMFl + sigmaSFFl*dSFCSVMFl)*(SFCSVMFs + sigmaSFFs*dSFCSVMFs);
