@@ -28,7 +28,7 @@ cscrtmp = open(nmscrtmp).read()
 nmjobtmp = dtemplates+'job.job'
 cjobtmp = open(nmjobtmp).read()
 dres = dwork+'results/'
-drestmp = dwork+'resultstmp3/'
+drestmp = dwork+'resultstmp/'
 exe = dwork+anl
 
 # Do some cleaning:

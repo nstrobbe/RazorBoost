@@ -383,12 +383,78 @@ int main(int argc, char** argv)
   TTdilep->Fill("0Lbg1Y1Ll", 0.0);
   TTdilep->Fill("0Lbg1Y1LlmT", 0.0);
 
+  // -----------------------------------------------
+  // -- extra histograms when running over signal --
+  // -----------------------------------------------
+  
+  // Binning of the signal samples
+  int nbins_mother = 10;
+  int nbins_LSP = 10;
+  int mother_min = 0; 
+  int mother_max = 1000; 
+  int LSP_min = 0; 
+  int LSP_max = 500; 
+
+  if (sample == "T1ttcc" || sample == "T1t1t"){
+    // mother is gluino
+    nbins_mother = 15;
+    nbins_LSP = 11;
+    mother_min = 600; 
+    mother_max = 1350; 
+    LSP_min = 0; 
+    LSP_max = 550; 
+  } else if (sample == "T1ttcc_old"){
+    // "mother" is stop as scan has fixed gluino mass
+    nbins_mother = 113;
+    nbins_LSP = 6;
+    mother_min = 310; 
+    mother_max = 880; 
+    LSP_min = 300; 
+    LSP_max = 900; 
+  } else if (sample == "T2tt"){
+    // mother is stop
+    nbins_mother = 35;
+    nbins_LSP = 37;
+    mother_min = 150; 
+    mother_max = 1025; 
+    LSP_min = 0; 
+    LSP_max = 925; 
+  }
+
+  // We need one histogram per region, per mass point
+  TH2D* list_S[nbins_mother][nbins_LSP];
+  TH2D* list_Q[nbins_mother][nbins_LSP];
+  TH2D* list_T[nbins_mother][nbins_LSP];
+  TH2D* list_W[nbins_mother][nbins_LSP];
+
+  int step_mother = (mother_max - mother_min)/nbins_mother;
+  int step_LSP = (LSP_max - LSP_min)/nbins_LSP;
+  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+    int counter_i = 0;
+    int counter_j = 0;
+    for(int i=mother_min; i<mother_max; i+=step_mother){
+      counter_j = 0;
+      for(int j=LSP_min; j<LSP_max; j+=step_LSP){
+	TString nameS = "h_S_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameT = "h_T_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameQ = "h_Q_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameW = "h_W_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	list_S[counter_i][counter_j] = new TH2D(nameS,nameS,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_T[counter_i][counter_j] = new TH2D(nameT,nameT,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_Q[counter_i][counter_j] = new TH2D(nameQ,nameQ,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_W[counter_i][counter_j] = new TH2D(nameW,nameW,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	counter_j++;
+      }
+      counter_i++;
+    }
+  }
+
 
   //---------------------------------------------------------------------------
   // Loop over events
   //---------------------------------------------------------------------------
 
-  nevents = 100;
+  //  nevents = 100;
   for(int entry=0; entry < nevents; ++entry)
     {
       // Read event into memory
@@ -412,6 +478,15 @@ int main(int argc, char** argv)
       // addEvent if you wish to save only the selected objects.
       
       fillObjects();
+
+      // get mass point information for signal samples
+      double mg = lheeventproducthelper_mg;
+      double mt1 = lheeventproducthelper_mt1;
+      double mz1 = lheeventproducthelper_mz1;
+      double m_mother = mt1; // set mother to stop, works for T2tt and T1ttcc_old
+      if (sample == "T1ttcc" || sample == "T1t1t")
+	m_mother = mg;
+      if (sample == "T2tt" && mz1 == 0) continue; // MLSP=0 should be rejected for this sample
 
       //cout << "will fill ofile with weight " << w << endl;
       ofile.count("NoCuts", w);
@@ -1204,6 +1279,12 @@ int main(int argc, char** argv)
 		      TTsemilep->Fill("g1Mbg1W0Ll_mdPhiHatg4", w);
 		    else if(isTTdilep)
 		      TTdilep->Fill("g1Mbg1W0Ll_mdPhiHatg4", w);
+
+		    if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		      int bin_mother = (mt1 - mother_min)/step_mother;
+		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		      list_S[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		    }
 		 		    
 		  } // end of  minDeltaPhiHat > 4
 		} // end of sW.size() > 0
@@ -1239,6 +1320,12 @@ int main(int argc, char** argv)
 		      TTsemilep->Fill("0Lbg1uW0Ll_mdPhiHat4", w);
 		    else if(isTTdilep)
 		      TTdilep->Fill("0Lbg1uW0Ll_mdPhiHat4", w);
+
+		    if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		      int bin_mother = (mt1 - mother_min)/step_mother;
+		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		      list_Q[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		    }
 		  } // end of minDeltaPhiHat < 4
 
 		} // end of aW.size() > 0
@@ -1300,6 +1387,11 @@ int main(int argc, char** argv)
 		else if(isTTdilep)
 		  TTdilep->Fill("g1Mbg1W1LlmT100", w);
 		
+		if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		  int bin_mother = (mt1 - mother_min)/step_mother;
+		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		  list_T[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		}
 	      } // end mT < 100
 	    } // end sW.size()
 	  } // end nmediumbs > 0
@@ -1335,6 +1427,12 @@ int main(int argc, char** argv)
 		  TTsemilep->Fill("0Lbg1Y1LlmT", w);
 		else if(isTTdilep)
 		  TTdilep->Fill("0Lbg1Y1LlmT", w);
+
+		if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		  int bin_mother = (mt1 - mother_min)/step_mother;
+		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		  list_W[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		}
 	      } // end mT < 100 && mT > 30
 	    } // end sY.size()
 	  } // end nloosebs > 0

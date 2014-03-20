@@ -284,6 +284,46 @@ int main(int argc, char** argv)
   TH2D* h_mstop_mLSP_g1Mbg1Y2l0ol = new TH2D("h_mstop_mLSP_g1Mbg1Y2l0ol","h_mstop_mLSP_g1Mbg1Y2l0ol",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
 
 
+
+  // Make the histograms for the likelihood 
+  // We need one histogram per region, per mass point
+  TH2D* list_S[nbins_stop][nbins_LSP];
+  TH2D* list_Q[nbins_stop][nbins_LSP];
+  TH2D* list_T[nbins_stop][nbins_LSP];
+  TH2D* list_W[nbins_stop][nbins_LSP];
+
+  // binning for MR and R2
+  int nbins_MR = 7;
+  int nbins_R2 = 7;
+  Double_t bins_MR_tmp[] = {0.,600.,800.,1000.,1200.,1600.,2000.,4000.};
+  Double_t* bins_MR = getVariableBinEdges(nbins_MR+1,bins_MR_tmp);
+  Double_t bins_R2_tmp[] = {0.,0.04,0.08,0.12,0.16,0.24,0.5,1.};
+  Double_t* bins_R2 = getVariableBinEdges(nbins_R2+1,bins_R2_tmp);
+  
+  bool runForLikelihood = true;
+  int step_stop = (stop_max - stop_min)/nbins_stop;
+  int step_LSP = (LSP_max - LSP_min)/nbins_LSP;
+  int counter_i = 0;
+  int counter_j = 0;
+  if (runForLikelihood){
+    for(int i=stop_min; i<stop_max; i+=step_stop){
+      counter_j = 0;
+      for(int j=LSP_min; j<LSP_max; j+=step_LSP){
+	TString nameS = "h_S_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameT = "h_T_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameQ = "h_Q_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameW = "h_W_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	//cout << "histogram name, i, j, counter_i, counter_j: " << nameS << " " << i << " " << j << " " << counter_i << " " << counter_j << endl;
+	list_S[counter_i][counter_j] = new TH2D(nameS,nameS,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_T[counter_i][counter_j] = new TH2D(nameT,nameT,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_Q[counter_i][counter_j] = new TH2D(nameQ,nameQ,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_W[counter_i][counter_j] = new TH2D(nameW,nameW,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	counter_j++;
+      }
+      counter_i++;
+    }
+  }
+
   //---------------------------------------------------------------------------
   // Loop over events
   //---------------------------------------------------------------------------
@@ -899,6 +939,14 @@ int main(int argc, char** argv)
 
 		  if (minDeltaPhiHat > 4){
 		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4->Fill(mt1,mz1,w);
+
+		    // Fill the histograms for the likelihood 
+		    if (runForLikelihood){
+		      int bin_stop = (mt1 - stop_min)/step_stop;
+		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		      list_S[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		    }
+
 		  } else {
 		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4->Fill(mt1,mz1,w);
 		  }
@@ -924,6 +972,13 @@ int main(int argc, char** argv)
 
 		  if (minDeltaPhiHat < 4){
 		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4->Fill(mt1,mz1,w);
+
+		    // Fill the histograms for the likelihood 
+		    if (runForLikelihood){
+		      int bin_stop = (mt1 - stop_min)/step_stop;
+		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		      list_Q[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		    }
 		  } // end of minDeltaPhiHat < 4
 
 		  if (minDeltaPhiHat < 5){
@@ -967,6 +1022,13 @@ int main(int argc, char** argv)
 	      if (mT < 100){
 		h_mstop_mLSP_g1Mbg1W1LlmT100->Fill(mt1,mz1,w);
 
+		// Fill the histograms for the likelihood 
+		if (runForLikelihood){
+		  int bin_stop = (mt1 - stop_min)/step_stop;
+		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		  list_T[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		}
+		
 		if (nmediumbs == 1){
 		  h_mstop_mLSP_1Mbg1W1LlmT100->Fill(mt1,mz1,w);
 		} else {
@@ -996,6 +1058,13 @@ int main(int argc, char** argv)
 		// mT window
 		if (mT > 30){
 		  h_mstop_mLSP_0Lbg1Y1LlmT->Fill(mt1,mz1,w);
+
+		  // Fill the histograms for the likelihood 
+		  if (runForLikelihood){
+		    int bin_stop = (mt1 - stop_min)/step_stop;
+		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		    list_W[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		  }
 		} // end mT > 30
 	      } // end mT < 100
 	    } // end sY.size()
