@@ -1,0 +1,2 @@
+tnm_group%/SMS-T1ttcc_2J_mGo-600to750_mLSP-1to500_DM-80_TuneZ2star_8TeV-madgraph-tauola/Summer12-START53_V19_FSIM_PU_S12-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1 mc 1 1 T1ttcc
+tnm_group%/SMS-T1ttcc_2J_mGo-800to1300_mLSP-1to500_DM-80_TuneZ2star_8TeV-madgraph-tauola/Summer12-START53_V19_FSIM_PU_S12-v1/AODSIM/V5_B/CMGPF_V5_16_0/NTUPLE_Aug1 mc 1 1 T1ttcc
