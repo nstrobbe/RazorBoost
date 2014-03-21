@@ -86,7 +86,7 @@ int main(int argc, char** argv)
   double totweight = cmdline.totweight; 
   double lumi = cmdline.lumi;
 
-  // Open the systemtics file:
+  // Open the systematics file:
   ifstream systFile(cmdline.systfilename.c_str());
   if ( !systFile.good() ) error("unable to open systematics file: " + cmdline.systfilename);
   std::vector<double> vsyst;
@@ -113,7 +113,8 @@ int main(int argc, char** argv)
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
-      && (sample == "T2tt" || sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t"
+      && (sample == "T2tt" || sample == "T1ttcc_old" || sample == "T1t1t"
+	  || sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
 	  || sample == "TTJets" || sample == "WJets" || sample == "ZJets" )
       ){
     doISRreweighting = true;
@@ -142,7 +143,7 @@ int main(int argc, char** argv)
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig52X.root";
   }
-  if (sample == "T1ttcc" || sample == "T1t1t"){
+  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t"){
     pileupname = "pileup_weights_sig53X.root";
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig53X.root";
@@ -163,7 +164,8 @@ int main(int argc, char** argv)
   TString beff_name = "";
   if (sample == "TTJets" or sample == "Top" or sample == "TTX") {
     beff_name = "btageff_TTJets.root";
-  } else if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
+  } else if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+	     || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
     beff_name = "btageff_T1ttcc.root";
   } else {
     beff_name = "btageff_QCD.root";
@@ -203,6 +205,26 @@ int main(int argc, char** argv)
   double weightnorm = 1.;
   if (xsect != -1 && totweight != -1 && lumi != -1) {
     weightnorm = (xsect*lumi)/totweight;
+  }
+
+  // for SMS's we take a different approach, and want histograms to be normalized to the efficiency
+  // So normalization only uses "totweight" and not xsect or lumi
+  TH2D* h_smscounts;
+  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25"  || sample == "T1ttcc_DM80" 
+      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+    // open file with counts
+    TFile* f_smscounts = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/smsinput/signal_counts.root");
+    if (!f_smscounts)
+      f_smscounts = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/smsinput/signal_counts.root");
+    // get the proper histogram
+    TString hname_smscounts = "";
+    if (doISRreweighting){
+      hname_smscounts = sample+"_ISR";
+    } else {
+      hname_smscounts = sample+"_noISR";
+    }
+    h_smscounts = (TH2D*)f_smscounts->Get(hname_smscounts);
+    weightnorm = 1.;
   }
 
   cout << "lumi: " << lumi << endl;
@@ -395,7 +417,7 @@ int main(int argc, char** argv)
   int LSP_min = 0; 
   int LSP_max = 500; 
 
-  if (sample == "T1ttcc" || sample == "T1t1t"){
+  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t"){
     // mother is gluino
     nbins_mother = 15;
     nbins_LSP = 11;
@@ -429,7 +451,8 @@ int main(int argc, char** argv)
 
   int step_mother = (mother_max - mother_min)/nbins_mother;
   int step_LSP = (LSP_max - LSP_min)/nbins_LSP;
-  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
     int counter_i = 0;
     int counter_j = 0;
     for(int i=mother_min; i<mother_max; i+=step_mother){
@@ -484,9 +507,17 @@ int main(int argc, char** argv)
       double mt1 = lheeventproducthelper_mt1;
       double mz1 = lheeventproducthelper_mz1;
       double m_mother = mt1; // set mother to stop, works for T2tt and T1ttcc_old
-      if (sample == "T1ttcc" || sample == "T1t1t")
+      if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t")
 	m_mother = mg;
       if (sample == "T2tt" && mz1 == 0) continue; // MLSP=0 should be rejected for this sample
+
+      // get normalization for sms's
+      if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T2tt" || sample == "T1t1t"){
+	int bin_mother = (m_mother - mother_min)/step_mother;
+	int bin_LSP = (mz1 - LSP_min)/step_LSP;
+	w = w/h_smscounts->GetBinContent(bin_mother+1,bin_LSP+1);	
+      }
+
 
       //cout << "will fill ofile with weight " << w << endl;
       ofile.count("NoCuts", w);
@@ -753,7 +784,7 @@ int main(int argc, char** argv)
 	  int ID_to_find = -1;
 	  if (sample == "T2tt")
 	    ID_to_find = 1000006;
-	  if (sample == "T1ttcc")
+	  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1ttcc_old")
 	    ID_to_find = 1000021;
 	  if (sample == "TTJets")
 	    ID_to_find = 6;
@@ -872,7 +903,8 @@ int main(int argc, char** argv)
 	double eCSVM = 0, eCSVL = 0;
 	double SFCSVM, SFCSVL;
 	// FastSim:
-	if (sample == "T1ttcc") {
+	if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+	    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
 	  if (fabs(partonFlavour) == 5) {
 	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
 	    eCSVL = geteff1D(h_pt_b_CSVLeff, pt);
@@ -1250,6 +1282,7 @@ int main(int argc, char** argv)
 		TTdilep->Fill("trackIso", w);
 	      
 	      if (nmediumbs > 0){
+		w = w*wCSVM;
 		ofile.count("g1Mb0Ll", w);
 		if(isTTallhad)
 		  TTallhad->Fill("g1Mb0Ll", w);
@@ -1280,8 +1313,9 @@ int main(int argc, char** argv)
 		    else if(isTTdilep)
 		      TTdilep->Fill("g1Mbg1W0Ll_mdPhiHatg4", w);
 
-		    if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
-		      int bin_mother = (mt1 - mother_min)/step_mother;
+		    if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+			|| sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		      int bin_mother = (m_mother - mother_min)/step_mother;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		      list_S[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		    }
@@ -1291,6 +1325,7 @@ int main(int argc, char** argv)
 	      } // end of nmediumbs > 0
 	      
 	      if (nloosebs == 0){
+		w = w*wCSVL;
 		ofile.count("0Lb0Ll", w);
 		if(isTTallhad)
 		  TTallhad->Fill("0Lb0Ll", w);
@@ -1321,8 +1356,9 @@ int main(int argc, char** argv)
 		    else if(isTTdilep)
 		      TTdilep->Fill("0Lbg1uW0Ll_mdPhiHat4", w);
 
-		    if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
-		      int bin_mother = (mt1 - mother_min)/step_mother;
+		    if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+			|| sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		      int bin_mother = (m_mother - mother_min)/step_mother;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		      list_Q[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		    }
@@ -1357,6 +1393,7 @@ int main(int argc, char** argv)
 	    TTdilep->Fill("1Ll", w);
 	  
 	  if (nmediumbs > 0){
+	    w = w*wCSVM;
 	    ofile.count("g1Mb1Ll",w);
 	    if(isTTallhad)
 	      TTallhad->Fill("g1Mb1Ll", w);
@@ -1387,8 +1424,9 @@ int main(int argc, char** argv)
 		else if(isTTdilep)
 		  TTdilep->Fill("g1Mbg1W1LlmT100", w);
 		
-		if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
-		  int bin_mother = (mt1 - mother_min)/step_mother;
+		if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+		    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		  int bin_mother = (m_mother - mother_min)/step_mother;
 		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		  list_T[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		}
@@ -1398,6 +1436,7 @@ int main(int argc, char** argv)
 
 
 	  if (nloosebs == 0){
+	    w = w*wCSVL;
 	    ofile.count("0Lb1Ll",w);
 	    if(isTTallhad)
 	      TTallhad->Fill("0Lb1Ll", w);
@@ -1428,8 +1467,9 @@ int main(int argc, char** argv)
 		else if(isTTdilep)
 		  TTdilep->Fill("0Lbg1Y1LlmT", w);
 
-		if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
-		  int bin_mother = (mt1 - mother_min)/step_mother;
+		if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
+		    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		  int bin_mother = (m_mother - mother_min)/step_mother;
 		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		  list_W[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		}

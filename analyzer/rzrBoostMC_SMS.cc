@@ -101,7 +101,8 @@ int main(int argc, char** argv)
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
-      && (sample == "T2tt" || sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t"
+      && (sample == "T2tt" || sample == "T1ttcc_old" || sample == "T1t1t"
+	  || sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
 	  || sample == "TTJets" || sample == "WJets" || sample == "ZJets" )
       ){
     doISRreweighting = true;
@@ -124,7 +125,7 @@ int main(int argc, char** argv)
   if (sample == "T1ttcc_old" || sample == "T2tt" ){
     pileupname = "pileup_weights_sig52X.root";
   }
-  if (sample == "T1ttcc" || sample == "T1t1t"){
+  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t"){
     pileupname = "pileup_weights_sig53X.root";
   }
   TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
@@ -145,7 +146,7 @@ int main(int argc, char** argv)
 
   if (sample == "TTJets" or sample == "Top" or sample == "TTX") {
     fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_TTJets.root");
-  } else if (sample == "T1ttcc" || sample == "T2tt") {
+  } else if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t" || sample == "T2tt") {
     fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
   } else {
     fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_QCD.root");
@@ -187,7 +188,7 @@ int main(int argc, char** argv)
   int LSP_min = 0; 
   int LSP_max = 500; 
 
-  if (sample == "T1ttcc" || sample == "T1t1t"){
+  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t"){
     // stop is actually gluino in this case
     nbins_stop = 15;
     nbins_LSP = 11;
@@ -356,7 +357,7 @@ int main(int argc, char** argv)
      
       // fill out histograms using mt1
       double mt1 = mt;
-      if (sample == "T1ttcc" || sample == "T1t1t")
+      if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t")
 	mt1 = mg;
 
       double mz1 = lheeventproducthelper_mz1;
@@ -470,7 +471,8 @@ int main(int argc, char** argv)
 	double eCSVL = 0;
 	double SFCSVM, SFCSVL;
 	// FastSim:
-	if (sample == "T1ttcc" || sample == "T2tt") {
+	if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
+	    || sample == "T1ttcc_old" || sample == "T1t1t" || sample == "T2tt") {
 	  if (fabs(partonFlavour) == 5) {
 	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
 	    eCSVL = geteff1D(h_pt_b_CSVLeff, pt);
@@ -767,7 +769,7 @@ int main(int argc, char** argv)
 	  int ID_to_find = -1;
 	  if (sample == "T2tt")
 	    ID_to_find = 1000006;
-	  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t")
+	  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1ttcc_old" || sample == "T1t1t")
 	    ID_to_find = 1000021;
 	  if (sample == "TTJets")
 	    ID_to_find = 6;

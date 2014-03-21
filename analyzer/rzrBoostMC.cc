@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 
   bool doISRreweighting = false;
   if (ISR == "ISR_True" 
-      && (sample == "T2tt" || sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t"
+      && (sample == "T2tt" || sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1ttcc_old" || sample == "T1t1t"
 	  || sample == "TTJets" || sample == "WJets" || sample == "ZJets" )
       ){
     doISRreweighting = true;
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig52X.root";
   }
-  if (sample == "T1ttcc" || sample == "T1t1t"){
+  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t"){
     pileupname = "pileup_weights_sig53X.root";
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig53X.root";
@@ -168,7 +168,7 @@ int main(int argc, char** argv)
 
   if (sample == "TTJets" or sample == "Top" or sample == "TTX") {
     fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_TTJets.root");
-  } else if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
+  } else if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
     fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
   } else {
     fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_QCD.root");
@@ -193,9 +193,9 @@ int main(int argc, char** argv)
   TH2D* h_pt_eta_l_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_l_CSVLeff");
   //TH2D* h_pt_eta_lc_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_lc_CSVLeff");
 
-  // -----------------------------
-  // -- Get the systemtics file --
-  // -----------------------------
+  // ------------------------------
+  // -- Get the systematics file --
+  // ------------------------------
   /*
   ifstream systFile("systematics_nominal.txt");
   if ( !systFile.good() ) error("unable to open systematics file");
@@ -1565,7 +1565,8 @@ int main(int argc, char** argv)
 	double eCSVL = 0;
 	double SFCSVM, SFCSVL;
 	// FastSim:
-	if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
+	if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
+	    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
 	  if (fabs(partonFlavour) == 5) {
 	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
 	    eCSVL = geteff1D(h_pt_b_CSVLeff, pt);
@@ -2001,7 +2002,8 @@ int main(int argc, char** argv)
 	  int ID_to_find = -1;
 	  if (sample == "T2tt")
 	    ID_to_find = 1000006;
-	  if (sample == "T1ttcc" || sample == "T1ttcc_old" || sample == "T1t1t" )
+	  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
+	      || sample == "T1ttcc_old" || sample == "T1t1t" )
 	    ID_to_find = 1000021;
 	  if (sample == "TTJets")
 	    ID_to_find = 6;
