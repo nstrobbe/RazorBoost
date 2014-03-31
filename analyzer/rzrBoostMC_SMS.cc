@@ -293,6 +293,11 @@ int main(int argc, char** argv)
   TH2D* list_T[nbins_stop][nbins_LSP];
   TH2D* list_W[nbins_stop][nbins_LSP];
 
+  TH2D* list_S_uw[nbins_stop][nbins_LSP];
+  TH2D* list_Q_uw[nbins_stop][nbins_LSP];
+  TH2D* list_T_uw[nbins_stop][nbins_LSP];
+  TH2D* list_W_uw[nbins_stop][nbins_LSP];
+
   // binning for MR and R2
   int nbins_MR = 7;
   int nbins_R2 = 7;
@@ -319,6 +324,17 @@ int main(int argc, char** argv)
 	list_T[counter_i][counter_j] = new TH2D(nameT,nameT,nbins_MR,bins_MR,nbins_R2,bins_R2);
 	list_Q[counter_i][counter_j] = new TH2D(nameQ,nameQ,nbins_MR,bins_MR,nbins_R2,bins_R2);
 	list_W[counter_i][counter_j] = new TH2D(nameW,nameW,nbins_MR,bins_MR,nbins_R2,bins_R2);
+
+	TString nameSuw = "h_uw_S_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameTuw = "h_uw_T_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameQuw = "h_uw_Q_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameWuw = "h_uw_W_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	//cout << "histogram name, i, j, counter_i, counter_j: " << nameS << " " << i << " " << j << " " << counter_i << " " << counter_j << endl;
+	list_S_uw[counter_i][counter_j] = new TH2D(nameSuw,nameSuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_T_uw[counter_i][counter_j] = new TH2D(nameTuw,nameTuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_Q_uw[counter_i][counter_j] = new TH2D(nameQuw,nameQuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_W_uw[counter_i][counter_j] = new TH2D(nameWuw,nameWuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+
 	counter_j++;
       }
       counter_i++;
@@ -947,6 +963,7 @@ int main(int argc, char** argv)
 		      int bin_stop = (mt1 - stop_min)/step_stop;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		      list_S[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		      list_S_uw[bin_stop][bin_LSP]->Fill(MR,R2,1.);
 		    }
 
 		  } else {
@@ -980,6 +997,7 @@ int main(int argc, char** argv)
 		      int bin_stop = (mt1 - stop_min)/step_stop;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		      list_Q[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		      list_Q_uw[bin_stop][bin_LSP]->Fill(MR,R2,1);
 		    }
 		  } // end of minDeltaPhiHat < 4
 
@@ -1029,6 +1047,7 @@ int main(int argc, char** argv)
 		  int bin_stop = (mt1 - stop_min)/step_stop;
 		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		  list_T[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		  list_T_uw[bin_stop][bin_LSP]->Fill(MR,R2,1);
 		}
 		
 		if (nmediumbs == 1){
@@ -1066,6 +1085,7 @@ int main(int argc, char** argv)
 		    int bin_stop = (mt1 - stop_min)/step_stop;
 		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		    list_W[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		    list_W_uw[bin_stop][bin_LSP]->Fill(MR,R2,1.);
 		  }
 		} // end mT > 30
 	      } // end mT < 100

@@ -22,11 +22,11 @@ if __name__ == "__main__":
     plotTools.SetColorPaletteSMS()
 
     dirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results"
-    indir = dirbase + "/results_20140306_T1ttcc_old/"
-    bfile = TFile.Open(dirbase+"/results_20140306_noISR_btag_TopPt/rzrBoostMC_bg.root")
+    indir = dirbase + "/results_20140325_T2tt/"
+    bfile = TFile.Open(dirbase+"/results_20140325_noISR_btag_TopPt/rzrBoostMC_bg.root")
     counts = bfile.Get("counts")
 
-    outdir = dirbase + "/results_20140306_T1ttcc_old/"
+    outdir = dirbase + "/results_20140325_T2tt/"
     if not os.path.isdir(outdir):
         os.mkdir(outdir)
             
@@ -34,8 +34,8 @@ if __name__ == "__main__":
     cf = TFile.Open(crosssectionfilename)
     
     #DMs = ["T1ttcc_DM-10","T1ttcc_DM-25","T1ttcc_DM-80"]
-    #DMs = ["T2tt"]
-    DMs = ["T1ttcc_old"]
+    DMs = ["T2tt"]
+    #DMs = ["T1ttcc_old"]
 
     for DM in DMs:
         infile = TFile.Open(indir+"/rzrBoostMC_SMS_"+DM+".root")

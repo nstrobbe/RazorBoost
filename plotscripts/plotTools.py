@@ -223,7 +223,7 @@ def Plot2DRatio(hdict1,hdict2,outputdir="plots",outfile=0,
 # -- Plot routine for 1D comparison plots     -- #
 # ---------------------------------------------- # 
 def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
-                    ,ratiotitle="ratio",logscale=False,scale="No",scalefactor=1,cdim=[696,472],ratiodim=0.25):
+                    ,ratiotitle="ratio",logscale=False,scale="No",scalefactor=1,cdim=[696,472],ratiodim=0.25,ymax=0):
     # First do some checks on the input
     if outfile == 0:
         print "You did not pass me a root file to store the plots. I will only produce pdf files."
@@ -283,10 +283,13 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
 
     for hdict in hdictlist:
         h = hdict["histogram"] # Get the histogram again
-        if logscale:
-            h.SetMaximum(maxi*5)
-        else:
-            h.SetMaximum(maxi*1.2)
+        if ymax == 0:
+            if logscale:
+                h.SetMaximum(maxi*5)
+            else:
+                h.SetMaximum(maxi*1.2)
+        else: 
+            h.SetMaximum(ymax)
         h.GetYaxis().SetTitleSize(0.055)
         h.GetYaxis().SetTitleOffset(0.8)
         h.GetYaxis().SetLabelSize(0.05)
@@ -390,7 +393,7 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
 # -- Plot routine for 1D comparison plots without a ratio plot -- #
 # --------------------------------------------------------------- # 
 def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
-           ,logscale=False,scale="No",scalefactor=1):
+           ,logscale=False,scale="No",scalefactor=1,ymax=0):
     # First do some checks on the input
     if outfile == 0:
         print "You did not pass me a root file to store the plots. I will only produce pdf files."
@@ -441,10 +444,13 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
 
     for hdict in hdictlist:
         h = hdict["histogram"] # Get the histogram again
-        if logscale:
-            h.SetMaximum(maxi*5)
+        if ymax==0:
+            if logscale:
+                h.SetMaximum(maxi*5)
+            else:
+                h.SetMaximum(maxi*1.2)
         else:
-            h.SetMaximum(maxi*1.2)
+            h.SetMaximum(ymax)
         h.GetXaxis().SetTitle(hdict["xtitle"])
         h.GetXaxis().SetTitleSize(0.05)
         h.GetXaxis().SetTitleOffset(1.1)
@@ -463,6 +469,8 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
             h.SetMarkerSize(hdict["markersize"])
             h.SetMarkerStyle(hdict["markerstyle"])
         h.SetTitle(hdict["title"])
+        if hdict["ytitle"] != "":
+            h.GetYaxis().SetTitle(hdict["ytitle"])
 
         if hdict["appear in legend"]:
             legoption = "l"

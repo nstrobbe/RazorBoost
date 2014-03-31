@@ -110,8 +110,10 @@ def allcuts():
             "SIG","neleeq0","nmueq0","trackIso",
             "g1Mb0Ll","g1Mbg1W0Ll","1Mbg1W0Ll","g2Mbg1W0Ll","g1Mbg1W0Ll_mdPhiHat4","g1Mbg1W0Ll_mdPhiHatg4","g1Mb0Wg1uW0Ll",
             "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5","0Lbg1W0Ll",
-            "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100","1Mbg1W1LlmT100","g2Mbg1W1LlmT100","g1Mbg1W1LlmT",
-            "0Lb1Ll","0Lbg1Y1Ll","0Lbg1Y1LlmT100","0Lbg1Y1LlmT",
+            "1Ll","g1Mb1Ll","g1Mbg1W1Ll",
+            "g1Mbg1W1LlmT100","1Mbg1W1LlmT100","g2Mbg1W1LlmT100","g1Mbg1W1LlmT100_mdPhiHat4","g1Mbg1W1LlmT100_mdPhiHatg4","g1Mbg1W1LlmT",
+            "0Lb1Ll","0Lbg1Y1Ll","0Lbg1Y1LlmT100",
+            "0Lbg1Y1LlmT","0Lbg1Y1LlmT_mdPhiHat4","0Lbg1Y1LlmT_mdPhiHatg4",
             "2munoZmass","2mu","2mu0el","0Lb2mu0el","0Lbg1Y2mu0el","g1Mb2mu0el","g1Mbg1Y2mu0el",
             "2elnoZmass","2el","2el0mu","0Lb2el0mu","0Lbg1Y2el0mu","g1Mb2el0mu","g1Mbg1Y2el0mu",
             "2lnoZmass","2l","2l0ol","0Lb2l0ol","0Lbg1Y2l0ol","g1Mb2l0ol","g1Mbg1Y2l0ol",
@@ -137,7 +139,7 @@ if __name__ == '__main__':
     intlumi = 19.789
 
     # input information
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag_TopPt"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140325_noISR_btag_TopPt"
     analyzer = "rzrBoostMC"
     signame = "T1ttcc_325_300"
     sigxs = 0.0243547

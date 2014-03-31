@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140306_noISR_btag"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140325_noISR_btag_TopPt"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140325_noISR_btag_TopPt/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -269,7 +269,7 @@ if __name__ == '__main__':
 
 
     vars = ["minDeltaPhiHat"]
-    cuts = ["g1Mbg1W0Ll"]
+    cuts = ["g1Mbg1W0Ll","g1Mbg1W1LlmT100","0Lbg1Y1LlmT"]
     for cut in cuts:
         for var in vars:
             hname = "h_%s_%s" % (var,cut)

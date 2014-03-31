@@ -271,21 +271,25 @@ int main(int argc, char** argv)
   TH1D * h_MR_g1Mbg1W0Ll_mdPhiHatg4 = new TH1D("h_MR_g1Mbg1W0Ll_mdPhiHatg4", "h_MR_g1Mbg1W0Ll_mdPhiHatg4", nbins_MR, bins_MR);
   TH1D * h_R2_g1Mbg1W0Ll_mdPhiHatg4 = new TH1D("h_R2_g1Mbg1W0Ll_mdPhiHatg4", "h_R2_g1Mbg1W0Ll_mdPhiHatg4", nbins_R2, bins_R2);
   TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4 = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4", "h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_g1Mbg1W0Ll_mdPhiHatg4 = new TH2D("h_uw_MR_R2_g1Mbg1W0Ll_mdPhiHatg4", "h_uw_MR_R2_g1Mbg1W0Ll_mdPhiHatg4", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhiHat < 4 (RA2b value)
   TH1D * h_MR_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhiHat4", "h_MR_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR);
   TH1D * h_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhiHat4", "h_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", "h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH2D("h_uw_MR_R2_0Lbg1uW0Ll_mdPhiHat4", "h_uw_MR_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   // g1Mbg1W1LlmT ; TTj control region: >= 1 Mb; >= 1 W; 1 Ll; mT<100
   TH1D * h_MR_g1Mbg1W1LlmT100 = new TH1D("h_MR_g1Mbg1W1LlmT100", "h_MR_g1Mbg1W1LlmT100", nbins_MR, bins_MR);
   TH1D * h_R2_g1Mbg1W1LlmT100 = new TH1D("h_R2_g1Mbg1W1LlmT100", "h_R2_g1Mbg1W1LlmT100", nbins_R2, bins_R2);
   TH2D * h_MR_R2_g1Mbg1W1LlmT100 = new TH2D("h_MR_R2_g1Mbg1W1LlmT100", "h_MR_R2_g1Mbg1W1LlmT100", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_g1Mbg1W1LlmT100 = new TH2D("h_uw_MR_R2_g1Mbg1W1LlmT100", "h_uw_MR_R2_g1Mbg1W1LlmT100", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   // 0Lbg1Y1LlmT ; Wj control region: == 0 Lb; >= 1 Y; 1 Ll; 30<mT<100
   TH1D * h_MR_0Lbg1Y1LlmT = new TH1D("h_MR_0Lbg1Y1LlmT", "h_MR_0Lbg1Y1LlmT", nbins_MR, bins_MR);
   TH1D * h_R2_0Lbg1Y1LlmT = new TH1D("h_R2_0Lbg1Y1LlmT", "h_R2_0Lbg1Y1LlmT", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lbg1Y1LlmT = new TH2D("h_MR_R2_0Lbg1Y1LlmT", "h_MR_R2_0Lbg1Y1LlmT", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_0Lbg1Y1LlmT = new TH2D("h_uw_MR_R2_0Lbg1Y1LlmT", "h_uw_MR_R2_0Lbg1Y1LlmT", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   // Define the order of bins in the counts histogram:
   
@@ -449,6 +453,11 @@ int main(int argc, char** argv)
   TH2D* list_T[nbins_mother][nbins_LSP];
   TH2D* list_W[nbins_mother][nbins_LSP];
 
+  TH2D* list_S_uw[nbins_mother][nbins_LSP];
+  TH2D* list_Q_uw[nbins_mother][nbins_LSP];
+  TH2D* list_T_uw[nbins_mother][nbins_LSP];
+  TH2D* list_W_uw[nbins_mother][nbins_LSP];
+
   int step_mother = (mother_max - mother_min)/nbins_mother;
   int step_LSP = (LSP_max - LSP_min)/nbins_LSP;
   if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
@@ -466,6 +475,16 @@ int main(int argc, char** argv)
 	list_T[counter_i][counter_j] = new TH2D(nameT,nameT,nbins_MR,bins_MR,nbins_R2,bins_R2);
 	list_Q[counter_i][counter_j] = new TH2D(nameQ,nameQ,nbins_MR,bins_MR,nbins_R2,bins_R2);
 	list_W[counter_i][counter_j] = new TH2D(nameW,nameW,nbins_MR,bins_MR,nbins_R2,bins_R2);
+
+	TString nameSuw = "h_uw_S_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameTuw = "h_uw_T_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameQuw = "h_uw_Q_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameWuw = "h_uw_W_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	list_S_uw[counter_i][counter_j] = new TH2D(nameSuw,nameSuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_T_uw[counter_i][counter_j] = new TH2D(nameTuw,nameTuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_Q_uw[counter_i][counter_j] = new TH2D(nameQuw,nameQuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_W_uw[counter_i][counter_j] = new TH2D(nameWuw,nameWuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+
 	counter_j++;
       }
       counter_i++;
@@ -1306,6 +1325,7 @@ int main(int argc, char** argv)
 		    h_MR_g1Mbg1W0Ll_mdPhiHatg4->Fill(MR, w);
 		    h_R2_g1Mbg1W0Ll_mdPhiHatg4->Fill(R2, w);
 		    h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4->Fill(MR, R2, w);
+		    h_uw_MR_R2_g1Mbg1W0Ll_mdPhiHatg4->Fill(MR, R2, 1.);
 		    if(isTTallhad)
 		      TTallhad->Fill("g1Mbg1W0Ll_mdPhiHatg4", w);
 		    else if(isTTsemilep)
@@ -1318,6 +1338,7 @@ int main(int argc, char** argv)
 		      int bin_mother = (m_mother - mother_min)/step_mother;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		      list_S[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		      list_S_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
 		    }
 		 		    
 		  } // end of  minDeltaPhiHat > 4
@@ -1349,6 +1370,7 @@ int main(int argc, char** argv)
 		    h_MR_0Lbg1uW0Ll_mdPhiHat4->Fill(MR, w);
 		    h_R2_0Lbg1uW0Ll_mdPhiHat4->Fill(R2, w);
 		    h_MR_R2_0Lbg1uW0Ll_mdPhiHat4->Fill(MR, R2, w);
+		    h_uw_MR_R2_0Lbg1uW0Ll_mdPhiHat4->Fill(MR, R2, 1.);
 		    if(isTTallhad)
 		      TTallhad->Fill("0Lbg1uW0Ll_mdPhiHat4", w);
 		    else if(isTTsemilep)
@@ -1361,6 +1383,7 @@ int main(int argc, char** argv)
 		      int bin_mother = (m_mother - mother_min)/step_mother;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		      list_Q[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		      list_Q_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
 		    }
 		  } // end of minDeltaPhiHat < 4
 
@@ -1417,6 +1440,7 @@ int main(int argc, char** argv)
 		h_MR_g1Mbg1W1LlmT100->Fill(MR, w);
 		h_R2_g1Mbg1W1LlmT100->Fill(R2, w);
 		h_MR_R2_g1Mbg1W1LlmT100->Fill(MR, R2, w);
+		h_uw_MR_R2_g1Mbg1W1LlmT100->Fill(MR, R2, 1.);
 		if(isTTallhad)
 		  TTallhad->Fill("g1Mbg1W1LlmT100", w);
 		else if(isTTsemilep)
@@ -1429,6 +1453,7 @@ int main(int argc, char** argv)
 		  int bin_mother = (m_mother - mother_min)/step_mother;
 		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		  list_T[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		  list_T_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
 		}
 	      } // end mT < 100
 	    } // end sW.size()
@@ -1460,6 +1485,7 @@ int main(int argc, char** argv)
 		h_MR_0Lbg1Y1LlmT->Fill(MR, w);
 		h_R2_0Lbg1Y1LlmT->Fill(R2, w);
 		h_MR_R2_0Lbg1Y1LlmT->Fill(MR, R2, w);
+		h_uw_MR_R2_0Lbg1Y1LlmT->Fill(MR, R2, 1.);
 		if(isTTallhad)
 		  TTallhad->Fill("0Lbg1Y1LlmT", w);
 		else if(isTTsemilep)
@@ -1472,6 +1498,7 @@ int main(int argc, char** argv)
 		  int bin_mother = (m_mother - mother_min)/step_mother;
 		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		  list_W[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		  list_W_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
 		}
 	      } // end mT < 100 && mT > 30
 	    } // end sY.size()
