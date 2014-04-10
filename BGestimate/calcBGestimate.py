@@ -255,8 +255,8 @@ if __name__ == "__main__":
     print "Will perform the background estimate"
 
     # directory containing all the raw histograms
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag_TopPt/summary/" 
-    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140306_noISR_btag_TopPt/" 
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/" 
+    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/" 
 
     # analyzer name
     analyzer = "rzrBoostMC"
@@ -267,23 +267,36 @@ if __name__ == "__main__":
                               TTJets_CR="g1Mbg1W1LlmT100",
                               WJetsToLNu_CR="0Lbg1Y1LlmT"
                               )
+
     SIGlike_info = make_info_dict(inputdir+analyzer+"_",
                                   QCD_CR="0Lbg1uW0Ll_mdPhiHat4",
                                   TTJets_CR="g1Mbg1W1LlmT100",
                                   WJetsToLNu_CR="0Lbg1Y1LlmT"
                                   )
     
+    # signal region with mindeltaphihat > 4
     SIG_dphig4_info = make_info_dict(inputdir+analyzer+"_",
                                     QCD_CR="0Lbg1uW0Ll_mdPhiHat4",QCD_binbybin=True,
                                     TTJets_CR="g1Mbg1W1LlmT100",
                                     WJetsToLNu_CR="0Lbg1Y1LlmT"
                                     )
+    SIG_dphig4_info2 = make_info_dict(inputdir+analyzer+"_",
+                                      QCD_CR="0Lbg1uW0Ll_mdPhiHat4",QCD_binbybin=True,
+                                      TTJets_CR="g1Mbg1W1LlmT100_mdPhiHatg4",
+                                      WJetsToLNu_CR="0Lbg1Y1LlmT_mdPhiHatg4"
+                                      )
     
+    # signal region with mindeltaphihat < 4
     SIG_dphi4_info = make_info_dict(inputdir+analyzer+"_",
                                     QCD_CR="0Lbg1uW0Ll_mdPhiHat4",QCD_binbybin=True,
                                     TTJets_CR="g1Mbg1W1LlmT100",
                                     WJetsToLNu_CR="0Lbg1Y1LlmT"
                                     )
+    SIG_dphi4_info2 = make_info_dict(inputdir+analyzer+"_",
+                                     QCD_CR="0Lbg1uW0Ll_mdPhiHat4",QCD_binbybin=True,
+                                     TTJets_CR="g1Mbg1W1LlmT100_mdPhiHatg4",
+                                     WJetsToLNu_CR="0Lbg1Y1LlmT_mdPhiHatg4"
+                                     )
     
     #QCD_info = make_info_dict(inputdir+analyzer+"_",
     #                          ZJetsToNuNu_CR="0Lbg1Y2mu0el",ZJetsToNuNu_binbybin=False)
@@ -321,12 +334,22 @@ if __name__ == "__main__":
                    "g1Mbg1W1LlmT100":TTJ_info,
                    "0Lbg1Y1LlmT": WJ_info
                    }
+    info2_dphig4 = {"g1Mbg1W0Ll_mdPhiHatg4":SIG_dphig4_info,
+                    "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
+                    "g1Mbg1W1LlmT100_mdPhiHatg4":TTJ_info,
+                    "0Lbg1Y1LlmT_mdPhiHatg4": WJ_info
+                   }
 
     info_dphi4 = {"g1Mbg1W0Ll_mdPhiHat4":SIG_dphi4_info,
                   "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
                   "g1Mbg1W1LlmT100":TTJ_info,
                   "0Lbg1Y1LlmT": WJ_info
                   }
+    info2_dphi4 = {"g1Mbg1W0Ll_mdPhiHat4":SIG_dphi4_info2,
+                   "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
+                   "g1Mbg1W1LlmT100_mdPhiHatg4":TTJ_info,
+                   "0Lbg1Y1LlmT_mdPhiHatg4": WJ_info
+                   }
 
     #doBGestimate(region,infodict,fdata,extra_info)
 
@@ -356,6 +379,9 @@ if __name__ == "__main__":
     # signal region mdphihat<4
     doBGestimate("g1Mbg1W0Ll_mdPhiHat4",info_dphi4,inputdir+analyzer+"_data.root","_QCDWJTTJ") 
  
+    # signal region mdphihat<4, using T and W with mdphihat>4
+    doBGestimate("g1Mbg1W0Ll_mdPhiHat4",info2_dphi4,inputdir+analyzer+"_data.root","_QCDWJTTJ_2") 
+ 
 
 
 
@@ -365,13 +391,22 @@ if __name__ == "__main__":
 
     # TTJ and WJ composition
     simple_estimate("g1Mbg1W1LlmT100","0Lbg1Y1LlmT",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+    # TTJ and WJ composition, using W and T with mdphihat>4
+    simple_estimate("g1Mbg1W1LlmT100_mdPhiHatg4","0Lbg1Y1LlmT_mdPhiHatg4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+
     # Btag modeling
     simple_estimate("1Mbg1W1LlmT100","0Lbg1Y1LlmT",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
     simple_estimate("g2Mbg1W1LlmT100","1Mbg1W1LlmT100",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
-    # Modeling of minDeltaPhiHat
+
+    # Modeling of minDeltaPhiHat for QCD
     simple_estimate("0Lbg1uW0Ll_mdPhiHatg4","0Lbg1uW0Ll_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
-    # Modeling of minDeltaPhiHat
+
+    # Modeling of minDeltaPhiHat for TTJ
     simple_estimate("g1Mbg1W1LlmT100_mdPhiHatg4","g1Mbg1W1LlmT100_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
-    # Modeling of minDeltaPhiHat
+
+    # Modeling of minDeltaPhiHat for WJ
     simple_estimate("0Lbg1Y1LlmT_mdPhiHatg4","0Lbg1Y1LlmT_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
+
+    # lepton modeling
+    simple_estimate("g1Mbg1W0Ll_mdPhiHat4","g1Mbg1W1LlmT100_mdPhiHat4",inputdir+analyzer+"_data.root",inputdirbase+analyzer+"_bg.root")
 
