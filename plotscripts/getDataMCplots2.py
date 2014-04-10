@@ -7,8 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140325_noISR_btag_TopPt"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140325_noISR_btag_TopPt/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140331_noISR_btag_TopPt"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/"
     analyzer ="rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -208,7 +208,7 @@ if __name__ == '__main__':
             "leptonpt","lepton1pt","lepton2pt",
             "HT","PV"]
 
-    cuts = ["SIG","g1Mbg1W0Ll","g1Mb0Wg1uW0Ll",
+    cuts = ["SIG","g1Mbg1W0Ll","g1Mbg1W0Ll_mdPhiHatg4","g1Mb0Wg1uW0Ll",
             "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5",
             "g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100",
             "0Lb1Ll","0Lbg1Y1Ll","0Lbg1Y1LlmT","0Lbg1Y1LlmT100",

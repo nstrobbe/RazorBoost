@@ -12,6 +12,7 @@ from array import array
 def SetBoostStyle():
     rt.gStyle.SetOptStat(0)
     rt.gStyle.SetTextFont(42)
+    rt.gStyle.SetPaintTextFormat(".3g")
     rt.TH1.SetDefaultSumw2()
 
 # ---------------------------------------------- #
@@ -55,6 +56,7 @@ def ConstructLDict(xmin,xmax,ymin,ymax,title="",ncolumns=1):
 # -----------------------------------------------#
 # -- Color style for 2D plots                 -- #
 # ---------------------------------------------- #
+
 def SetColorPaletteSMS():
     # define the palette for z axis
     NRGBs = 5
@@ -66,6 +68,21 @@ def SetColorPaletteSMS():
     rt.TColor.CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont)
     rt.gStyle.SetNumberContours(NCont)
 
+# -----------------------------------------------# 
+# -- Color style for 2D ratio plots           -- # 
+# ---------------------------------------------- # 
+
+def SetColorPalette2DRatio():
+    # define the palette for z axis
+    NRGBs = 5 
+    NCont = 255 
+    stops = array("d",[0.00, 0.16, 0.2, 0.24, 1.00]) 
+    red   = array("d",[0.10, 0.10, 0.10, 1.00, 1.00])
+    green = array("d",[0.20, 0.90, 1.00, 0.80, 0.20])
+    blue  = array("d",[1.00, 0.90, 0.00, 0.00, 0.20])
+    rt.TColor.CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont)
+    rt.gStyle.SetNumberContours(NCont)
+    
 # ---------------------------------------------- #
 # -- Plot routine for 2D plots                -- #
 # ---------------------------------------------- # 
@@ -129,8 +146,11 @@ def Plot2D(hdict,outputdir="plots",outfile=0,cname="canvas"
     
     drawoption = hdict["drawoption"]
     palette = hdict["palette"]
-    if drawoption == "colz" and palette == "SMS":
+    if "colz" in drawoption and palette == "SMS":
+        print "change color palette"
         SetColorPaletteSMS()
+    if "colz" in drawoption and palette == "2DRatio":
+        SetColorPalette2DRatio()
     rootEvil.append(h.DrawClone(drawoption))
             
     print "Drew histogram"
@@ -205,8 +225,8 @@ def Plot2DRatio(hdict1,hdict2,outputdir="plots",outfile=0,
     
     drawoption = hdict1["drawoption"]
     palette = hdict1["palette"]
-    if drawoption == "colz" and palette == "SMS":
-        SetColorPaletteSMS()
+    if "colz" in drawoption:
+        SetColorPalette2DRatio()
     rootEvil.append(ratio.DrawClone(drawoption))
             
     print "Drew histogram"

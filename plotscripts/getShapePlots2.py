@@ -13,14 +13,15 @@ if __name__ == '__main__':
     #outputdir = sys.argv[1]
     #inputfile = sys.argv[2] # total bg histograms
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140325_noISR_btag_TopPt"
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140325_noISR_btag_TopPt/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140331_noISR_btag_TopPt"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/"
     inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
     inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
     inputfile_WJets = basedir + "rzrBoostMC_WJetsToLNu.root"
     inputfile_DYJets = basedir + "rzrBoostMC_DYJetsToLL.root"
     inputfile_ZJetsToNuNu = basedir + "rzrBoostMC_ZJetsToNuNu.root"
     inputfile_data = basedir + "rzrBoostMC_data.root"
+    inputfile_bg = basedir + "../rzrBoostMC_bg.root"
     
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
@@ -32,6 +33,7 @@ if __name__ == '__main__':
     infile_DYJets = TFile.Open(inputfile_DYJets)
     infile_Zinv = TFile.Open(inputfile_ZJetsToNuNu)
     infile_data = TFile.Open(inputfile_data)
+    infile_bg = TFile.Open(inputfile_bg)
 
     # Integrated luminosity in fb-1s
     intlumi = 19.789 # ABCD
@@ -307,6 +309,65 @@ if __name__ == '__main__':
     hdictlist=[hdict_data,hdict_QCD,hdict_WJets,hdict_DYJets,hdict_Zinv]
     canvasname = "HT_comparison"
     plotTools.Plot1D(hdictlist,outputdir,outfile,legdict=legd3,logscale=True,cname=canvasname,scale="Yes")
+
+    #############################################
+
+    for var in vars:
+        hdict_T_mdphihatg4 = plotTools.ConstructHDict(infile_bg.Get("h_"+var+"_g1Mbg1W1LlmT100_mdPhiHatg4"),
+                                                      name="T region, minDeltaPhiHat > 4", color=rt.kRed,
+                                                      title="Shape comparison for total background in T region",
+                                                      appear_in_ratio="Ref", xtitle=var)
+        hdict_T_mdphihat4 = plotTools.ConstructHDict(infile_bg.Get("h_"+var+"_g1Mbg1W1LlmT100_mdPhiHat4"),
+                                                     name="T region, minDeltaPhiHat < 4", color=rt.kRed+2,
+                                                     title="Shape comparison for total background in T region",
+                                                     appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_T_mdphihatg4,hdict_T_mdphihat4]
+        canvasname = var+"_comparison_T_mdphihat"
+        rtitle = "#frac{min#Delta#Phi > 4}{min#Delta#Phi < 4}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    for var in vars:
+        hdict_W_mdphihatg4 = plotTools.ConstructHDict(infile_bg.Get("h_"+var+"_0Lbg1Y1LlmT_mdPhiHatg4"),
+                                                      name="W region, minDeltaPhiHat > 4", color=rt.kRed,
+                                                      title="Shape comparison for total background in W region",
+                                                      appear_in_ratio="Ref", xtitle=var)
+        hdict_W_mdphihat4 = plotTools.ConstructHDict(infile_bg.Get("h_"+var+"_0Lbg1Y1LlmT_mdPhiHat4"),
+                                                     name="W region, minDeltaPhiHat < 4", color=rt.kRed+2,
+                                                     title="Shape comparison for total background in W region",
+                                                     appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_W_mdphihatg4,hdict_W_mdphihat4]
+        canvasname = var+"_comparison_W_mdphihat"
+        rtitle = "#frac{min#Delta#Phi > 4}{min#Delta#Phi < 4}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    for var in vars:
+        hdict_T_mdphihatg4 = plotTools.ConstructHDict(infile_data.Get("h_"+var+"_g1Mbg1W1LlmT100_mdPhiHatg4"),
+                                                      name="T region, minDeltaPhiHat > 4", color=rt.kRed,
+                                                      title="Shape comparison for data in T region",
+                                                      appear_in_ratio="Ref", xtitle=var)
+        hdict_T_mdphihat4 = plotTools.ConstructHDict(infile_data.Get("h_"+var+"_g1Mbg1W1LlmT100_mdPhiHat4"),
+                                                     name="T region, minDeltaPhiHat < 4", color=rt.kRed+2,
+                                                     title="Shape comparison for data in T region",
+                                                     appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_T_mdphihatg4,hdict_T_mdphihat4]
+        canvasname = var+"_comparison_T_mdphihat_data"
+        rtitle = "#frac{min#Delta#Phi > 4}{min#Delta#Phi < 4}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    for var in vars:
+        hdict_W_mdphihatg4 = plotTools.ConstructHDict(infile_data.Get("h_"+var+"_0Lbg1Y1LlmT_mdPhiHatg4"),
+                                                      name="W region, minDeltaPhiHat > 4", color=rt.kRed,
+                                                      title="Shape comparison for data in W region",
+                                                      appear_in_ratio="Ref", xtitle=var)
+        hdict_W_mdphihat4 = plotTools.ConstructHDict(infile_data.Get("h_"+var+"_0Lbg1Y1LlmT_mdPhiHat4"),
+                                                     name="W region, minDeltaPhiHat < 4", color=rt.kRed+2,
+                                                     title="Shape comparison for data in W region",
+                                                     appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_W_mdphihatg4,hdict_W_mdphihat4]
+        canvasname = var+"_comparison_W_mdphihat_data"
+        rtitle = "#frac{min#Delta#Phi > 4}{min#Delta#Phi < 4}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
 
 
     outfile.Close()
