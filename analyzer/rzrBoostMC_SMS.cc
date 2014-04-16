@@ -181,122 +181,122 @@ int main(int argc, char** argv)
 
   // set the ranges and nbins according to which sample we are using
   // declare variables and give some random default values
-  int nbins_stop = 10;
+  int nbins_mother = 10;
   int nbins_LSP = 10;
-  int stop_min = 0; 
-  int stop_max = 1000; 
+  int mother_min = 0; 
+  int mother_max = 1000; 
   int LSP_min = 0; 
   int LSP_max = 500; 
 
   if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t"){
-    // stop is actually gluino in this case
-    nbins_stop = 15;
+    // mother is gluino in this case
+    nbins_mother = 15;
     nbins_LSP = 11;
-    stop_min = 600; 
-    stop_max = 1350; 
+    mother_min = 600; 
+    mother_max = 1350; 
     LSP_min = 0; 
     LSP_max = 550; 
   } else if (sample == "T1ttcc_old"){
-    nbins_stop = 113;
+    nbins_mother = 113;
     nbins_LSP = 6;
-    stop_min = 310; 
-    stop_max = 880; 
+    mother_min = 310; 
+    mother_max = 880; 
     LSP_min = 300; 
     LSP_max = 900; 
   } else if (sample == "T2tt"){
-    nbins_stop = 35;
+    nbins_mother = 35;
     nbins_LSP = 37;
-    stop_min = 150; 
-    stop_max = 1025; 
+    mother_min = 150; 
+    mother_max = 1025; 
     LSP_min = 0; 
     LSP_max = 925; 
   }
 
-  TH1D* h_mstop = new TH1D("h_mstop","h_mstop",nbins_stop,stop_min,stop_max);
+  TH1D* h_mstop = new TH1D("h_mstop","h_mstop",nbins_mother,mother_min,mother_max);
   TH1D* h_mLSP = new TH1D("h_mLSP","h_mLSP",nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP = new TH2D("h_mstop_mLSP","h_mstop_mLSP",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_nevents = new TH2D("h_mstop_mLSP_nevents","h_mstop_mLSP_nevents",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP = new TH2D("h_mstop_mLSP","h_mstop_mLSP",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_nevents = new TH2D("h_mstop_mLSP_nevents","h_mstop_mLSP_nevents",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
 
-  TH2D* h_mstop_mLSP_NoCuts = new TH2D("h_mstop_mLSP_NoCuts","h_mstop_mLSP_NoCuts",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_Cleaning = new TH2D("h_mstop_mLSP_Cleaning","h_mstop_mLSP_Cleaning",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_Pileup = new TH2D("h_mstop_mLSP_Pileup","h_mstop_mLSP_Pileup",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_ISR = new TH2D("h_mstop_mLSP_ISR","h_mstop_mLSP_ISR",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_HCAL_noise = new TH2D("h_mstop_mLSP_HCAL_noise","h_mstop_mLSP_HCAL_noise",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_vertexg0 = new TH2D("h_mstop_mLSP_vertexg0","h_mstop_mLSP_vertexg0",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_njetge3 = new TH2D("h_mstop_mLSP_njetge3","h_mstop_mLSP_njetge3",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_HLT = new TH2D("h_mstop_mLSP_HLT","h_mstop_mLSP_HLT",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_jet1ptg200 = new TH2D("h_mstop_mLSP_jet1ptg200","h_mstop_mLSP_jet1ptg200",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_SIG = new TH2D("h_mstop_mLSP_SIG","h_mstop_mLSP_SIG",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_NoCuts = new TH2D("h_mstop_mLSP_NoCuts","h_mstop_mLSP_NoCuts",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_Cleaning = new TH2D("h_mstop_mLSP_Cleaning","h_mstop_mLSP_Cleaning",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_Pileup = new TH2D("h_mstop_mLSP_Pileup","h_mstop_mLSP_Pileup",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_ISR = new TH2D("h_mstop_mLSP_ISR","h_mstop_mLSP_ISR",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_HCAL_noise = new TH2D("h_mstop_mLSP_HCAL_noise","h_mstop_mLSP_HCAL_noise",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_vertexg0 = new TH2D("h_mstop_mLSP_vertexg0","h_mstop_mLSP_vertexg0",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_njetge3 = new TH2D("h_mstop_mLSP_njetge3","h_mstop_mLSP_njetge3",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_HLT = new TH2D("h_mstop_mLSP_HLT","h_mstop_mLSP_HLT",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_jet1ptg200 = new TH2D("h_mstop_mLSP_jet1ptg200","h_mstop_mLSP_jet1ptg200",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_SIG = new TH2D("h_mstop_mLSP_SIG","h_mstop_mLSP_SIG",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
 
-  TH2D* h_mstop_mLSP_neleeq0 = new TH2D("h_mstop_mLSP_neleeq0","h_mstop_mLSP_neleeq0",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_nmueq0 = new TH2D("h_mstop_mLSP_nmueq0","h_mstop_mLSP_nmueq0",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_trackIso = new TH2D("h_mstop_mLSP_trackIso","h_mstop_mLSP_trackIso",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mb0Ll = new TH2D("h_mstop_mLSP_g1Mb0Ll","h_mstop_mLSP_g1Mb0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mbg1W0Ll = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll","h_mstop_mLSP_g1Mbg1W0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_1Mbg1W0Ll = new TH2D("h_mstop_mLSP_1Mbg1W0Ll","h_mstop_mLSP_1Mbg1W0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g2Mbg1W0Ll = new TH2D("h_mstop_mLSP_g2Mbg1W0Ll","h_mstop_mLSP_g2Mbg1W0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4","h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4","h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mb0Wg1uW0Ll = new TH2D("h_mstop_mLSP_g1Mb0Wg1uW0Ll","h_mstop_mLSP_g1Mb0Wg1uW0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_neleeq0 = new TH2D("h_mstop_mLSP_neleeq0","h_mstop_mLSP_neleeq0",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_nmueq0 = new TH2D("h_mstop_mLSP_nmueq0","h_mstop_mLSP_nmueq0",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_trackIso = new TH2D("h_mstop_mLSP_trackIso","h_mstop_mLSP_trackIso",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mb0Ll = new TH2D("h_mstop_mLSP_g1Mb0Ll","h_mstop_mLSP_g1Mb0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W0Ll = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll","h_mstop_mLSP_g1Mbg1W0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_1Mbg1W0Ll = new TH2D("h_mstop_mLSP_1Mbg1W0Ll","h_mstop_mLSP_1Mbg1W0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g2Mbg1W0Ll = new TH2D("h_mstop_mLSP_g2Mbg1W0Ll","h_mstop_mLSP_g2Mbg1W0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4","h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4","h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mb0Wg1uW0Ll = new TH2D("h_mstop_mLSP_g1Mb0Wg1uW0Ll","h_mstop_mLSP_g1Mb0Wg1uW0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
  
-  TH2D* h_mstop_mLSP_0Lb0Ll = new TH2D("h_mstop_mLSP_0Lb0Ll","h_mstop_mLSP_0Lb0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1uW0Ll = new TH2D("h_mstop_mLSP_0Lbg1uW0Ll","h_mstop_mLSP_0Lbg1uW0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1uW0Ll_mdPhi0p3 = new TH2D("h_mstop_mLSP_0Lbg1uW0Ll_mdPhi0p3","h_mstop_mLSP_0Lbg1uW0Ll_mdPhi0p3",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4 = new TH2D("h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4","h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat5 = new TH2D("h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat5","h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat5",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1W0Ll = new TH2D("h_mstop_mLSP_0Lbg1W0Ll","h_mstop_mLSP_0Lbg1W0Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lb0Ll = new TH2D("h_mstop_mLSP_0Lb0Ll","h_mstop_mLSP_0Lb0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1uW0Ll = new TH2D("h_mstop_mLSP_0Lbg1uW0Ll","h_mstop_mLSP_0Lbg1uW0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1uW0Ll_mdPhi0p3 = new TH2D("h_mstop_mLSP_0Lbg1uW0Ll_mdPhi0p3","h_mstop_mLSP_0Lbg1uW0Ll_mdPhi0p3",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4 = new TH2D("h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4","h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat5 = new TH2D("h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat5","h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat5",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1W0Ll = new TH2D("h_mstop_mLSP_0Lbg1W0Ll","h_mstop_mLSP_0Lbg1W0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
 
   
-  TH2D* h_mstop_mLSP_1Ll = new TH2D("h_mstop_mLSP_1Ll","h_mstop_mLSP_1Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mb1Ll = new TH2D("h_mstop_mLSP_g1Mb1Ll","h_mstop_mLSP_g1Mb1Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mbg1W1Ll = new TH2D("h_mstop_mLSP_g1Mbg1W1Ll","h_mstop_mLSP_g1Mbg1W1Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_g1Mbg1W1LlmT100","h_mstop_mLSP_g1Mbg1W1LlmT100",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_1Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_1Mbg1W1LlmT100","h_mstop_mLSP_1Mbg1W1LlmT100",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g2Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_g2Mbg1W1LlmT100","h_mstop_mLSP_g2Mbg1W1LlmT100",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mbg1W1LlmT = new TH2D("h_mstop_mLSP_g1Mbg1W1LlmT","h_mstop_mLSP_g1Mbg1W1LlmT",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_1Ll = new TH2D("h_mstop_mLSP_1Ll","h_mstop_mLSP_1Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mb1Ll = new TH2D("h_mstop_mLSP_g1Mb1Ll","h_mstop_mLSP_g1Mb1Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W1Ll = new TH2D("h_mstop_mLSP_g1Mbg1W1Ll","h_mstop_mLSP_g1Mbg1W1Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_g1Mbg1W1LlmT100","h_mstop_mLSP_g1Mbg1W1LlmT100",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_1Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_1Mbg1W1LlmT100","h_mstop_mLSP_1Mbg1W1LlmT100",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g2Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_g2Mbg1W1LlmT100","h_mstop_mLSP_g2Mbg1W1LlmT100",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W1LlmT = new TH2D("h_mstop_mLSP_g1Mbg1W1LlmT","h_mstop_mLSP_g1Mbg1W1LlmT",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
 
-  TH2D* h_mstop_mLSP_0Lb1Ll = new TH2D("h_mstop_mLSP_0Lb1Ll","h_mstop_mLSP_0Lb1Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1Y1Ll = new TH2D("h_mstop_mLSP_0Lbg1Y1Ll","h_mstop_mLSP_0Lbg1Y1Ll",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1Y1LlmT100 = new TH2D("h_mstop_mLSP_0Lbg1Y1LlmT100","h_mstop_mLSP_0Lbg1Y1LlmT100",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1Y1LlmT = new TH2D("h_mstop_mLSP_0Lbg1Y1LlmT","h_mstop_mLSP_0Lbg1Y1LlmT",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lb1Ll = new TH2D("h_mstop_mLSP_0Lb1Ll","h_mstop_mLSP_0Lb1Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1Y1Ll = new TH2D("h_mstop_mLSP_0Lbg1Y1Ll","h_mstop_mLSP_0Lbg1Y1Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1Y1LlmT100 = new TH2D("h_mstop_mLSP_0Lbg1Y1LlmT100","h_mstop_mLSP_0Lbg1Y1LlmT100",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1Y1LlmT = new TH2D("h_mstop_mLSP_0Lbg1Y1LlmT","h_mstop_mLSP_0Lbg1Y1LlmT",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
 
-  TH2D* h_mstop_mLSP_2munoZmass = new TH2D("h_mstop_mLSP_2munoZmass","h_mstop_mLSP_2munoZmass",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_2mu = new TH2D("h_mstop_mLSP_2mu","h_mstop_mLSP_2mu",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_2mu0el = new TH2D("h_mstop_mLSP_2mu0el","h_mstop_mLSP_2mu0el",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lb2mu0el = new TH2D("h_mstop_mLSP_0Lb2mu0el","h_mstop_mLSP_0Lb2mu0el",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mb2mu0el = new TH2D("h_mstop_mLSP_g1Mb2mu0el","h_mstop_mLSP_g1Mb2mu0el",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1Y2mu0el = new TH2D("h_mstop_mLSP_0Lbg1Y2mu0el","h_mstop_mLSP_0Lbg1Y2mu0el",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mbg1Y2mu0el = new TH2D("h_mstop_mLSP_g1Mbg1Y2mu0el","h_mstop_mLSP_g1Mbg1Y2mu0el",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_2munoZmass = new TH2D("h_mstop_mLSP_2munoZmass","h_mstop_mLSP_2munoZmass",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_2mu = new TH2D("h_mstop_mLSP_2mu","h_mstop_mLSP_2mu",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_2mu0el = new TH2D("h_mstop_mLSP_2mu0el","h_mstop_mLSP_2mu0el",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lb2mu0el = new TH2D("h_mstop_mLSP_0Lb2mu0el","h_mstop_mLSP_0Lb2mu0el",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mb2mu0el = new TH2D("h_mstop_mLSP_g1Mb2mu0el","h_mstop_mLSP_g1Mb2mu0el",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1Y2mu0el = new TH2D("h_mstop_mLSP_0Lbg1Y2mu0el","h_mstop_mLSP_0Lbg1Y2mu0el",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1Y2mu0el = new TH2D("h_mstop_mLSP_g1Mbg1Y2mu0el","h_mstop_mLSP_g1Mbg1Y2mu0el",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
 
-  TH2D* h_mstop_mLSP_2elnoZmass = new TH2D("h_mstop_mLSP_2elnoZmass","h_mstop_mLSP_2elnoZmass",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_2el = new TH2D("h_mstop_mLSP_2el","h_mstop_mLSP_2el",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_2el0mu = new TH2D("h_mstop_mLSP_2el0mu","h_mstop_mLSP_2el0mu",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lb2el0mu = new TH2D("h_mstop_mLSP_0Lb2el0mu","h_mstop_mLSP_0Lb2el0mu",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mb2el0mu = new TH2D("h_mstop_mLSP_g1Mb2el0mu","h_mstop_mLSP_g1Mb2el0mu",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1Y2el0mu = new TH2D("h_mstop_mLSP_0Lbg1Y2el0mu","h_mstop_mLSP_0Lbg1Y2el0mu",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mbg1Y2el0mu = new TH2D("h_mstop_mLSP_g1Mbg1Y2el0mu","h_mstop_mLSP_g1Mbg1Y2el0mu",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_2elnoZmass = new TH2D("h_mstop_mLSP_2elnoZmass","h_mstop_mLSP_2elnoZmass",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_2el = new TH2D("h_mstop_mLSP_2el","h_mstop_mLSP_2el",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_2el0mu = new TH2D("h_mstop_mLSP_2el0mu","h_mstop_mLSP_2el0mu",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lb2el0mu = new TH2D("h_mstop_mLSP_0Lb2el0mu","h_mstop_mLSP_0Lb2el0mu",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mb2el0mu = new TH2D("h_mstop_mLSP_g1Mb2el0mu","h_mstop_mLSP_g1Mb2el0mu",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1Y2el0mu = new TH2D("h_mstop_mLSP_0Lbg1Y2el0mu","h_mstop_mLSP_0Lbg1Y2el0mu",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1Y2el0mu = new TH2D("h_mstop_mLSP_g1Mbg1Y2el0mu","h_mstop_mLSP_g1Mbg1Y2el0mu",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
 
-  TH2D* h_mstop_mLSP_2lnoZmass = new TH2D("h_mstop_mLSP_2lnoZmass","h_mstop_mLSP_2lnoZmass",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_2l = new TH2D("h_mstop_mLSP_2l","h_mstop_mLSP_2l",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_2l0ol = new TH2D("h_mstop_mLSP_2l0ol","h_mstop_mLSP_2l0ol",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lb2l0ol = new TH2D("h_mstop_mLSP_0Lb2l0ol","h_mstop_mLSP_0Lb2l0ol",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mb2l0ol = new TH2D("h_mstop_mLSP_g1Mb2l0ol","h_mstop_mLSP_g1Mb2l0ol",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_0Lbg1Y2l0ol = new TH2D("h_mstop_mLSP_0Lbg1Y2l0ol","h_mstop_mLSP_0Lbg1Y2l0ol",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
-  TH2D* h_mstop_mLSP_g1Mbg1Y2l0ol = new TH2D("h_mstop_mLSP_g1Mbg1Y2l0ol","h_mstop_mLSP_g1Mbg1Y2l0ol",nbins_stop,stop_min,stop_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_2lnoZmass = new TH2D("h_mstop_mLSP_2lnoZmass","h_mstop_mLSP_2lnoZmass",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_2l = new TH2D("h_mstop_mLSP_2l","h_mstop_mLSP_2l",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_2l0ol = new TH2D("h_mstop_mLSP_2l0ol","h_mstop_mLSP_2l0ol",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lb2l0ol = new TH2D("h_mstop_mLSP_0Lb2l0ol","h_mstop_mLSP_0Lb2l0ol",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mb2l0ol = new TH2D("h_mstop_mLSP_g1Mb2l0ol","h_mstop_mLSP_g1Mb2l0ol",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1Y2l0ol = new TH2D("h_mstop_mLSP_0Lbg1Y2l0ol","h_mstop_mLSP_0Lbg1Y2l0ol",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1Y2l0ol = new TH2D("h_mstop_mLSP_g1Mbg1Y2l0ol","h_mstop_mLSP_g1Mbg1Y2l0ol",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
 
 
 
   // Make the histograms for the likelihood 
   // We need one histogram per region, per mass point
-  TH2D* list_S[nbins_stop][nbins_LSP];
-  TH2D* list_Q[nbins_stop][nbins_LSP];
-  TH2D* list_T[nbins_stop][nbins_LSP];
-  TH2D* list_W[nbins_stop][nbins_LSP];
+  TH2D* list_S[nbins_mother][nbins_LSP];
+  TH2D* list_Q[nbins_mother][nbins_LSP];
+  TH2D* list_T[nbins_mother][nbins_LSP];
+  TH2D* list_W[nbins_mother][nbins_LSP];
 
-  TH2D* list_S_uw[nbins_stop][nbins_LSP];
-  TH2D* list_Q_uw[nbins_stop][nbins_LSP];
-  TH2D* list_T_uw[nbins_stop][nbins_LSP];
-  TH2D* list_W_uw[nbins_stop][nbins_LSP];
+  TH2D* list_S_uw[nbins_mother][nbins_LSP];
+  TH2D* list_Q_uw[nbins_mother][nbins_LSP];
+  TH2D* list_T_uw[nbins_mother][nbins_LSP];
+  TH2D* list_W_uw[nbins_mother][nbins_LSP];
 
   // binning for MR and R2
   int nbins_MR = 7;
@@ -307,12 +307,12 @@ int main(int argc, char** argv)
   Double_t* bins_R2 = getVariableBinEdges(nbins_R2+1,bins_R2_tmp);
   
   bool runForLikelihood = true;
-  int step_stop = (stop_max - stop_min)/nbins_stop;
+  int step_mother = (mother_max - mother_min)/nbins_mother;
   int step_LSP = (LSP_max - LSP_min)/nbins_LSP;
   int counter_i = 0;
   int counter_j = 0;
   if (runForLikelihood){
-    for(int i=stop_min; i<stop_max; i+=step_stop){
+    for(int i=mother_min; i<mother_max; i+=step_mother){
       counter_j = 0;
       for(int j=LSP_min; j<LSP_max; j+=step_LSP){
 	TString nameS = "h_S_" + sample + "_" + to_string(i) + "_" + to_string(j);
@@ -340,6 +340,27 @@ int main(int argc, char** argv)
       counter_i++;
     }
   }
+
+
+  // for these histograms we want them to be normalized to the efficiency
+  // So normalization only uses "totweight"
+  TH2D* h_smscounts;
+  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25"  || sample == "T1ttcc_DM80" 
+      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+    // open file with counts
+    TFile* f_smscounts = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/smsinput/signal_counts.root");
+    if (!f_smscounts)
+      f_smscounts = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/smsinput/signal_counts.root");
+    // get the proper histogram
+    TString hname_smscounts = "";
+    if (doISRreweighting){
+      hname_smscounts = sample+"_ISR";
+    } else {
+      hname_smscounts = sample+"_noISR";
+    }
+    h_smscounts = (TH2D*)f_smscounts->Get(hname_smscounts);
+  }
+
 
   //---------------------------------------------------------------------------
   // Loop over events
@@ -369,25 +390,33 @@ int main(int argc, char** argv)
 
       // now find out which mass point this event belongs to
       double mg = lheeventproducthelper_mg;
-      double mt = lheeventproducthelper_mt1;
-     
-      // fill out histograms using mt1
-      double mt1 = mt;
-      if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t")
-	mt1 = mg;
-
+      double mt1 = lheeventproducthelper_mt1;
       double mz1 = lheeventproducthelper_mz1;
+      double m_mother = mt1; // set mother to stop, works for T2tt and T1ttcc_old
+     
+      if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t")
+	m_mother = mg;
+
       //cout << "mgluino = " << mg << ", mstop = " << mt << ", mLSP = " << mz1 << endl;
 
-      if (mz1 == 0) continue; // mLSP=0 should be rejected
+      if (sample == "T2tt" && mz1 == 0) continue; // mLSP=0 should be rejected
 
-      h_mstop->Fill(mt1);
+      double w_norm = 1.;
+      // get normalization for sms's
+      if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T2tt" || sample == "T1t1t"){
+	int bin_mother = (m_mother - mother_min)/step_mother;
+	int bin_LSP = (mz1 - LSP_min)/step_LSP;
+	w_norm = 1./h_smscounts->GetBinContent(bin_mother+1,bin_LSP+1);	
+      }
+
+
+      h_mstop->Fill(m_mother);
       h_mLSP->Fill(mz1);
-      h_mstop_mLSP->Fill(mt1,mz1,1);
-      h_mstop_mLSP_nevents->Fill(mt1,mz1,w);
+      h_mstop_mLSP->Fill(m_mother,mz1,1);
+      h_mstop_mLSP_nevents->Fill(m_mother,mz1,w);
 
       //cout << "will fill ofile with weight " << w << endl;
-      h_mstop_mLSP_NoCuts->Fill(mt1,mz1,w);
+      h_mstop_mLSP_NoCuts->Fill(m_mother,mz1,w);
 
       // Get rid of the noise in data before you start filling ANY histogram
       // by applying the filters:
@@ -409,7 +438,7 @@ int main(int argc, char** argv)
         if (triggerresultshelper2_totalKinematicsFilterPath==0) continue;
       }
 
-      h_mstop_mLSP_Cleaning->Fill(mt1,mz1,w);
+      h_mstop_mLSP_Cleaning->Fill(m_mother,mz1,w);
 
       // do pileup reweighting
       double num_vertices = pileupsummaryinfo[0].getTrueNumInteractions;
@@ -421,7 +450,7 @@ int main(int argc, char** argv)
 
       w = w*w_pileup;
 
-      h_mstop_mLSP_Pileup->Fill(mt1,mz1,w);
+      h_mstop_mLSP_Pileup->Fill(m_mother,mz1,w);
 
       // ----------------------
       // -- object selection --
@@ -823,7 +852,7 @@ int main(int argc, char** argv)
 	w = w*w_ISR_nominal;
       }
 
-      h_mstop_mLSP_ISR->Fill(mt1,mz1,w);  
+      h_mstop_mLSP_ISR->Fill(m_mother,mz1,w);  
 
 
       // **************************************************************
@@ -855,15 +884,15 @@ int main(int argc, char** argv)
       // Additional HCAL noise cleaning
       double dphi_PF_CALO_met = fdeltaPhi(cmgbasemet2[0].phi,calomet[0].phi);
       if (fabs(dphi_PF_CALO_met - TMath::Pi()) < 1 ) continue;
-      h_mstop_mLSP_HCAL_noise->Fill(mt1,mz1,w);
+      h_mstop_mLSP_HCAL_noise->Fill(m_mother,mz1,w);
 
       // at least one good primary vertex
       if (!(svertex.size() > 0)) continue;
-      h_mstop_mLSP_vertexg0->Fill(mt1,mz1,w);
+      h_mstop_mLSP_vertexg0->Fill(m_mother,mz1,w);
 
       // at least three jets
       if (!(sjet.size() >= 3)) continue;
-      h_mstop_mLSP_njetge3->Fill(mt1,mz1,w);
+      h_mstop_mLSP_njetge3->Fill(m_mother,mz1,w);
       
       // Calculate the HLT weight and include it in the total weight:
       double whlt = 1;
@@ -884,11 +913,11 @@ int main(int argc, char** argv)
 	}
       }
       w = w*whlt;
-      h_mstop_mLSP_HLT->Fill(mt1,mz1,w);
+      h_mstop_mLSP_HLT->Fill(m_mother,mz1,w);
 
       // pt of first jet greater than 200 GeV
       if (!(sjet[0].pt > 200)) continue;
-      h_mstop_mLSP_jet1ptg200->Fill(mt1,mz1,w);
+      h_mstop_mLSP_jet1ptg200->Fill(m_mother,mz1,w);
 
       // count number of leptons
       int nlooseelectrons = velectron.size();
@@ -905,7 +934,7 @@ int main(int argc, char** argv)
       // Only select events in MR-R2 SIG region 
       //if (!(MR > 800 && R2 > 0.08)) continue;
       if (MR > 800 && R2 > 0.08){
-	h_mstop_mLSP_SIG->Fill(mt1,mz1,w);
+	h_mstop_mLSP_SIG->Fill(m_mother,mz1,w);
 	
 	// Compute the minDeltaPhi variable, taking the first three jets into account
 	// Compute the minDeltaPhiHat variable, taking the first three jets into account
@@ -933,82 +962,82 @@ int main(int argc, char** argv)
 	// 0 Lepton trajectory
 	// ----------------------------------------------------------------------------------------------------
 	if (nlooseelectrons == 0){
-	  h_mstop_mLSP_neleeq0->Fill(mt1,mz1,w);
+	  h_mstop_mLSP_neleeq0->Fill(m_mother,mz1,w);
 	  
 	  if (nloosemuons == 0) {
-	    h_mstop_mLSP_nmueq0->Fill(mt1,mz1,w);
+	    h_mstop_mLSP_nmueq0->Fill(m_mother,mz1,w);
 	    
 	    if (eventhelperextra_trackIso == 0){
-	      h_mstop_mLSP_trackIso->Fill(mt1,mz1,w);
+	      h_mstop_mLSP_trackIso->Fill(m_mother,mz1,w);
 	      
 	      if (nmediumbs > 0){
 		w = w*wCSVM;
-		h_mstop_mLSP_g1Mb0Ll->Fill(mt1,mz1,w);
+		h_mstop_mLSP_g1Mb0Ll->Fill(m_mother,mz1,w);
 
 		// g1Mb g1W 0Ll -- SIGNAL region
 		if( sW.size() > 0){
-		  h_mstop_mLSP_g1Mbg1W0Ll->Fill(mt1,mz1,w);
+		  h_mstop_mLSP_g1Mbg1W0Ll->Fill(m_mother,mz1,w);
 		  
 		  if (nmediumbs == 1){
-		    h_mstop_mLSP_1Mbg1W0Ll->Fill(mt1,mz1,w); 
+		    h_mstop_mLSP_1Mbg1W0Ll->Fill(m_mother,mz1,w); 
 		  } else {
-		    h_mstop_mLSP_g2Mbg1W0Ll->Fill(mt1,mz1,w); 
+		    h_mstop_mLSP_g2Mbg1W0Ll->Fill(m_mother,mz1,w); 
 		  }
 
 		  if (minDeltaPhiHat > 4){
-		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4->Fill(mt1,mz1,w);
+		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4->Fill(m_mother,mz1,w);
 
 		    // Fill the histograms for the likelihood 
 		    if (runForLikelihood){
-		      int bin_stop = (mt1 - stop_min)/step_stop;
+		      int bin_stop = (m_mother - mother_min)/step_mother;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
-		      list_S[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		      list_S[bin_stop][bin_LSP]->Fill(MR,R2,w*w_norm);
 		      list_S_uw[bin_stop][bin_LSP]->Fill(MR,R2,1.);
 		    }
 
 		  } else {
-		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4->Fill(mt1,mz1,w);
+		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4->Fill(m_mother,mz1,w);
 		  }
 		  
 		} // end of sW.size() > 0
 		else if (aW.size() > 0){
-		  h_mstop_mLSP_g1Mb0Wg1uW0Ll->Fill(mt1,mz1,w);
+		  h_mstop_mLSP_g1Mb0Wg1uW0Ll->Fill(m_mother,mz1,w);
 		}
 	      } // end of nmediumbs > 0
 	      
 	      if (nloosebs == 0){
 		w = w*wCSVL;
-		h_mstop_mLSP_0Lb0Ll->Fill(mt1,mz1,w);
+		h_mstop_mLSP_0Lb0Ll->Fill(m_mother,mz1,w);
 		
 		// 0Lbg1uW0Ll -- QCD control region
 		if( aW.size() > 0){
-		  h_mstop_mLSP_0Lbg1uW0Ll->Fill(mt1,mz1,w);
+		  h_mstop_mLSP_0Lbg1uW0Ll->Fill(m_mother,mz1,w);
 		  
 		  // cut on mindDeltaPhi
 		  if (minDeltaPhi < 0.3){
-		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhi0p3->Fill(mt1,mz1,w);
+		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhi0p3->Fill(m_mother,mz1,w);
 		  } // end of minDeltaPhi < 0.3
 
 		  if (minDeltaPhiHat < 4){
-		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4->Fill(mt1,mz1,w);
+		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4->Fill(m_mother,mz1,w);
 
 		    // Fill the histograms for the likelihood 
 		    if (runForLikelihood){
-		      int bin_stop = (mt1 - stop_min)/step_stop;
+		      int bin_stop = (m_mother - mother_min)/step_mother;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
-		      list_Q[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		      list_Q[bin_stop][bin_LSP]->Fill(MR,R2,w*w_norm);
 		      list_Q_uw[bin_stop][bin_LSP]->Fill(MR,R2,1);
 		    }
 		  } // end of minDeltaPhiHat < 4
 
 		  if (minDeltaPhiHat < 5){
-		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat5->Fill(mt1,mz1,w);
+		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat5->Fill(m_mother,mz1,w);
 		  } // end of minDeltaPhiHat < 5
 		} // end of aW.size() > 0
 		
 		// 0Lbg1W0Ll
 		if( sW.size() > 0){
-		  h_mstop_mLSP_0Lbg1W0Ll->Fill(mt1,mz1,w);
+		  h_mstop_mLSP_0Lbg1W0Ll->Fill(m_mother,mz1,w);
 		} // end of sW.size() > 0
 		
 	      } // end of nloosebs == 0
@@ -1029,36 +1058,36 @@ int main(int argc, char** argv)
 	    lepton.SetPtEtaPhiE(vmuon[0].pt, vmuon[0].eta, vmuon[0].phi, vmuon[0].energy);
 	  double mT = CalcMT(lepton,met);
 	  
-	  h_mstop_mLSP_1Ll->Fill(mt1,mz1,w);
+	  h_mstop_mLSP_1Ll->Fill(m_mother,mz1,w);
 	  
 	  if (nmediumbs > 0){
 	    w = w*wCSVM;
-	    h_mstop_mLSP_g1Mb1Ll->Fill(mt1,mz1,w);
+	    h_mstop_mLSP_g1Mb1Ll->Fill(m_mother,mz1,w);
 	    
 	    if( sW.size() > 0 ){
-	      h_mstop_mLSP_g1Mbg1W1Ll->Fill(mt1,mz1,w);
+	      h_mstop_mLSP_g1Mbg1W1Ll->Fill(m_mother,mz1,w);
 
 	      // TTJets Control region
 	      if (mT < 100){
-		h_mstop_mLSP_g1Mbg1W1LlmT100->Fill(mt1,mz1,w);
+		h_mstop_mLSP_g1Mbg1W1LlmT100->Fill(m_mother,mz1,w);
 
 		// Fill the histograms for the likelihood 
 		if (runForLikelihood){
-		  int bin_stop = (mt1 - stop_min)/step_stop;
+		  int bin_stop = (m_mother - mother_min)/step_mother;
 		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
-		  list_T[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		  list_T[bin_stop][bin_LSP]->Fill(MR,R2,w*w_norm);
 		  list_T_uw[bin_stop][bin_LSP]->Fill(MR,R2,1);
 		}
 		
 		if (nmediumbs == 1){
-		  h_mstop_mLSP_1Mbg1W1LlmT100->Fill(mt1,mz1,w);
+		  h_mstop_mLSP_1Mbg1W1LlmT100->Fill(m_mother,mz1,w);
 		} else {
-		  h_mstop_mLSP_g2Mbg1W1LlmT100->Fill(mt1,mz1,w);
+		  h_mstop_mLSP_g2Mbg1W1LlmT100->Fill(m_mother,mz1,w);
 		}
 		
 		// mT window
 		if (mT > 30){
-		  h_mstop_mLSP_g1Mbg1W1LlmT->Fill(mt1,mz1,w);
+		  h_mstop_mLSP_g1Mbg1W1LlmT->Fill(m_mother,mz1,w);
 		} // end mT > 30
 	      } // end mT < 100
 	    } // end sW.size()
@@ -1067,24 +1096,24 @@ int main(int argc, char** argv)
 
 	  if (nloosebs == 0){
 	    w = w*wCSVL;
-	    h_mstop_mLSP_0Lb1Ll->Fill(mt1,mz1,w);
+	    h_mstop_mLSP_0Lb1Ll->Fill(m_mother,mz1,w);
 	    
 	    if( sY.size() > 0 ){
-	      h_mstop_mLSP_0Lbg1Y1Ll->Fill(mt1,mz1,w);
+	      h_mstop_mLSP_0Lbg1Y1Ll->Fill(m_mother,mz1,w);
 	      
 	      // WJets Control Region
 	      if (mT < 100){ 
-		h_mstop_mLSP_0Lbg1Y1LlmT100->Fill(mt1,mz1,w);
+		h_mstop_mLSP_0Lbg1Y1LlmT100->Fill(m_mother,mz1,w);
 		
 		// mT window
 		if (mT > 30){
-		  h_mstop_mLSP_0Lbg1Y1LlmT->Fill(mt1,mz1,w);
+		  h_mstop_mLSP_0Lbg1Y1LlmT->Fill(m_mother,mz1,w);
 
 		  // Fill the histograms for the likelihood 
 		  if (runForLikelihood){
-		    int bin_stop = (mt1 - stop_min)/step_stop;
+		    int bin_stop = (m_mother - mother_min)/step_mother;
 		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
-		    list_W[bin_stop][bin_LSP]->Fill(MR,R2,w);
+		    list_W[bin_stop][bin_LSP]->Fill(MR,R2,w*w_norm);
 		    list_W_uw[bin_stop][bin_LSP]->Fill(MR,R2,1.);
 		  }
 		} // end mT > 30
@@ -1113,36 +1142,36 @@ int main(int argc, char** argv)
 	  }
 	  double Zmass = LVZcand.M();
 
-	  h_mstop_mLSP_2munoZmass->Fill(mt1,mz1,w);
-	  h_mstop_mLSP_2lnoZmass->Fill(mt1,mz1,w);
+	  h_mstop_mLSP_2munoZmass->Fill(m_mother,mz1,w);
+	  h_mstop_mLSP_2lnoZmass->Fill(m_mother,mz1,w);
 	  
 	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
-	  h_mstop_mLSP_2mu->Fill(mt1,mz1,w);
-	  h_mstop_mLSP_2l->Fill(mt1,mz1,w);
+	  h_mstop_mLSP_2mu->Fill(m_mother,mz1,w);
+	  h_mstop_mLSP_2l->Fill(m_mother,mz1,w);
 	  
 	  if (nlooseelectrons == 0){
-	    h_mstop_mLSP_2mu0el->Fill(mt1,mz1,w);
-	    h_mstop_mLSP_2l0ol->Fill(mt1,mz1,w);
+	    h_mstop_mLSP_2mu0el->Fill(m_mother,mz1,w);
+	    h_mstop_mLSP_2l0ol->Fill(m_mother,mz1,w);
 	    
 	    if (nloosebs == 0){
 	      w = w*wCSVL;
-	      h_mstop_mLSP_0Lb2mu0el->Fill(mt1,mz1,w);
-	      h_mstop_mLSP_0Lb2l0ol->Fill(mt1,mz1,w);
+	      h_mstop_mLSP_0Lb2mu0el->Fill(m_mother,mz1,w);
+	      h_mstop_mLSP_0Lb2l0ol->Fill(m_mother,mz1,w);
 	      
 	      if (nYs >= 1){ // Z no b, mu CR 
-		h_mstop_mLSP_0Lbg1Y2mu0el->Fill(mt1,mz1,w);
-		h_mstop_mLSP_0Lbg1Y2l0ol->Fill(mt1,mz1,w);
+		h_mstop_mLSP_0Lbg1Y2mu0el->Fill(m_mother,mz1,w);
+		h_mstop_mLSP_0Lbg1Y2l0ol->Fill(m_mother,mz1,w);
 	      }// nYs >= 1
 	    }// end nloosebs == 0
 
 	    if (nmediumbs >= 1){
 	      w = w*wCSVM;
-	      h_mstop_mLSP_g1Mb2mu0el->Fill(mt1,mz1,w);
-	      h_mstop_mLSP_g1Mb2l0ol->Fill(mt1,mz1,w);
+	      h_mstop_mLSP_g1Mb2mu0el->Fill(m_mother,mz1,w);
+	      h_mstop_mLSP_g1Mb2l0ol->Fill(m_mother,mz1,w);
 	      
 	      if (nYs >= 1){ // Z with b, mu CR
-		h_mstop_mLSP_g1Mbg1Y2mu0el->Fill(mt1,mz1,w);
-		h_mstop_mLSP_g1Mbg1Y2l0ol->Fill(mt1,mz1,w);
+		h_mstop_mLSP_g1Mbg1Y2mu0el->Fill(m_mother,mz1,w);
+		h_mstop_mLSP_g1Mbg1Y2l0ol->Fill(m_mother,mz1,w);
 	      } // end nYs >= 1
 	    } // end nmediumbs >= 1
 	  } // end nlooseelectrons == 0
@@ -1162,36 +1191,36 @@ int main(int argc, char** argv)
 	  }
 	  double Zmass = LVZcand.M();
 
-	  h_mstop_mLSP_2elnoZmass->Fill(mt1,mz1,w);
-	  h_mstop_mLSP_2lnoZmass->Fill(mt1,mz1,w);
+	  h_mstop_mLSP_2elnoZmass->Fill(m_mother,mz1,w);
+	  h_mstop_mLSP_2lnoZmass->Fill(m_mother,mz1,w);
 
      	  if (!(Zmass >= 60 && Zmass <= 120)) continue;
-	  h_mstop_mLSP_2el->Fill(mt1,mz1,w);
-	  h_mstop_mLSP_2l->Fill(mt1,mz1,w);
+	  h_mstop_mLSP_2el->Fill(m_mother,mz1,w);
+	  h_mstop_mLSP_2l->Fill(m_mother,mz1,w);
 	  
 	  if (nloosemuons == 0){
-	    h_mstop_mLSP_2el0mu->Fill(mt1,mz1,w);
-	    h_mstop_mLSP_2l0ol->Fill(mt1,mz1,w);
+	    h_mstop_mLSP_2el0mu->Fill(m_mother,mz1,w);
+	    h_mstop_mLSP_2l0ol->Fill(m_mother,mz1,w);
 	    
 	    if (nloosebs == 0){
 	      w = w*wCSVL;
-	      h_mstop_mLSP_0Lb2el0mu->Fill(mt1,mz1,w);
-	      h_mstop_mLSP_0Lb2l0ol->Fill(mt1,mz1,w);
+	      h_mstop_mLSP_0Lb2el0mu->Fill(m_mother,mz1,w);
+	      h_mstop_mLSP_0Lb2l0ol->Fill(m_mother,mz1,w);
 
 	      if (nYs >= 1){
-		h_mstop_mLSP_0Lbg1Y2el0mu->Fill(mt1,mz1,w);
-		h_mstop_mLSP_0Lbg1Y2l0ol->Fill(mt1,mz1,w);
+		h_mstop_mLSP_0Lbg1Y2el0mu->Fill(m_mother,mz1,w);
+		h_mstop_mLSP_0Lbg1Y2l0ol->Fill(m_mother,mz1,w);
 	      }// nYs >= 1
 	    }// end nloosebs == 0
 	    
 	    if (nmediumbs >= 1){
 	      w = w*wCSVM;
-	      h_mstop_mLSP_g1Mb2el0mu->Fill(mt1,mz1,w);
-	      h_mstop_mLSP_g1Mb2l0ol->Fill(mt1,mz1,w);
+	      h_mstop_mLSP_g1Mb2el0mu->Fill(m_mother,mz1,w);
+	      h_mstop_mLSP_g1Mb2l0ol->Fill(m_mother,mz1,w);
 	    
 	      if (nYs >= 1){
-		h_mstop_mLSP_g1Mbg1Y2el0mu->Fill(mt1,mz1,w);
-		h_mstop_mLSP_g1Mbg1Y2l0ol->Fill(mt1,mz1,w);
+		h_mstop_mLSP_g1Mbg1Y2el0mu->Fill(m_mother,mz1,w);
+		h_mstop_mLSP_g1Mbg1Y2l0ol->Fill(m_mother,mz1,w);
 	      } // end nYs >= 1
 	    } // end nmediumbs >= 1
 	  } // end nlooseelectrons == 0
