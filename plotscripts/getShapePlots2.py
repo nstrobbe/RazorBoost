@@ -53,6 +53,8 @@ if __name__ == '__main__':
     #    * different QCD regions
     #    * different TTjets regions
 
+    leg = plotTools.ConstructLDict(0.7,0.85,0.65,0.87)
+
     # build hdictlist for TTJ:
     for var in vars:
         hdict_TTJ = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W1Ll"),
@@ -85,6 +87,20 @@ if __name__ == '__main__':
         canvasname = var+"_comparison_TTJ_SIG"
         rtitle = "#frac{TTJ}{SIG}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W0Ll_mdPhiHatg4"),
+                                             name=" S region", color=rt.kBlack,
+                                             title="Shape comparison for TTJets in S and T region",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_TTJmt = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W1LlmT100_mdPhiHatg4"),
+                                             name=" T region", color=rt.kCyan+2,
+                                             title="Shape comparison for TTJets in Sand T region",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_SIG,hdict_TTJmt]
+        canvasname = var+"_comparison_TTJ_TvsS"
+        rtitle = "#frac{T}{S}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes",legdict=leg)
 
     # compare Wjets and TTjets in signal region and TTJets control region
     for var in vars:
@@ -150,6 +166,21 @@ if __name__ == '__main__':
         canvasname = var+"_comparison_QCD_SIG_mdphihat"
         rtitle = "#frac{SIG}{QCD}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    # build hdictlist for QCD:
+    for var in vars:
+        hdict_QCD_mdphihat4 = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_0Lbg1uW0Ll_mdPhiHat4"),
+                                             name=" Q region", color=rt.kMagenta,
+                                             title="Shape comparison for QCD MC in the Q region and the S region",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_SIG_mdphihatg4 = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_g1Mbg1W0Ll_mdPhiHatg4"),
+                                             name=" S region", color=rt.kBlue-3,
+                                             title="Shape comparison for QCD MC in the Q region and in the S region",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_QCD_mdphihat4,hdict_SIG_mdphihatg4]
+        canvasname = var+"_comparison_QCD_QvsS"
+        rtitle = "#frac{S}{Q}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes",legdict=leg)
 
     # build hdictlist for Wjets:
     for var in vars:
