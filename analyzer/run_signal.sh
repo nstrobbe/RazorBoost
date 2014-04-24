@@ -4,7 +4,7 @@
 #*** cross section and total weight            ***
 #*************************************************
 
-./rzrBoostMC filelists/filelist_T1ttcc_325_300.txt 0.0243547 128650 19789 rzrBoostMC_T1ttcc_325_300.root T1ttcc_old ISR_False TopPt_False Pileup_True
+#./rzrBoostMC filelists/filelist_T1ttcc_325_300.txt 0.0243547 128650 19789 rzrBoostMC_T1ttcc_325_300.root T1ttcc_old ISR_False TopPt_False Pileup_True
 #./rzrBoostMC filelists/filelist_T1ttcc_375_300.txt 0.0243547 129094 19789 rzrBoostMC_T1ttcc_375_300.root T1ttcc_old ISR_False TopPt_False Pileup_True
 #./rzrBoostMC filelists/filelist_T1ttcc_510_500.txt 0.0243547 128744 19789 rzrBoostMC_T1ttcc_510_500.root T1ttcc_old ISR_False TopPt_False Pileup_True
 #./rzrBoostMC filelists/filelist_T1ttcc_575_500.txt 0.0243547 128754 19789 rzrBoostMC_T1ttcc_575_500.root T1ttcc_old ISR_False TopPt_False Pileup_True
@@ -30,4 +30,4 @@
 
 
 # Using ISR weights
-#./rzrBoostMC filelists/filelist_T1ttcc_325_300.txt 0.0243547 123871.1 19789 rzrBoostMC_T1ttcc_325_300.root T1ttcc_old ISR_True TopPt_False Pileup_True
+./rzrBoostMC filelists/filelist_T1ttcc_325_300.txt 0.0243547 123871.1 19789 rzrBoostMC_T1ttcc_325_300.root T1ttcc_old ISR_True TopPt_False Pileup_True
