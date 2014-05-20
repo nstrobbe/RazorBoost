@@ -26,10 +26,11 @@ int main(int argc, char** argv)
   // -- Get the trigger histogram: // old name: extr_eff0_sm2.root --
   // ----------------------------------------------------------------
 
-  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  if (!fhlt){
+  TFile* fhlt; 
+  fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
+  //if (!fhlt){
     fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  }
+  //}
   if (!fhlt){
     cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
     return 1;
@@ -151,10 +152,11 @@ int main(int argc, char** argv)
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig53X.root";
   }
-  TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
-  if (!fpileup){
+  TFile* fpileup;
+  //fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
+  //if (!fpileup){
     fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
-  }
+  //}
   if (!fpileup){
     cout << "Could not find pileup weights root file... Where did you put it??" << endl;
     return 1;
@@ -168,12 +170,15 @@ int main(int argc, char** argv)
   TFile* fbeff;
 
   if (sample == "TTJets" or sample == "Top" or sample == "TTX") {
-    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_TTJets.root");
+    //fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_TTJets.root");
+    fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/btageff_TTJets.root");
   } else if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
 	     || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
-    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
+    //fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
+    fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
   } else {
-    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_QCD.root");
+    //fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_QCD.root");
+    fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/btageff_QCD.root");
   }
   TH1D* h_pt_b_CSVMeff = (TH1D*)fbeff->Get("h_pt_b_CSVMeff");
   TH1D* h_pt_c_CSVMeff = (TH1D*)fbeff->Get("h_pt_c_CSVMeff");
@@ -1906,7 +1911,8 @@ int main(int argc, char** argv)
         h_d1m_d2m->Fill(jethelper4[i].daughter_0_mass, jethelper4[i].daughter_1_mass);
         h_jmass->Fill(jethelper4[i].mass);
 	// New Andreas cuts:
-        if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+        //if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+        if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
 	sY.push_back(jethelper4[i]);
         h_d1ptsel_d2ptsel->Fill(jethelper4[i].daughter_0_pt, jethelper4[i].daughter_1_pt);
         h_d1msel_d2msel->Fill(jethelper4[i].daughter_0_mass, jethelper4[i].daughter_1_mass);
@@ -1960,12 +1966,13 @@ int main(int argc, char** argv)
 	if (!(prjmatch==1)) continue;
 	double tau21 = jethelper5[jpr].tau2 / jethelper5[jpr].tau1;
 	double tau3 = jethelper5[jpr].tau3;
-        //if (!(massdrop < 0.31)) continue;
-	if (tau21 >= 0.46 || tau3 >= 0.135) {
+	//if (tau21 >= 0.46 || tau3 >= 0.135) {
+	if (tau21 >= 0.50) {
           aW.push_back(jethelper4[i]);
         }
-	if (!(tau21 < 0.46) ) continue;
-	if (!(tau3 < 0.135) ) continue;
+	if (!(tau21 < 0.50) ) continue;
+	//if (!(tau21 < 0.46) ) continue;
+	//if (!(tau3 < 0.135) ) continue;
         sW.push_back(jethelper4[i]);
       }
 
@@ -1976,7 +1983,8 @@ int main(int argc, char** argv)
         if (!(fabs(jethelper4[i].eta) < 3) ) continue;
 
 	// New Andreas cuts:
-        if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+        //if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+        if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
         double massdrop = 1;
         double daughmass = -9;
         if (jethelper4[i].daughter_0_mass > jethelper4[i].daughter_1_mass) {
@@ -2223,7 +2231,7 @@ int main(int argc, char** argv)
 	      if (!found_bjet_in_cone){
 		h_pt_closestCA8jet->Fill(jethelper4[matched_index].pt,w);
 		// now check whether the matched jet has mass in proper window
-		if (jethelper4[matched_index].mass > 70 && jethelper4[matched_index].mass < 100){
+		if (jethelper4[matched_index].mass > 65 && jethelper4[matched_index].mass < 105){
 		  h_pt_closestCA8jet_Wmass->Fill(jethelper4[matched_index].pt,w);
 		  
 		  // now check whether it is also tagged
@@ -2243,10 +2251,11 @@ int main(int argc, char** argv)
 		  if (prjmatch==1){
 		    double tau21 = jethelper5[jpr].tau2 / jethelper5[jpr].tau1;
 		    double tau3 = jethelper5[jpr].tau3;
-		    if (tau21 < 0.46) {
-		      if (tau3 < 0.135){
+		    if (tau21 < 0.50) {
+		    //if (tau21 < 0.46) {
+		      //if (tau3 < 0.135){
 			h_pt_closestCA8jet_Wmass_tagged->Fill(jethelper4[matched_index].pt,w);
-		      }
+		      //}
 		    }
 		  }
 		}

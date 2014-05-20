@@ -991,7 +991,8 @@ int main(int argc, char** argv)
         if (!(jethelper4[i].pt > 30) ) continue;
         if (!(fabs(jethelper4[i].eta) < 3) ) continue;
 	// New Andreas cuts:
-        if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+        //if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+        if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
 	sY.push_back(jethelper4[i]);
         sjet2.push_back(jethelper4[i]);
         // Match with the unpruned:
@@ -1010,11 +1011,13 @@ int main(int argc, char** argv)
 	if (!(prjmatch==1)) continue;
 	double tau21 = jethelper5[jpr].tau2 / jethelper5[jpr].tau1;
 	double tau3 = jethelper5[jpr].tau3;
-	if (tau21 >= 0.46 || tau3 >= 0.135) {
+	//if (tau21 >= 0.46 || tau3 >= 0.135) {
+	if (tau21 >= 0.50) {
           aW.push_back(jethelper4[i]);
         }
-	if (!(tau21 < 0.46) ) continue;
-	if (!(tau3 < 0.135) ) continue;
+	if (!(tau21 < 0.50) ) continue;
+	//if (!(tau21 < 0.46) ) continue;
+	//if (!(tau3 < 0.135) ) continue;
         sW.push_back(jethelper4[i]);
       }
 

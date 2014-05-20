@@ -15,8 +15,8 @@ parser.add_option("--AB", action="store_true", dest="RunsAB", default=False, hel
 
 anl = 'rzrBoostMC'
 
-dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
-#dwork = '/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/'
+#dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
+dwork = '/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/'
 dflist = dwork+'filelists/'
 dflisttmp = dwork+'fileliststmp/'
 druns = dwork+'runs/'
@@ -140,8 +140,8 @@ for d in datasets:
         cscr = cscrtmp % names
         open(nmscr,'w').write(cscr)
         os.system('chmod +x '+nmscr)
-        #os.chdir('/tmp/ssekmen/')
-        os.chdir("/tmp/nstrobbe/")
+        os.chdir('/tmp/ssekmen/')
+        #os.chdir("/tmp/nstrobbe/")
         os.system('bsub -q 1nh '+nmscr)
         #print names
         nrunstot = nrunstot + 1
