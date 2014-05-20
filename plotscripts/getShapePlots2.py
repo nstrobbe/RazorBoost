@@ -201,6 +201,21 @@ if __name__ == '__main__':
         rtitle = "#frac{WJets}{SIG}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
 
+    # build hdictlist for Wjets:
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_g1Mbg1W0Ll_mdPhiHatg4"),
+                                             name="S region", color=rt.kBlack,
+                                             title="Shape comparison for WJets in the S and W region",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_WJets_mt = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_0Lbg1Y1LlmT_mdPhiHatg4"),
+                                             name="W region", color=rt.kGreen+2,
+                                             title="Shape comparison for WJets in the S and W region",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_SIG,hdict_WJets_mt]
+        canvasname = var+"_comparison_WJ_WvsS"
+        rtitle = "#frac{W}{S}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes",legdict=leg)
+
     leps = ["2el0mu","2mu0el","2l0ol"]
     # build hdictlist for Zjets 0b:
     for var in vars:

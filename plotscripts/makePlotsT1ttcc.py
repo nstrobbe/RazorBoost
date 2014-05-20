@@ -71,6 +71,8 @@ if __name__ == "__main__":
             h_eff.Divide(h_nevents)
             if "T1ttcc" in DM:
                 h_eff.GetXaxis().SetTitle("mGluino")
+            if "T1ttcc_old" in DM:
+                h_eff.GetXaxis().SetTitle("mStop")
             if "T2tt" in DM:
                 h_eff.GetXaxis().SetTitle("mStop")
             h_eff.GetYaxis().SetTitle("mLSP")
@@ -104,6 +106,8 @@ if __name__ == "__main__":
             h_events.Scale(19789)
             if "T1ttcc" in DM:
                 h_events.GetXaxis().SetTitle("mGluino")
+            if "T1ttcc_old" in DM:
+                h_eff.GetXaxis().SetTitle("mStop")
             if "T2tt" in DM:
                 h_events.GetXaxis().SetTitle("mStop")
             h_events.GetYaxis().SetTitle("mLSP")
@@ -130,6 +134,8 @@ if __name__ == "__main__":
             h_signif.Scale(1./TMath.Sqrt(B))
             if "T1ttcc" in DM:
                 h_signif.GetXaxis().SetTitle("mGluino")
+            if "T1ttcc_old" in DM:
+                h_eff.GetXaxis().SetTitle("mStop")
             if "T2tt" in DM:
                 h_signif.GetXaxis().SetTitle("mStop")
             h_signif.GetYaxis().SetTitle("mLSP")
