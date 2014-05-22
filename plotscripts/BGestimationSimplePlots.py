@@ -77,9 +77,24 @@ if __name__ == '__main__':
 
     makeplot("g1Mbg1W1LlmT100", "0Lbg1Y1LlmT", basedir, estdir, outputdir)
     makeplot("g1Mbg1W1LlmT100_mdPhiHatg4", "0Lbg1Y1LlmT_mdPhiHatg4", basedir, estdir, outputdir)
+    makeplot("g1Mbg1W1LlmT100_mdPhig0p3", "0Lbg1Y1LlmT_mdPhig0p3", basedir, estdir, outputdir)
+    makeplot("g1Mbg1W1LlmT100_mdPhig0p5", "0Lbg1Y1LlmT_mdPhig0p5", basedir, estdir, outputdir)
+
     makeplot("1Mbg1W1LlmT100", "0Lbg1Y1LlmT", basedir, estdir, outputdir)
     makeplot("g2Mbg1W1LlmT100", "1Mbg1W1LlmT100", basedir, estdir, outputdir)
+
     makeplot("0Lbg1uW0Ll_mdPhiHatg4","0Lbg1uW0Ll_mdPhiHat4", basedir, estdir, outputdir)
+    makeplot("0Lbg1uW0Ll_mdPhig0p5","0Lbg1uW0Ll_mdPhi0p3", basedir, estdir, outputdir)
+    makeplot("0Lbg1uW0Ll_mdPhig0p3","0Lbg1uW0Ll_mdPhi0p3", basedir, estdir, outputdir)
+
     makeplot("g1Mbg1W1LlmT100_mdPhiHatg4","g1Mbg1W1LlmT100_mdPhiHat4", basedir, estdir, outputdir)
+    makeplot("g1Mbg1W1LlmT100_mdPhig0p3","g1Mbg1W1LlmT100_mdPhi0p3", basedir, estdir, outputdir)
+    makeplot("g1Mbg1W1LlmT100_mdPhig0p5","g1Mbg1W1LlmT100_mdPhi0p5", basedir, estdir, outputdir)
+
     makeplot("0Lbg1Y1LlmT_mdPhiHatg4","0Lbg1Y1LlmT_mdPhiHat4", basedir, estdir, outputdir)
+    makeplot("0Lbg1Y1LlmT_mdPhig0p3","0Lbg1Y1LlmT_mdPhi0p3", basedir, estdir, outputdir)
+    makeplot("0Lbg1Y1LlmT_mdPhig0p5","0Lbg1Y1LlmT_mdPhi0p5", basedir, estdir, outputdir)
+
     makeplot("g1Mbg1W0Ll_mdPhiHat4","g1Mbg1W1LlmT100_mdPhiHat4", basedir, estdir, outputdir)
+    makeplot("g1Mbg1W0Ll_mdPhi0p3","g1Mbg1W1LlmT100_mdPhi0p3", basedir, estdir, outputdir)
+    makeplot("g1Mbg1W0Ll_mdPhi0p5","g1Mbg1W1LlmT100_mdPhi0p5", basedir, estdir, outputdir)

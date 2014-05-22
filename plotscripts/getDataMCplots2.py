@@ -48,7 +48,7 @@ if __name__ == '__main__':
     cuts = ["Cleaning","HCAL_noise","vertexg0","njetge3","HLT","jet1ptg200",
             "SIG","neleeq0","nmueq0","trackIso",
             "g1Mb0Ll","g1Mbg1W0Ll","1Mbg1W0Ll","g2Mbg1W0Ll","g1Mbg1W0Ll_mdPhiHatg4","g1Mbg1W0Ll_mdPhiHat4","g1Mb0Wg1uW0Ll",
-            "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5","0Lbg1W0Ll",
+            "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhi0p5","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5","0Lbg1W0Ll",
             "1Ll","g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100",
             "1Mbg1W1LlmT100","g2Mbg1W1LlmT100","g1Mbg1W1LlmT","g1Mbg1W1LlmT100_mdPhiHatg4","g1Mbg1W1LlmT100_mdPhiHat4",
             "0Lb1Ll","0Lbg1Y1Ll","0Lbg1Y1LlmT100","0Lbg1Y1LlmT",
@@ -56,6 +56,10 @@ if __name__ == '__main__':
             "2munoZmass","2mu","2mu0el","0Lb2mu0el","0Lbg1Y2mu0el","g1Mb2mu0el","g1Mbg1Y2mu0el",
             "2elnoZmass","2el","2el0mu","0Lb2el0mu","0Lbg1Y2el0mu","g1Mb2el0mu","g1Mbg1Y2el0mu",
             "2lnoZmass","2l","2l0ol","0Lb2l0ol","0Lbg1Y2l0ol","g1Mb2l0ol","g1Mbg1Y2l0ol",
+            "g1Mbg1W0Ll_mdPhig0p3","g1Mbg1W0Ll_mdPhi0p3","g1Mbg1W1LlmT100_mdPhig0p3","g1Mbg1W1LlmT100_mdPhi0p3",
+            "0Lbg1Y1LlmT_mdPhig0p3","0Lbg1Y1LlmT_mdPhi0p3",
+            "g1Mbg1W0Ll_mdPhig0p5","g1Mbg1W0Ll_mdPhi0p5","g1Mbg1W1LlmT100_mdPhig0p5","g1Mbg1W1LlmT100_mdPhi0p5",
+            "0Lbg1Y1LlmT_mdPhig0p5","0Lbg1Y1LlmT_mdPhi0p5",
             ]
 
     legd = plotTools.ConstructLDict(0.6,0.87,0.5,0.8,ncolumns=2)
@@ -209,12 +213,14 @@ if __name__ == '__main__':
             "HT","PV"]
 
     cuts = ["SIG","g1Mbg1W0Ll","g1Mbg1W0Ll_mdPhiHatg4","g1Mb0Wg1uW0Ll",
-            "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5",
+            "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhi0p5","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5",
             "g1Mb1Ll","g1Mbg1W1Ll","g1Mbg1W1LlmT100",
             "0Lb1Ll","0Lbg1Y1Ll","0Lbg1Y1LlmT","0Lbg1Y1LlmT100",
             "2mu","2mu0el","0Lb2mu0el","g1Mb2mu0el","0Lbg1Y2mu0el","g1Mbg1Y2mu0el",
             "2el","2el0mu","0Lb2el0mu","g1Mb2el0mu","0Lbg1Y2el0mu","g1Mbg1Y2el0mu",
             "2l","2l0ol","0Lb2l0ol","g1Mb2l0ol","0Lbg1Y2l0ol","g1Mbg1Y2l0ol"
+            "g1Mbg1W0Ll_mdPhig0p3","g1Mbg1W1LlmT100_mdPhig0p3","0Lbg1Y1LlmT_mdPhig0p3",
+            "g1Mbg1W0Ll_mdPhig0p5","g1Mbg1W1LlmT100_mdPhig0p5","0Lbg1Y1LlmT_mdPhig0p5"
             ]
 
     for cut in cuts:
@@ -268,7 +274,7 @@ if __name__ == '__main__':
                                  ratiotitle="Data/MC", logscale=True, scale="No")
 
 
-    vars = ["minDeltaPhiHat"]
+    vars = ["minDeltaPhiHat","minDeltaPhi"]
     cuts = ["g1Mbg1W0Ll","g1Mbg1W1LlmT100","0Lbg1Y1LlmT"]
     for cut in cuts:
         for var in vars:
@@ -317,7 +323,7 @@ if __name__ == '__main__':
 
     # Make plot of signal region without data
     vars = ["MR","R2"]
-    cuts = ["g1Mbg1W0Ll_mdPhiHatg4"]
+    cuts = ["g1Mbg1W0Ll_mdPhiHatg4","g1Mbg1W0Ll_mdPhig0p3"]
     sf = [100,0.01]
     for cut in cuts:
         for vi,var in enumerate(vars):
