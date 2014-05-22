@@ -330,7 +330,6 @@ int main(int argc, char** argv)
   TH1D* h_nW_Pileup = new TH1D("h_nW_Pileup", "h_nW_Pileup", 5, 0, 5);
   TH1D* h_nb_Pileup = new TH1D("h_nb_Pileup", "h_nb_Pileup", 5, 0, 5);
   TH2D* h_nW_nb_Pileup = new TH2D("h_nW_nb_Pileup", "h_nW_nb_Pileup", 5, 0, 5, 5, 0, 5);
-  TH1D* h_nWAK5_Pileup = new TH1D("h_nWAK5_Pileup", "h_nWAK5_Pileup", 5, 0, 5);
   TH2D* h_met_R2_Pileup = new TH2D("h_met_R2_Pileup", "h_met_R2_Pileup", 20, 0, 1000, 25, 0, 1);
   TH1D* h_met_Pileup = new TH1D("h_met_Pileup", "h_met_Pileup", 20, 0, 1000);
   TH2D* h_metmu_R2metmu_Pileup = new TH2D("h_metmu_R2metmu_Pileup", "h_metmu_R2metmu_Pileup", 20, 0, 1000, 25, 0, 1);
@@ -343,7 +342,6 @@ int main(int argc, char** argv)
   TH1D* h_nW_jet1ptg200 = new TH1D("h_nW_jet1ptg200", "h_nW_jet1ptg200", 5, 0, 5);
   TH1D* h_nb_jet1ptg200 = new TH1D("h_nb_jet1ptg200", "h_nb_jet1ptg200", 5, 0, 5);
   TH2D* h_nW_nb_jet1ptg200 = new TH2D("h_nW_nb_jet1ptg200", "h_nW_nb_jet1ptg200", 5, 0, 5, 5, 0, 5);
-  TH1D* h_nWAK5_jet1ptg200 = new TH1D("h_nWAK5_jet1ptg200", "h_nWAK5_jet1ptg200", 5, 0, 5);
 
   // MR, R2 plots for the different steps in the selection
   // need at least two jets to be able to compute MR and R2
@@ -1905,14 +1903,14 @@ int main(int argc, char** argv)
       std::vector<jethelper4_s> sY;
       for (unsigned int i=0; i<jethelper4.size(); i++) {
         if (!(jethelper4[i].pt > 30) ) continue;
-        if (!(fabs(jethelper4[i].eta) < 3) ) continue;
+        if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;
         h_jmass_jpt->Fill(jethelper4[i].mass, jethelper4[i].pt);
         h_d1pt_d2pt->Fill(jethelper4[i].daughter_0_pt, jethelper4[i].daughter_1_pt);
         h_d1m_d2m->Fill(jethelper4[i].daughter_0_mass, jethelper4[i].daughter_1_mass);
         h_jmass->Fill(jethelper4[i].mass);
 	// New Andreas cuts:
-        //if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
-        if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
+        if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+        //if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
 	sY.push_back(jethelper4[i]);
         h_d1ptsel_d2ptsel->Fill(jethelper4[i].daughter_0_pt, jethelper4[i].daughter_1_pt);
         h_d1msel_d2msel->Fill(jethelper4[i].daughter_0_mass, jethelper4[i].daughter_1_mass);
@@ -1976,26 +1974,11 @@ int main(int argc, char** argv)
         sW.push_back(jethelper4[i]);
       }
 
-      // W selection:
-      std::vector<jethelper4_s> sWAK5;
-      for (unsigned int i=0; i<jethelper4.size(); i++) {
-        if (!(jethelper4[i].pt > 30) ) continue;
-        if (!(fabs(jethelper4[i].eta) < 3) ) continue;
 
-	// New Andreas cuts:
-        //if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
-        if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
-        double massdrop = 1;
-        double daughmass = -9;
-        if (jethelper4[i].daughter_0_mass > jethelper4[i].daughter_1_mass) {
-          daughmass = jethelper4[i].daughter_0_mass;
-        } else {
-          daughmass = jethelper4[i].daughter_1_mass;
-        };
-        massdrop = daughmass / jethelper4[i].mass;
-        if (!(massdrop < 0.31)) continue;
-        sWAK5.push_back(jethelper4[i]);
-      }
+      // Wtag scale factors:
+      double SFWtag = 0.86;
+      double wWtag = pow(SFWtag, sW.size());
+
 
       // Muons - veto:
       // From https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMuonId#Tight_Muon
@@ -2081,7 +2064,6 @@ int main(int argc, char** argv)
       h_nW_Pileup->Fill(nWs, w);
       h_nb_Pileup->Fill(nbs, w);
       h_nW_nb_Pileup->Fill(nWs, nbs, w);
-      h_nWAK5_Pileup->Fill(sWAK5.size(), w);
 
       h_met_Pileup->Fill(cmgbasemet2[0].et, w);
       if (sjet.size() > 0)
@@ -2210,7 +2192,7 @@ int main(int argc, char** argv)
 	    int matched_index = -1;
 	    for (int j=0; j<(int)jethelper4.size(); ++j){
 	      if (!(jethelper4[i].pt > 30) ) continue;
-	      if (!(fabs(jethelper4[i].eta) < 3) ) continue;
+	      if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;
 	      double dRgenCA8_temp = fdeltaR(Ws[i].eta, Ws[i].phi,
 					     jethelper4[j].eta,jethelper4[j].phi);
 	      if (dRgenCA8_temp < dRgenCA8 && dRgenCA8_temp < 0.8){
@@ -2231,7 +2213,8 @@ int main(int argc, char** argv)
 	      if (!found_bjet_in_cone){
 		h_pt_closestCA8jet->Fill(jethelper4[matched_index].pt,w);
 		// now check whether the matched jet has mass in proper window
-		if (jethelper4[matched_index].mass > 65 && jethelper4[matched_index].mass < 105){
+		if (jethelper4[matched_index].mass > 70 && jethelper4[matched_index].mass < 100){
+		//if (jethelper4[matched_index].mass > 65 && jethelper4[matched_index].mass < 105){
 		  h_pt_closestCA8jet_Wmass->Fill(jethelper4[matched_index].pt,w);
 		  
 		  // now check whether it is also tagged
@@ -2623,7 +2606,6 @@ int main(int argc, char** argv)
       h_nW_jet1ptg200->Fill(nWs, w);
       h_nb_jet1ptg200->Fill(nbs, w);
       h_nW_nb_jet1ptg200->Fill(nWs, nbs, w);
-      h_nWAK5_jet1ptg200->Fill(sWAK5.size(), w);
 
       h_minDeltaPhi_jet1ptg200->Fill(minDeltaPhi, w);
       h_MR_minDeltaPhi_jet1ptg200->Fill(MR, minDeltaPhi, w);
@@ -2795,6 +2777,9 @@ int main(int argc, char** argv)
 		
 		// g1Mb g1W 0Ll -- SIGNAL region
 		if( sW.size() > 0){
+		  if (eventhelper_isRealData!=1) {
+		    w = w*wWtag;
+		  }
 		  ofile.count("g1Mbg1W0Ll",w);
 		  h_MR_g1Mbg1W0Ll->Fill(MR, w);
 		  h_R2_g1Mbg1W0Ll->Fill(R2, w);
@@ -3151,6 +3136,9 @@ int main(int argc, char** argv)
 		
 		// 0Lbg1W0Ll
 		if( sW.size() > 0){
+		  if (eventhelper_isRealData!=1) {
+		    w = w*wWtag;
+		  }
 		  ofile.count("0Lbg1W0Ll",w);
 		  h_MR_0Lbg1W0Ll->Fill(MR, w);
 		  h_R2_0Lbg1W0Ll->Fill(R2, w);
@@ -3221,6 +3209,9 @@ int main(int argc, char** argv)
 	      TTdilep->Fill("g1Mb1Ll", w);
 	    
 	    if( sW.size() > 0 ){
+	      if (eventhelper_isRealData!=1) {
+		w = w*wWtag;
+	      }
 	      ofile.count("g1Mbg1W1Ll",w);
 	      h_MR_g1Mbg1W1Ll->Fill(MR, w);
 	      h_R2_g1Mbg1W1Ll->Fill(R2, w);
