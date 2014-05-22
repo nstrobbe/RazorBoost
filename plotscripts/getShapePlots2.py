@@ -13,8 +13,8 @@ if __name__ == '__main__':
     #outputdir = sys.argv[1]
     #inputfile = sys.argv[2] # total bg histograms
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140331_noISR_btag_TopPt"
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/"
     inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
     inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
     inputfile_WJets = basedir + "rzrBoostMC_WJetsToLNu.root"

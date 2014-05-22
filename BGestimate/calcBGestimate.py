@@ -255,8 +255,10 @@ if __name__ == "__main__":
     print "Will perform the background estimate"
 
     # directory containing all the raw histograms
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/" 
-    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/" 
+    #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/" 
+    #inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/" 
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/" 
+    inputdirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/" 
 
     # analyzer name
     analyzer = "rzrBoostMC"
@@ -329,16 +331,6 @@ if __name__ == "__main__":
              "0Lbg1Y1LlmT": WJ_info
              }
 
-    info_dphig4 = {"g1Mbg1W0Ll_mdPhiHatg4":SIG_dphig4_info,
-                   "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
-                   "g1Mbg1W1LlmT100":TTJ_info,
-                   "0Lbg1Y1LlmT": WJ_info
-                   }
-    info2_dphig4 = {"g1Mbg1W0Ll_mdPhiHatg4":SIG_dphig4_info,
-                    "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
-                    "g1Mbg1W1LlmT100_mdPhiHatg4":TTJ_info,
-                    "0Lbg1Y1LlmT_mdPhiHatg4": WJ_info
-                   }
 
     info_dphi4 = {"g1Mbg1W0Ll_mdPhiHat4":SIG_dphi4_info,
                   "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
@@ -346,6 +338,12 @@ if __name__ == "__main__":
                   "0Lbg1Y1LlmT": WJ_info
                   }
     info2_dphi4 = {"g1Mbg1W0Ll_mdPhiHat4":SIG_dphi4_info2,
+                   "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
+                   "g1Mbg1W1LlmT100_mdPhiHatg4":TTJ_info,
+                   "0Lbg1Y1LlmT_mdPhiHatg4": WJ_info
+                   }
+
+    info2_dphig4 = {"g1Mbg1W0Ll_mdPhiHatg4":SIG_dphig4_info2,
                    "0Lbg1uW0Ll_mdPhiHat4":QCD_info,
                    "g1Mbg1W1LlmT100_mdPhiHatg4":TTJ_info,
                    "0Lbg1Y1LlmT_mdPhiHatg4": WJ_info
@@ -382,7 +380,9 @@ if __name__ == "__main__":
     # signal region mdphihat<4, using T and W with mdphihat>4
     doBGestimate("g1Mbg1W0Ll_mdPhiHat4",info2_dphi4,inputdir+analyzer+"_data.root","_QCDWJTTJ_2") 
  
-
+    # signal region mdphihat>4, using T and W with mdphihat>4
+    doBGestimate("g1Mbg1W0Ll_mdPhiHatg4",info2_dphig4,inputdir+analyzer+"_data.root","_QCDWJTTJ_2") 
+ 
 
 
     ############################################################

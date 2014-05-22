@@ -13,11 +13,13 @@ if __name__ == '__main__':
     #outputdir = sys.argv[1]
     #inputfile = sys.argv[2] # total bg histograms
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140331_noISR_btag_TopPt"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass"
     # outputdir = "./test_2D/"
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/"
+    basedir_old = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/"
     # inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
     inputfile_data = basedir + "rzrBoostMC_data.root"
+    inputfile_data_old = basedir_old + "rzrBoostMC_data.root"
     inputfile_bg = basedir + "../rzrBoostMC_bg.root"
     
     if not os.path.isdir(outputdir):
@@ -26,6 +28,7 @@ if __name__ == '__main__':
     outfile = TFile.Open(outputdir+"/2Dplots2.root","RECREATE")
     # infile_TTJ = TFile.Open(inputfile_TTJ)
     infile_data = TFile.Open(inputfile_data)
+    infile_data_old = TFile.Open(inputfile_data_old)
     infile_bg = TFile.Open(inputfile_bg)
 
     # Integrated luminosity in fb-1s
@@ -166,8 +169,31 @@ if __name__ == '__main__':
             plotTools.Plot2DRatio(hdict_mdphihatg4,hdict_mdphihat4,outputdir,outfile,cname=canvasname,scale="Yes",
                                   ctitle="Ratio minDeltaPhiHat > 4 / minDeltaPhiHat < 4 for %s region"%(cut),ztitle="Ratio")
 
+    #############################
+    # compare old vs new tagger #
+    #############################
+
+    # old tagger
+    hdict_old = plotTools.ConstructHDict(infile_data_old.Get("h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4"), 
+                                         name="Old tagger", title="R2 vs MR distribution for data in the Signal region",
+                                         xtitle="MR", ytitle="R2",
+                                         drawoption="colztext", palette="SMS") 
+
+    # new tagger
+    hdict_new = plotTools.ConstructHDict(infile_data.Get("h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4"), 
+                                         name="New tagger", title="R2 vs MR distribution for data in the Signal region",
+                                         xtitle="MR", ytitle="R2",
+                                         drawoption="colztext", palette="SMS") 
+        
+    # ratio
+    canvasname = "Wtagger_old_new_ratio_data"
+    plotTools.Plot2DRatio(hdict_new,hdict_old,outputdir,outfile,cname=canvasname,scale="No",
+                          ctitle="Ratio New tagger / Old tagger for signal region",ztitle="New/Old")
+
+
 
     outfile.Close()
     # infile_TTJ.Close()
     infile_data.Close()
+    infile_data_old.Close()
     infile_bg.Close()

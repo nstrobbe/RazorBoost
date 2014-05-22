@@ -7,14 +7,19 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140408_noISR_btag_TopPt/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/"
 
-    #region = "g1Mb0Wg1uW0Ll"
-    region = "g1Mbg1W0Ll_mdPhiHat4"
+    region = "g1Mb0Wg1uW0Ll"
+    #region = "g1Mbg1W0Ll_mdPhiHat4"
+    #region = "g1Mbg1W0Ll_mdPhiHatg4"
 
-    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/rzrBoostMC_data.root" # data histograms
-    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/rzrBoostMC_bg.root" # data histograms
-    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140408_noISR_btag_TopPt/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
+    #inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/summary/rzrBoostMC_data.root" # data histograms
+    #inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140331_noISR_btag_TopPt/rzrBoostMC_bg.root" # data histograms
+    #inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140408_noISR_btag_TopPt/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
+
+    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/rzrBoostMC_data.root" # data histograms
+    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/rzrBoostMC_bg.root" # data histograms
+    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
 
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
