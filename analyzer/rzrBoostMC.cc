@@ -153,10 +153,10 @@ int main(int argc, char** argv)
       pileupname = "pileup_weights_AB_sig53X.root";
   }
   TFile* fpileup;
-  //fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
-  //if (!fpileup){
+  fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
+  if (!fpileup){
     fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
-  //}
+  }
   if (!fpileup){
     cout << "Could not find pileup weights root file... Where did you put it??" << endl;
     return 1;
