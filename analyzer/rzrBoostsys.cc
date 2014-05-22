@@ -9,6 +9,7 @@
 #include "utils.h"
 #include "btagutils.h"
 #include <math.h>
+#include "JetCorrectionUncertainty.h"
 
 #include "TLorentzVector.h"
 
@@ -198,6 +199,11 @@ int main(int argc, char** argv)
   //TH2D* h_pt_eta_c_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_c_CSVLeff");
   TH2D* h_pt_eta_l_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_l_CSVLeff");
   //TH2D* h_pt_eta_lc_CSVLeff = (TH2D*)fbeff->Get("h_pt_eta_lc_CSVLeff");
+
+
+  // JEC uncertainty class:
+  JetCorrectionUncertainty* jecUnc = new JetCorrectionUncertainty("MCcorrs/JEC/Summer13_V5_MC_Uncertainty_AK5PF.txt");
+  //JetCorrectionUncertainty jecunc;
 
 
   // Calculate the normalization factor for the event weights
@@ -892,7 +898,27 @@ int main(int argc, char** argv)
       double PCSVMdata = 1.0;
       double sigmaSFFl = 0.0;
       double sigmaSFFs = 0.0;
+      double METcorrfromJEC_px = 0.0;
+      double METcorrfromJEC_py = 0.0;
       for (unsigned int i=0; i<cmgpfjet.size(); i++) {
+	// begin JEC SF
+	double jecSF = 1.;
+	jecUnc->setJetEta(cmgpfjet[i].eta);
+	jecUnc->setJetPt(cmgpfjet[i].pt);
+	jecSF = 1. + fabs(jecUnc->getUncertainty(true));
+	// Put the jet in a TLorentzVector and scale it with JEC SF
+	TLorentzVector jlnojecSF;
+	jlnojecSF.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
+			cmgpfjet[i].phi, cmgpfjet[i].energy);
+	TLorentzVector jl;
+	jl.SetPxPyPzE(jlnojecSF.Px()*jecSF, jlnojecSF.Py()*jecSF, jlnojecSF.Pz()*jecSF, jlnojecSF.E()*jecSF);
+	cout << "SF, jlpt, jleta, corrpt, correta: " << jecSF << " " << jlnojecSF.Pt() << " " << jlnojecSF.Eta() 
+	     << " " << jl.Pt() << " " << jl.Eta() << " " << jl.Pt()/jl.Pt() << endl;
+	// get the MET corrections:
+	METcorrfromJEC_px += (jl.Px() - jlnojecSF.Px());
+	METcorrfromJEC_py += (jl.Py() - jlnojecSF.Py());
+	cmgpfjet[i].pt = jl.Pt();
+	// end of JEC SF
 	if (!(cmgpfjet[i].pt > 30) ) continue;
 	if (!(fabs(cmgpfjet[i].eta) < 2.4) ) continue;
 	//if (!(cmgpfjet[i].neutralHadronEnergyFraction < 0.99) ) continue;
@@ -969,9 +995,9 @@ int main(int argc, char** argv)
 	  PCSVLsim *= (1 - eCSVL);
 	  PCSVLdata *= (1 - eCSVL * SFCSVL);
 	}
-	TLorentzVector jl;
-	jl.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
-			cmgpfjet[i].phi, cmgpfjet[i].energy);
+	//TLorentzVector jl;
+	//jl.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
+	//		cmgpfjet[i].phi, cmgpfjet[i].energy);
 	LVsjet.push_back(jl);
       }
 
@@ -1102,11 +1128,20 @@ int main(int argc, char** argv)
       // ---------------------
 
       // Calculate MR and R2 ignoring muons
+      TVector3 V3metnojecSF;
+      V3metnojecSF.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
+      TLorentzVector metnojecSF;
+      metnojecSF.SetPtEtaPhiE(cmgbasemet2[0].pt, 0, cmgbasemet2[0].phi, cmgbasemet2[0].energy);
+      // MET with JEC SF
       TVector3 V3met;
-      V3met.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
+      V3met.SetXYZ(V3metnojecSF.Px()-METcorrfromJEC_px, V3metnojecSF.Py()-METcorrfromJEC_py, 0.0);
       TLorentzVector met;
-      met.SetPtEtaPhiE(cmgbasemet2[0].pt, 0, cmgbasemet2[0].phi, cmgbasemet2[0].energy);
+      met.SetPxPyPzE(V3met.Px(), V3met.Py(), 0.0, V3met.Pt());
       std::vector<TLorentzVector> LVhemis = CombineJets(LVsjet);
+
+      cout << METcorrfromJEC_px << " " << METcorrfromJEC_py << " " 
+	   << V3metnojecSF.Pt() << " " << metnojecSF.E() << " " 
+	   << V3met.Pt() << " " << met.E() << endl;
 
       double MR = -9999;
       double MTR = -9999;
