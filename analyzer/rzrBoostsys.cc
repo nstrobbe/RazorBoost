@@ -138,30 +138,45 @@ int main(int argc, char** argv)
   // ---------------------------------------
 
   TString pileupname = "pileup_weights.root";
+  TString pileupname_up = "pileup_weights_up.root";
+  TString pileupname_down = "pileup_weights_down.root";
   if (Runs == "AB"){
     pileupname = "pileup_weights_AB.root";
     cout << "Using pileup profile for runs A+B only" << endl;
   }
   if (sample == "T1ttcc_old" || sample == "T2tt"){
     pileupname = "pileup_weights_sig52X.root";
+    pileupname_up = "pileup_weights_sig52X_up.root";
+    pileupname_down = "pileup_weights_sig52X_down.root";
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig52X.root";
   }
   if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t"){
     pileupname = "pileup_weights_sig53X.root";
+    pileupname_up = "pileup_weights_sig53X_up.root";
+    pileupname_down = "pileup_weights_sig53X_down.root";
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig53X.root";
   }
   TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
+  TFile* fpileup_up = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname_up);
+  TFile* fpileup_down = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname_down);
   if (!fpileup){
     fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
   }
-  if (!fpileup){
+  if (!fpileup_up){
+    fpileup_up = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname_up);
+  }
+  if (!fpileup_down){
+    fpileup_down = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname_down);
+  }
+  if (!fpileup || !pileup_up || !fpileup_down){
     cout << "Could not find pileup weights root file... Where did you put it??" << endl;
     return 1;
   }
   TH1D* h_pileup = (TH1D*)fpileup->Get("pileup_weight");
-
+  TH1D* h_pileup_up = (TH1D*)fpileup_up->Get("pileup_weight");
+  TH1D* h_pileup_down = (TH1D*)fpileup_down->Get("pileup_weight");
 
   // ---------------------------------------
   // -- Get the btag eff histograms:
@@ -738,10 +753,17 @@ int main(int argc, char** argv)
       double num_vertices = pileupsummaryinfo[0].getTrueNumInteractions;
       // get the bin number in the pileup histogram
       int pileup_bin = (int)ceil(num_vertices);
+      // get the nominal, up and down weights
       double w_pileup = 1.;
-      if(doPileupReweighting)
+      double w_pileup_up = 1.;
+      double w_pileup_down = 1.;
+      if(doPileupReweighting){
 	w_pileup = h_pileup->GetBinContent(pileup_bin);      
-
+	w_pileup_up = h_pileup_up->GetBinContent(pileup_bin);      
+	w_pileup_down = h_pileup_down->GetBinContent(pileup_bin);      
+      }
+      // Compute the pileup weight according to the systematic variation considered
+      // Use difference between nominal and up/down as 1 sigma variation 
       w = w*w_pileup;
 
       ofile.count("Pileup",w);
