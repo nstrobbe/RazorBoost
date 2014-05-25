@@ -391,6 +391,9 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
         ratio.GetXaxis().SetTickLength(0.1*0.25/ratiodim)
         ratio.GetXaxis().SetTitle(hdict["xtitle"])
         ratio.SetStats(0)
+        if outfile != 0:
+            outfile.cd()
+            ratio.Write("ratio_"+hdict["xtitle"]+"_"+str(firstB))
         drawoption="E P"
         if firstB > 0:
             drawoption=drawoption + " SAME"
