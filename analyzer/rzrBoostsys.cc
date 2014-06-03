@@ -7,9 +7,10 @@
 //-----------------------------------------------------------------------------
 #include "rzrBTanalyzercmdsys.h"
 #include "utils.h"
-#include "btagutils.h"
+#include "systutils.h"
 #include <math.h>
-#include "JetCorrectionUncertainty.h"
+//#include "JetCorrectionUncertainty.h"
+//#include "LHAPDF/LHAPDF.h"
 
 #include "TLorentzVector.h"
 
@@ -20,20 +21,23 @@
 #endif
 
 using namespace std;
+//using namespace LHAPDF;
 //-----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
 
   // Get the trigger histogram:
-  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  if (!fhlt){
-    fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  }
+  //TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
+  //if (!fhlt){
+  TFile*  fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
+  //}
   if (!fhlt){
     cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
     return 1;
   }
   TH2D* h_hlteff = (TH2D*)fhlt->Get("h_HT_j1pt_0_effph");
+  TH2D* h_hlteff_up = (TH2D*)fhlt->Get("h_HT_j1pt_0_effph_up");
+  TH2D* h_hlteff_low = (TH2D*)fhlt->Get("h_HT_j1pt_0_effph_low");
 
   // Get file list and histogram filename from command line
   commandLine cmdline;
@@ -87,14 +91,31 @@ int main(int argc, char** argv)
   double totweight = cmdline.totweight; 
   double lumi = cmdline.lumi;
 
+  cout << "Output file: " << cmdline.outputfilename.c_str() << endl;
+  cout << "Systematics file: " << cmdline.systfilename.c_str() << endl;
+
   // Open the systematics file:
   ifstream systFile(cmdline.systfilename.c_str());
   if ( !systFile.good() ) error("unable to open systematics file: " + cmdline.systfilename);
   std::vector<double> vsyst;
   double syst;
-  while (systFile >> syst)
+  while (systFile >> syst) {
     cout << "Systematic: " << syst << endl;
     vsyst.push_back(syst);
+  }
+
+  // Assign the systematic sigmas:
+  int nsyst = vsyst.size();
+  double sigmaJEC = vsyst[0];
+  double sigmaJECCA8 = vsyst[1];
+  double sigmaHLT = vsyst[2];
+  double sigmabtagFl = vsyst[3];
+  double sigmabtagFs = vsyst[4];
+  double sigmaW = vsyst[5];
+  double sigmaeleVeto = vsyst[6];
+  double sigmaPU = vsyst[7];
+  double sigmaISR = vsyst[8];
+  double sigmaTopPt = vsyst[9];
 
   string sample = "";
   if ( argc > 7 )
@@ -158,19 +179,19 @@ int main(int argc, char** argv)
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig53X.root";
   }
-  TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
-  TFile* fpileup_up = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname_up);
-  TFile* fpileup_down = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname_down);
-  if (!fpileup){
-    fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
-  }
-  if (!fpileup_up){
-    fpileup_up = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname_up);
-  }
-  if (!fpileup_down){
-    fpileup_down = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname_down);
-  }
-  if (!fpileup || !pileup_up || !fpileup_down){
+  //TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
+  //TFile* fpileup_up = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname_up);
+  //TFile* fpileup_down = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname_down);
+  //if (!fpileup){
+  TFile*  fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
+  //}
+  //if (!fpileup_up){
+  TFile* fpileup_up = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname_up);
+  //}
+  //if (!fpileup_down){
+  TFile* fpileup_down = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname_down);
+  //}
+  if (!fpileup || !fpileup_up || !fpileup_down){
     cout << "Could not find pileup weights root file... Where did you put it??" << endl;
     return 1;
   }
@@ -222,8 +243,8 @@ int main(int argc, char** argv)
 
 
   // JEC uncertainty class:
-  JetCorrectionUncertainty* jecUnc = new JetCorrectionUncertainty("MCcorrs/JEC/Summer13_V5_MC_Uncertainty_AK5PF.txt");
-  //JetCorrectionUncertainty jecunc;
+  //JetCorrectionUncertainty* jecUnc = new JetCorrectionUncertainty("MCcorrs/JEC/Summer13_V5_MC_Uncertainty_AK5PF.txt");
+  //JetCorrectionUncertainty* jecUncCA8 = new JetCorrectionUncertainty("MCcorrs/JEC/Summer13_V5_MC_Uncertainty_AK7PFchs.txt");
 
 
   // --------------------------------------------------------------
@@ -761,6 +782,14 @@ int main(int argc, char** argv)
 	w_pileup = h_pileup->GetBinContent(pileup_bin);      
 	w_pileup_up = h_pileup_up->GetBinContent(pileup_bin);      
 	w_pileup_down = h_pileup_down->GetBinContent(pileup_bin);      
+	double dw_pileup_up = max(w_pileup_up, w_pileup_down) - w_pileup;
+	double dw_pileup_down = w_pileup - min(w_pileup_up, w_pileup_down);
+	//cout << "PU: " << w_pileup << " " << dw_pileup_up << " " << dw_pileup_down << endl;
+	if (sigmaPU >= 0.) {
+	  w_pileup += sigmaPU*dw_pileup_up; 
+	} else {
+	  w_pileup += sigmaPU*dw_pileup_down;
+	}
       }
       // Compute the pileup weight according to the systematic variation considered
       // Use difference between nominal and up/down as 1 sigma variation 
@@ -768,6 +797,8 @@ int main(int argc, char** argv)
 
       ofile.count("Pileup",w);
 
+
+      cout << "xpu: " << endl;
 
       // ----------------------
       // -- object selection --
@@ -786,6 +817,7 @@ int main(int argc, char** argv)
 	svertex.push_back(vertex[i]);
       }
 
+
       // jets - selected:
       // From https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetID
       std::vector<cmgpfjet_s> sjet;
@@ -798,24 +830,22 @@ int main(int argc, char** argv)
       double PCSVLdata = 1.0;
       double PCSVMsim = 1.0;
       double PCSVMdata = 1.0;
-      double sigmaSFFl = 0.0;
-      double sigmaSFFs = 0.0;
       double METcorrfromJEC_px = 0.0;
       double METcorrfromJEC_py = 0.0;
       for (unsigned int i=0; i<cmgpfjet.size(); i++) {
 	// begin JEC SF
-	double jecSF = 1.;
-	jecUnc->setJetEta(cmgpfjet[i].eta);
-	jecUnc->setJetPt(cmgpfjet[i].pt);
-	jecSF = 1. + fabs(jecUnc->getUncertainty(true));
+	double jecUnc = 0.;
+	AK5PFCHSJECunc(cmgpfjet[i].pt, cmgpfjet[i].eta, jecUnc);
+	double jecSF = 1. + (sigmaJEC * fabs(jecUnc));
+	//cout << cmgpfjet[i].pt << " " << cmgpfjet[i].eta << " " << jecUnc << endl;
 	// Put the jet in a TLorentzVector and scale it with JEC SF
 	TLorentzVector jlnojecSF;
 	jlnojecSF.SetPtEtaPhiE(cmgpfjet[i].pt, cmgpfjet[i].eta,
 			cmgpfjet[i].phi, cmgpfjet[i].energy);
 	TLorentzVector jl;
 	jl.SetPxPyPzE(jlnojecSF.Px()*jecSF, jlnojecSF.Py()*jecSF, jlnojecSF.Pz()*jecSF, jlnojecSF.E()*jecSF);
-	cout << "SF, jlpt, jleta, corrpt, correta: " << jecSF << " " << jlnojecSF.Pt() << " " << jlnojecSF.Eta() 
-	     << " " << jl.Pt() << " " << jl.Eta() << " " << jl.Pt()/jl.Pt() << endl;
+	//cout << "SF, jlpt, jleta, corrpt, correta: " << jecSF << " " << jlnojecSF.Pt() << " " << jlnojecSF.Eta() 
+	//     << " " << jl.Pt() << " " << jl.Eta() << " " << jl.Pt()/jl.Pt() << endl;
 	// get the MET corrections:
 	METcorrfromJEC_px += (jl.Px() - jlnojecSF.Px());
 	METcorrfromJEC_py += (jl.Py() - jlnojecSF.Py());
@@ -842,11 +872,11 @@ int main(int argc, char** argv)
 	double pt = cmgpfjet[i].pt;
 	double eta = cmgpfjet[i].eta;
 	double partonFlavour = cmgpfjet[i].partonFlavour;
-        btagCSVMEEFull(partonFlavour, pt, fabs(eta), SFCSVMFl, dSFCSVMFl);
-        btagCSVMEEFast(partonFlavour, pt, fabs(eta), SFCSVMFs, dSFCSVMFs);
+        btagCSVMSFFull(partonFlavour, pt, fabs(eta), SFCSVMFl, dSFCSVMFl);
+        btagCSVMSFFast(partonFlavour, pt, fabs(eta), SFCSVMFs, dSFCSVMFs);
 
-        btagCSVLEEFull(partonFlavour, pt, fabs(eta), SFCSVLFl, dSFCSVLFl);
-        btagCSVLEEFast(partonFlavour, pt, fabs(eta), SFCSVLFs, dSFCSVLFs);
+        btagCSVLSFFull(partonFlavour, pt, fabs(eta), SFCSVLFl, dSFCSVLFl);
+        btagCSVLSFFast(partonFlavour, pt, fabs(eta), SFCSVLFs, dSFCSVLFs);
 
 	double eCSVM = 0, eCSVL = 0;
 	double SFCSVM, SFCSVL;
@@ -865,8 +895,8 @@ int main(int argc, char** argv)
 	    eCSVM = geteff2D(h_pt_eta_l_CSVMeff, pt, fabs(eta));
 	    eCSVL = geteff2D(h_pt_eta_l_CSVLeff, pt, fabs(eta));
 	  }
-	  SFCSVL = (SFCSVLFl + sigmaSFFl*dSFCSVLFl)*(SFCSVLFs + sigmaSFFs*dSFCSVLFs);
-	  SFCSVM = (SFCSVMFl + sigmaSFFl*dSFCSVMFl)*(SFCSVMFs + sigmaSFFs*dSFCSVMFs);
+	  SFCSVL = (SFCSVLFl + sigmabtagFl*dSFCSVLFl)*(SFCSVLFs + sigmabtagFs*dSFCSVLFs);
+	  SFCSVM = (SFCSVMFl + sigmabtagFl*dSFCSVMFl)*(SFCSVMFs + sigmabtagFs*dSFCSVMFs);
 	} else { // FullSim
 	  if (fabs(partonFlavour) == 5) {
 	    eCSVM = geteff1D(h_pt_b_CSVMeff, pt);
@@ -876,8 +906,8 @@ int main(int argc, char** argv)
 	    eCSVM = geteff1D(h_pt_lc_CSVMeff, pt);
 	    eCSVL = geteff1D(h_pt_lc_CSVLeff, pt);
 	  }
-	  SFCSVL = (SFCSVLFl + sigmaSFFl*dSFCSVLFl);
-	  SFCSVM = (SFCSVMFl + sigmaSFFs*dSFCSVMFl);
+	  SFCSVL = (SFCSVLFl + sigmabtagFl*dSFCSVLFl);
+	  SFCSVM = (SFCSVMFl + sigmabtagFs*dSFCSVMFl);
 	}
 
 	// CSVM
@@ -910,6 +940,7 @@ int main(int argc, char** argv)
       //cout << sbjet.size() << " " << wCSVM << " " << slbjet.size() << " " << wCSVL << endl;
       //continue;
 
+
       // CA8
       // W selection:
       std::vector<jethelper4_s> sjet2;
@@ -917,6 +948,17 @@ int main(int argc, char** argv)
       std::vector<jethelper4_s> aW;
       std::vector<jethelper4_s> sY;
       for (unsigned int i=0; i<jethelper4.size(); i++) {
+	// begin JEC SF
+	double jecUnc = 0.;
+	AK5PFCHSJECunc(jethelper4[i].pt, jethelper4[i].eta, jecUnc);
+	double jecSFCA8 = 1. + (sigmaJECCA8 * fabs(jecUnc));
+	// Put the jet in a TLorentzVector and scale it with JEC SF
+	TLorentzVector jlCA8nojecSF;
+	jlCA8nojecSF.SetPtEtaPhiE(jethelper4[i].pt, jethelper4[i].eta,
+			jethelper4[i].phi, jethelper4[i].energy);
+	TLorentzVector jlCA8;
+	jlCA8.SetPxPyPzE(jlCA8nojecSF.Px()*jecSFCA8, jlCA8nojecSF.Py()*jecSFCA8, jlCA8nojecSF.Pz()*jecSFCA8, jlCA8nojecSF.E()*jecSFCA8);
+	jethelper4[i].pt = jlCA8.Pt();
         if (!(jethelper4[i].pt > 30) ) continue;
         if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;
 	// New Andreas cuts:
@@ -952,7 +994,9 @@ int main(int argc, char** argv)
 
       // Wtag scale factors:
       double SFWtag = 0.86;
-      double wWtag = pow(SFWtag, sW.size());
+      double dSFWtag = 0.08;
+      double w_Wtag = pow((SFWtag + sigmaW*dSFWtag), sW.size());
+
 
       // Muons - veto:
       // From https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMuonId#Tight_Muon
@@ -990,6 +1034,15 @@ int main(int argc, char** argv)
 	if (!(fabs(cmgelectron[i].eta) < 1.442 && fabs(cmgelectron[i].eta) < 1.556) ) continue;
 	velectron.push_back(cmgelectron[i]);
       }
+      // electron SFs:
+      double SFeleVeto = 1.;
+      double dSFeleVeto = 0.;
+      if (velectron.size() == 1) {
+	eleLooseSFEFull(velectron[0].pt, fabs(velectron[0].eta), SFeleVeto, dSFeleVeto);
+      }
+      double w_eleVeto = SFeleVeto + sigmaeleVeto*dSFeleVeto;
+      //cout << "ele: " << SFe << " " << dSFe << endl;
+
       // Electrons - tight
       std::vector<cmgelectron1_s> selectron;
       std::vector<TVector3> V3el;
@@ -1010,6 +1063,8 @@ int main(int argc, char** argv)
 
       }
 
+      // We are not using taus, so we comment this out:
+      /*
       // Taus - veto
       // From supposed to behttps://twiki.cern.ch/twiki/bin/view/CMS/TauIDRecommendation#TauID
       // but since that twiki is so horrible, I just followed Will's multijet note.  Screw'em!
@@ -1028,6 +1083,7 @@ int main(int argc, char** argv)
         //if (!(tau2[i].byMediumCombinedIsolationDeltaBetaCorr == 1) ) continue; 
         stau.push_back(cmgtau1[i]);
       }
+      */
 
 
       // ---------------------
@@ -1046,9 +1102,9 @@ int main(int argc, char** argv)
       met.SetPxPyPzE(V3met.Px(), V3met.Py(), 0.0, V3met.Pt());
       std::vector<TLorentzVector> LVhemis = CombineJets(LVsjet);
 
-      cout << METcorrfromJEC_px << " " << METcorrfromJEC_py << " " 
-	   << V3metnojecSF.Pt() << " " << metnojecSF.E() << " " 
-	   << V3met.Pt() << " " << met.E() << endl;
+      //cout << METcorrfromJEC_px << " " << METcorrfromJEC_py << " " 
+      //   << V3metnojecSF.Pt() << " " << metnojecSF.E() << " " 
+      //   << V3met.Pt() << " " << met.E() << endl;
 
       double MR = -9999;
       double MTR = -9999;
@@ -1059,7 +1115,9 @@ int main(int argc, char** argv)
 	MTR = CalcMTR(LVhemis[0], LVhemis[1], V3met);
 	R2 = pow((MTR / MR),2);
       }
-      
+
+      // We are not using these definitions which were once efined for HLT studies.
+      /*      
       // Calculate MR and R2 adding mus to MET
       TVector3 V3metmu;
       V3metmu.SetPtEtaPhi(cmgbasemet2[0].et, 0, cmgbasemet2[0].phi);
@@ -1090,7 +1148,8 @@ int main(int argc, char** argv)
         MTRmetel = CalcMTR(LVhemis[0], LVhemis[1], V3metel);
         R2metel = pow((MTRmetel / MR),2);
       }
-     
+      */
+
 
       // --------------------------------------------------------
       // -- Everything computed from generator level particles --
@@ -1157,6 +1216,7 @@ int main(int argc, char** argv)
       // ------------------------------------
 
       double w_trigger = 1.;
+      double hlterr = 0.;
       if (eventhelper_isRealData==0) {
 	if (sjet.size() > 0){ // need at least one jet
 	  for (int i=1; i<h_hlteff->GetNbinsX()+1; i++) {
@@ -1168,7 +1228,15 @@ int main(int argc, char** argv)
 	      double ymax = h_hlteff->GetYaxis()->GetBinUpEdge(j);
 	      if (sjet[0].pt >= ymin && sjet[0].pt < ymax) {
 		w_trigger = h_hlteff->GetBinContent(i, j);
-		//cout << xmin << " " << MR << " " << xmax << " " << ymin << " " << R2 << " " << ymax << " " << whlt << endl;
+		if (sigmaHLT >= 0) { 
+		  hlterr = sigmaHLT*h_hlteff_up->GetBinContent(i, j);
+		} else {
+		  hlterr = sigmaHLT*h_hlteff_low->GetBinContent(i, j);
+		}
+		w_trigger += hlterr;
+		if (w_trigger > 1.) w_trigger = 1.;
+		if (w_trigger < 0.) w_trigger = 0.;
+		//cout << i << " " << j << " " << h_hlteff->GetBinContent(i, j) << " " << h_hlteff_up->GetBinContent(i, j) << " " << h_hlteff_low->GetBinContent(i, j) << endl;
 		break;
 	      }
 	    }
@@ -1224,6 +1292,13 @@ int main(int argc, char** argv)
 	    w_ISR_nominal = 0.8;
 	    w_ISR_down = 0.6;
 	  }
+	  double dw_ISR_up = w_ISR_up - w_ISR_nominal;
+	  double dw_ISR_down = w_ISR_nominal - w_ISR_down;
+	  if (sigmaISR >= 0.) {
+	    w_ISR_nominal += sigmaISR*dw_ISR_up;
+	  } else {
+	    w_ISR_nominal += sigmaISR*dw_ISR_down;
+	  }
 	}
 
       // Need to think how to apply these weights with their systematic variations
@@ -1248,11 +1323,22 @@ int main(int argc, char** argv)
 	}
 	w_TopPt_up = w_TopPt_nominal;
 	w_TopPt_nominal = sqrt(w_TopPt_nominal);
+
+	double dw_TopPt_up = w_TopPt_up - w_TopPt_nominal;
+	double dw_TopPt_down = w_TopPt_nominal - w_TopPt_down;
+	//cout << "toppt: " << w_TopPt_down << " " << w_TopPt_nominal << " " << w_TopPt_up << endl;
+	if (sigmaTopPt >= 0.) {
+	  w_TopPt_nominal += sigmaTopPt*dw_TopPt_up;
+	} else {
+	  w_TopPt_nominal += sigmaTopPt*dw_TopPt_down;
+	}
       }
 
       if(doTopPtreweighting)
 	w = w*w_TopPt_nominal;
       
+
+      cout << "xbefore sel" << endl;
 
       // ---------------------
       // -- event selection --
@@ -1405,7 +1491,7 @@ int main(int argc, char** argv)
 		// g1Mb g1W 0Ll -- SIGNAL region
 		if( sW.size() > 0){
 		  if (eventhelper_isRealData!=1) {
-		    w = w*wWtag;
+		    w = w*w_Wtag;
 		  }
 		  ofile.count("g1Mbg1W0Ll",w);
 		  if(isTTallhad)
@@ -1498,9 +1584,12 @@ int main(int argc, char** argv)
 	if(nlooseleptons == 1){
 	  // Calculate mT 
 	  TLorentzVector lepton;
-	  if (nlooseelectrons == 1)
+	  if (nlooseelectrons == 1) {
 	    lepton.SetPtEtaPhiE(velectron[0].pt, velectron[0].eta, velectron[0].phi, velectron[0].energy);
-	  else if (nloosemuons == 1)
+	    if (eventhelper_isRealData!=1) {
+	      w = w*w_eleVeto;
+	    }
+	  } else if (nloosemuons == 1)
 	    lepton.SetPtEtaPhiE(vmuon[0].pt, vmuon[0].eta, vmuon[0].phi, vmuon[0].energy);
 	  double mT = CalcMT(lepton,met);
 	  
@@ -1526,7 +1615,7 @@ int main(int argc, char** argv)
 	    
 	    if( sW.size() > 0 ){
 	      if (eventhelper_isRealData!=1) {
-		w = w*wWtag;
+		w = w*w_Wtag;
 	      }
 	      ofile.count("g1Mbg1W1Ll",w);
 	      if(isTTallhad)
