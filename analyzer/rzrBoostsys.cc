@@ -26,11 +26,12 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
+  // Uncomment appropriate line to switch between sezen and nadja
+  //TString base = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/";
+  TString base = "/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/";
+
   // Get the trigger histogram:
-  //TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  //if (!fhlt){
-  TFile*  fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  //}
+  TFile*  fhlt = TFile::Open(base+"hlteff/hlteff_HT_jpt_singlel.root");
   if (!fhlt){
     cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
     return 1;
@@ -179,18 +180,9 @@ int main(int argc, char** argv)
     if (Runs == "AB")
       pileupname = "pileup_weights_AB_sig53X.root";
   }
-  //TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
-  //TFile* fpileup_up = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname_up);
-  //TFile* fpileup_down = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname_down);
-  //if (!fpileup){
-  TFile*  fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
-  //}
-  //if (!fpileup_up){
-  TFile* fpileup_up = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname_up);
-  //}
-  //if (!fpileup_down){
-  TFile* fpileup_down = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname_down);
-  //}
+  TFile*  fpileup = TFile::Open(base+"pileup/"+pileupname);
+  TFile* fpileup_up = TFile::Open(base+"pileup/"+pileupname_up);
+  TFile* fpileup_down = TFile::Open(base+"pileup/"+pileupname_down);
   if (!fpileup || !fpileup_up || !fpileup_down){
     cout << "Could not find pileup weights root file... Where did you put it??" << endl;
     return 1;
@@ -212,10 +204,7 @@ int main(int argc, char** argv)
   } else {
     beff_name = "btageff_QCD.root";
   }
-  TFile* fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/"+beff_name);
-  if (!fbeff){
-    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/"+beff_name);
-  }
+  TFile* fbeff = TFile::Open(base+"btageff/"+beff_name);
   if (!fbeff){
     cout << "Could not find btag root file... Where did you put it??" << endl;
     return 1;
@@ -262,9 +251,7 @@ int main(int argc, char** argv)
   if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25"  || sample == "T1ttcc_DM80" 
       || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
     // open file with counts
-    TFile* f_smscounts = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/smsinput/signal_counts.root");
-    if (!f_smscounts)
-      f_smscounts = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/smsinput/signal_counts.root");
+    TFile* f_smscounts = TFile::Open(base+"smsinput/signal_counts.root");
     // get the proper histogram
     TString hname_smscounts = "";
     if (doISRreweighting){
@@ -317,28 +304,28 @@ int main(int argc, char** argv)
   TH1D* h_totweight = new TH1D("h_totweight", "h_totweight", 1, 1, 2);
 
   // g1Mb g1W 0Ll ; Signal box: >= 1 Mb; >= 1 W; 0 Ll
-  TH1D * h_MR_g1Mbg1W0Ll_mdPhiHatg4 = new TH1D("h_MR_g1Mbg1W0Ll_mdPhiHatg4", "h_MR_g1Mbg1W0Ll_mdPhiHatg4", nbins_MR, bins_MR);
-  TH1D * h_R2_g1Mbg1W0Ll_mdPhiHatg4 = new TH1D("h_R2_g1Mbg1W0Ll_mdPhiHatg4", "h_R2_g1Mbg1W0Ll_mdPhiHatg4", nbins_R2, bins_R2);
-  TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4 = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4", "h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4", nbins_MR, bins_MR, nbins_R2, bins_R2);
-  TH2D * h_uw_MR_R2_g1Mbg1W0Ll_mdPhiHatg4 = new TH2D("h_uw_MR_R2_g1Mbg1W0Ll_mdPhiHatg4", "h_uw_MR_R2_g1Mbg1W0Ll_mdPhiHatg4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D * h_MR_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_MR_g1Mbg1W0Ll_mdPhig0p5", "h_MR_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR);
+  TH1D * h_R2_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_R2_g1Mbg1W0Ll_mdPhig0p5", "h_R2_g1Mbg1W0Ll_mdPhig0p5", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhig0p5", "h_MR_R2_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5", "h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhiHat < 4 (RA2b value)
-  TH1D * h_MR_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhiHat4", "h_MR_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR);
-  TH1D * h_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhiHat4", "h_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_R2, bins_R2);
-  TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", "h_MR_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR, nbins_R2, bins_R2);
-  TH2D * h_uw_MR_R2_0Lbg1uW0Ll_mdPhiHat4 = new TH2D("h_uw_MR_R2_0Lbg1uW0Ll_mdPhiHat4", "h_uw_MR_R2_0Lbg1uW0Ll_mdPhiHat4", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D * h_MR_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhi0p3", "h_MR_0Lbg1uW0Ll_mdPhi0p3", nbins_MR, bins_MR);
+  TH1D * h_R2_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhi0p3", "h_R2_0Lbg1uW0Ll_mdPhi0p3", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhi0p3 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhi0p3", "h_MR_R2_0Lbg1uW0Ll_mdPhi0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_0Lbg1uW0Ll_mdPhi0p3 = new TH2D("h_uw_MR_R2_0Lbg1uW0Ll_mdPhi0p3", "h_uw_MR_R2_0Lbg1uW0Ll_mdPhi0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   // g1Mbg1W1LlmT ; TTj control region: >= 1 Mb; >= 1 W; 1 Ll; mT<100
-  TH1D * h_MR_g1Mbg1W1LlmT100 = new TH1D("h_MR_g1Mbg1W1LlmT100", "h_MR_g1Mbg1W1LlmT100", nbins_MR, bins_MR);
-  TH1D * h_R2_g1Mbg1W1LlmT100 = new TH1D("h_R2_g1Mbg1W1LlmT100", "h_R2_g1Mbg1W1LlmT100", nbins_R2, bins_R2);
-  TH2D * h_MR_R2_g1Mbg1W1LlmT100 = new TH2D("h_MR_R2_g1Mbg1W1LlmT100", "h_MR_R2_g1Mbg1W1LlmT100", nbins_MR, bins_MR, nbins_R2, bins_R2);
-  TH2D * h_uw_MR_R2_g1Mbg1W1LlmT100 = new TH2D("h_uw_MR_R2_g1Mbg1W1LlmT100", "h_uw_MR_R2_g1Mbg1W1LlmT100", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D * h_MR_g1Mbg1W1LlmT100_mdPhig0p5 = new TH1D("h_MR_g1Mbg1W1LlmT100_mdPhig0p5", "h_MR_g1Mbg1W1LlmT100_mdPhig0p5", nbins_MR, bins_MR);
+  TH1D * h_R2_g1Mbg1W1LlmT100_mdPhig0p5 = new TH1D("h_R2_g1Mbg1W1LlmT100_mdPhig0p5", "h_R2_g1Mbg1W1LlmT100_mdPhig0p5", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_g1Mbg1W1LlmT100_mdPhig0p5 = new TH2D("h_MR_R2_g1Mbg1W1LlmT100_mdPhig0p5", "h_MR_R2_g1Mbg1W1LlmT100_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_g1Mbg1W1LlmT100_mdPhig0p5 = new TH2D("h_uw_MR_R2_g1Mbg1W1LlmT100_mdPhig0p5", "h_uw_MR_R2_g1Mbg1W1LlmT100_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   // 0Lbg1Y1LlmT ; Wj control region: == 0 Lb; >= 1 Y; 1 Ll; 30<mT<100
-  TH1D * h_MR_0Lbg1Y1LlmT = new TH1D("h_MR_0Lbg1Y1LlmT", "h_MR_0Lbg1Y1LlmT", nbins_MR, bins_MR);
-  TH1D * h_R2_0Lbg1Y1LlmT = new TH1D("h_R2_0Lbg1Y1LlmT", "h_R2_0Lbg1Y1LlmT", nbins_R2, bins_R2);
-  TH2D * h_MR_R2_0Lbg1Y1LlmT = new TH2D("h_MR_R2_0Lbg1Y1LlmT", "h_MR_R2_0Lbg1Y1LlmT", nbins_MR, bins_MR, nbins_R2, bins_R2);
-  TH2D * h_uw_MR_R2_0Lbg1Y1LlmT = new TH2D("h_uw_MR_R2_0Lbg1Y1LlmT", "h_uw_MR_R2_0Lbg1Y1LlmT", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH1D * h_MR_0Lbg1Y1LlmT_mdPhig0p5 = new TH1D("h_MR_0Lbg1Y1LlmT_mdPhig0p5", "h_MR_0Lbg1Y1LlmT_mdPhig0p5", nbins_MR, bins_MR);
+  TH1D * h_R2_0Lbg1Y1LlmT_mdPhig0p5 = new TH1D("h_R2_0Lbg1Y1LlmT_mdPhig0p5", "h_R2_0Lbg1Y1LlmT_mdPhig0p5", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_0Lbg1Y1LlmT_mdPhig0p5 = new TH2D("h_MR_R2_0Lbg1Y1LlmT_mdPhig0p5", "h_MR_R2_0Lbg1Y1LlmT_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p5 = new TH2D("h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p5", "h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   // Define the order of bins in the counts histogram:
   
@@ -357,18 +344,18 @@ int main(int argc, char** argv)
   ofile.count("trackIso", 0.0);
   ofile.count("g1Mb0Ll", 0.0);
   ofile.count("g1Mbg1W0Ll", 0.0);
-  ofile.count("g1Mbg1W0Ll_mdPhiHatg4", 0.0);
+  ofile.count("g1Mbg1W0Ll_mdPhig0p5", 0.0);
   ofile.count("0Lb0Ll", 0.0);
   ofile.count("0Lbg1uW0Ll", 0.0);
-  ofile.count("0Lbg1uW0Ll_mdPhiHat4", 0.0);
+  ofile.count("0Lbg1uW0Ll_mdPhi0p3", 0.0);
 
   ofile.count("1Ll", 0.0);
   ofile.count("g1Mb1Ll", 0.0);
   ofile.count("g1Mbg1W1Ll", 0.0);
-  ofile.count("g1Mbg1W1LlmT100", 0.0);
+  ofile.count("g1Mbg1W1LlmT100_mdPhig0p5", 0.0);
   ofile.count("0Lb1Ll", 0.0);
   ofile.count("0Lbg1Y1Ll", 0.0);
-  ofile.count("0Lbg1Y1LlmT", 0.0);
+  ofile.count("0Lbg1Y1LlmT_mdPhig0p5", 0.0);
 
 
   
@@ -393,17 +380,17 @@ int main(int argc, char** argv)
   TTallhad->Fill("trackIso", 0.0);
   TTallhad->Fill("g1Mb0Ll", 0.0);
   TTallhad->Fill("g1Mbg1W0Ll", 0.0);
-  TTallhad->Fill("g1Mbg1W0Ll_mdPhiHatg4", 0.0);
+  TTallhad->Fill("g1Mbg1W0Ll_mdPhig0p5", 0.0);
   TTallhad->Fill("0Lb0Ll", 0.0);
   TTallhad->Fill("0Lbg1uW0Ll", 0.0);
-  TTallhad->Fill("0Lbg1uW0Ll_mdPhiHat4", 0.0);
+  TTallhad->Fill("0Lbg1uW0Ll_mdPhi0p3", 0.0);
   TTallhad->Fill("1Ll", 0.0);
   TTallhad->Fill("g1Mb1Ll", 0.0);
   TTallhad->Fill("g1Mbg1W1Ll", 0.0);
-  TTallhad->Fill("g1Mbg1W1LlmT100", 0.0);
+  TTallhad->Fill("g1Mbg1W1LlmT100_mdPhig0p5", 0.0);
   TTallhad->Fill("0Lb1Ll", 0.0);
   TTallhad->Fill("0Lbg1Y1Ll", 0.0);
-  TTallhad->Fill("0Lbg1Y1LlmT", 0.0);
+  TTallhad->Fill("0Lbg1Y1LlmT_mdPhig0p5", 0.0);
 
   TTsemilep->Fill("NoCuts", 0.0);
   TTsemilep->Fill("Cleaning", 0.0);
@@ -419,17 +406,17 @@ int main(int argc, char** argv)
   TTsemilep->Fill("trackIso", 0.0);
   TTsemilep->Fill("g1Mb0Ll", 0.0);
   TTsemilep->Fill("g1Mbg1W0Ll", 0.0);
-  TTsemilep->Fill("g1Mbg1W0Ll_mdPhiHatg4", 0.0);
+  TTsemilep->Fill("g1Mbg1W0Ll_mdPhig0p5", 0.0);
   TTsemilep->Fill("0Lb0Ll", 0.0);
   TTsemilep->Fill("0Lbg1uW0Ll", 0.0);
-  TTsemilep->Fill("0Lbg1uW0Ll_mdPhiHat4", 0.0);
+  TTsemilep->Fill("0Lbg1uW0Ll_mdPhi0p3", 0.0);
   TTsemilep->Fill("1Ll", 0.0);
   TTsemilep->Fill("g1Mb1Ll", 0.0);
   TTsemilep->Fill("g1Mbg1W1Ll", 0.0);
-  TTsemilep->Fill("g1Mbg1W1LlmT100", 0.0);
+  TTsemilep->Fill("g1Mbg1W1LlmT100_mdPhig0p5", 0.0);
   TTsemilep->Fill("0Lb1Ll", 0.0);
   TTsemilep->Fill("0Lbg1Y1Ll", 0.0);
-  TTsemilep->Fill("0Lbg1Y1LlmT", 0.0);
+  TTsemilep->Fill("0Lbg1Y1LlmT_mdPhig0p5", 0.0);
 
 
   TTdilep->Fill("NoCuts", 0.0);
@@ -446,17 +433,17 @@ int main(int argc, char** argv)
   TTdilep->Fill("trackIso", 0.0);
   TTdilep->Fill("g1Mb0Ll", 0.0);
   TTdilep->Fill("g1Mbg1W0Ll", 0.0);
-  TTdilep->Fill("g1Mbg1W0Ll_mdPhiHatg4", 0.0);
+  TTdilep->Fill("g1Mbg1W0Ll_mdPhig0p5", 0.0);
   TTdilep->Fill("0Lb0Ll", 0.0);
   TTdilep->Fill("0Lbg1uW0Ll", 0.0);
-  TTdilep->Fill("0Lbg1uW0Ll_mdPhiHat4", 0.0);
+  TTdilep->Fill("0Lbg1uW0Ll_mdPhi0p3", 0.0);
   TTdilep->Fill("1Ll", 0.0);
   TTdilep->Fill("g1Mb1Ll", 0.0);
   TTdilep->Fill("g1Mbg1W1Ll", 0.0);
-  TTdilep->Fill("g1Mbg1W1LlmT100", 0.0);
+  TTdilep->Fill("g1Mbg1W1LlmT100_mdPhig0p5", 0.0);
   TTdilep->Fill("0Lb1Ll", 0.0);
   TTdilep->Fill("0Lbg1Y1Ll", 0.0);
-  TTdilep->Fill("0Lbg1Y1LlmT", 0.0);
+  TTdilep->Fill("0Lbg1Y1LlmT_mdPhig0p5", 0.0);
 
   // -----------------------------------------------
   // -- extra histograms when running over signal --
@@ -621,27 +608,27 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 190456 && eventhelper_run < 190762 ) {
 	  if (fsample.find("_Jet_") < fsample.length()) {
 	    if (!
-		(triggerresultshelper_HLT_PFJet320_v3 == 1 ||
+		(triggerresultshelper_HLT_PFJet320_v3 == 1 //||
 		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
 		 //triggerresultshelper_HLT_PFHT650_v5 == 1 ||
 		 //triggerresultshelper_HLT_HT750_v1 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
+		 //triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
 		 )) continue;
 	  } else if (fsample.find("_HT_") < fsample.length()) {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v3 == 0 &&
-		 (triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
-		  triggerresultshelper_HLT_PFHT650_v5 == 1) &&
+		 (//triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
+		  triggerresultshelper_HLT_PFHT650_v5 == 1) //&&
 		  //triggerresultshelper_HLT_HT750_v1 == 1 &&
-		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 0 
+		 //triggerresultshelper_HLT_DiPFJetAve320_v3 == 0 
 		 )) continue;
 	  } else {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v3 == 1 ||
-		 triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
-		 triggerresultshelper_HLT_PFHT650_v5 == 1 ||
+		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v2 == 1 ||
+		 triggerresultshelper_HLT_PFHT650_v5 == 1 //||
 		 //triggerresultshelper_HLT_HT750_v1 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
+		 //triggerresultshelper_HLT_DiPFJetAve320_v3 == 1
 		 ) ) continue;
 	  }
 	}
@@ -649,27 +636,27 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 190762 && eventhelper_run < 191512 ) {
 	  if (fsample.find("_Jet_") < fsample.length()) {
 	    if (!
-		(triggerresultshelper_HLT_PFJet320_v4 == 1 ||
+		(triggerresultshelper_HLT_PFJet320_v4 == 1 //||
 		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
 		 //triggerresultshelper_HLT_PFHT650_v6 == 1 ||
 		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
+		 //triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
 		 )) continue;
 	  } else if (fsample.find("_HT_") < fsample.length()) {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v4 == 0 &&
-		 (triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
-		  triggerresultshelper_HLT_PFHT650_v6 == 1) &&
+		 (//triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
+		  triggerresultshelper_HLT_PFHT650_v6 == 1) //&&
 		 //triggerresultshelper_HLT_HT750_v2 == 1 &&
-		 triggerresultshelper_HLT_DiPFJetAve320_v4 == 0
+		 //triggerresultshelper_HLT_DiPFJetAve320_v4 == 0
 		 )) continue;
 	  } else {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v4 == 1 ||
-		 triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
-		 triggerresultshelper_HLT_PFHT650_v6 == 1 ||
+		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v3 == 1 ||
+		 triggerresultshelper_HLT_PFHT650_v6 == 1 //||
 		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
+		 //triggerresultshelper_HLT_DiPFJetAve320_v4 == 1
 		 ) ) continue;
 	  }
 	}
@@ -677,27 +664,27 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 191512 && eventhelper_run < 193746 ) {
 	  if (fsample.find("_Jet_") < fsample.length()) {
 	    if (!
-		(triggerresultshelper_HLT_PFJet320_v5 == 1 ||
+		(triggerresultshelper_HLT_PFJet320_v5 == 1 //||
 		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
 		 //triggerresultshelper_HLT_PFHT650_v7 == 1 ||
 		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
+		 //triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
 		 )) continue;
 	  } else if (fsample.find("_HT_") < fsample.length()) {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v5 == 0 &&
-		 (triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
-		  triggerresultshelper_HLT_PFHT650_v7 == 1) &&
+		 (//triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
+		  triggerresultshelper_HLT_PFHT650_v7 == 1) //&&
 		 //triggerresultshelper_HLT_HT750_v2 == 1 &&
-		 triggerresultshelper_HLT_DiPFJetAve320_v5 == 0
+		 //triggerresultshelper_HLT_DiPFJetAve320_v5 == 0
 		 )) continue;
 	  } else {
 	    if (!
 		(triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-		 triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
-		 triggerresultshelper_HLT_PFHT650_v7 == 1 ||
+		 //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v4 == 1 ||
+		 triggerresultshelper_HLT_PFHT650_v7 == 1 //||
 		 //triggerresultshelper_HLT_HT750_v2 == 1 ||
-		 triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
+		 //triggerresultshelper_HLT_DiPFJetAve320_v5 == 1
 		 ) ) continue;
 	  }
 	}
@@ -706,20 +693,20 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 193746 && eventhelper_run < 196039) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v5 == 1 ||
-	       triggerresultshelper_HLT_PFHT650_v8 == 1 ||
+	       //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v5 == 1 ||
+	       triggerresultshelper_HLT_PFHT650_v8 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v3 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
+	       //triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
 	       ) ) continue;
 	}
 
 	if ( eventhelper_run >= 196039 && eventhelper_run < 197770 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v5 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v6 == 1 ||
-	       triggerresultshelper_HLT_PFHT650_v9 == 1 ||
+	       //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v6 == 1 ||
+	       triggerresultshelper_HLT_PFHT650_v9 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v4 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
+	       //triggerresultshelper_HLT_DiPFJetAve400_v6 == 1
 	       ) ) continue;
 	}
 
@@ -727,30 +714,30 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 197770 && eventhelper_run < 199648 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet400_v6 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v7 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v1 == 1 ||
+	       //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v7 == 1 ||
+	       triggerresultshelper_HLT_PFNoPUHT650_v1 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v5 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v7 == 1
+	       //triggerresultshelper_HLT_DiPFJetAve400_v7 == 1
 	       ) ) continue;
 	}
 
 	if ( eventhelper_run >= 199648 && eventhelper_run < 202807 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v8 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v9 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v3 == 1 ||
+	       //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v9 == 1 ||
+	       triggerresultshelper_HLT_PFNoPUHT650_v3 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v7 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v9 == 1
+	       //triggerresultshelper_HLT_DiPFJetAve400_v9 == 1
 	       ) ) continue;
 	}
 
 	if ( eventhelper_run >= 202807 && eventhelper_run < 203734 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v9 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 ||
+	       //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
+	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v7 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
+	       //triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
 	       ) ) continue;
 	}
 
@@ -758,10 +745,10 @@ int main(int argc, char** argv)
 	if ( eventhelper_run >= 203734 && eventhelper_run < 208940 ) {
 	  if (!
               (triggerresultshelper_HLT_PFJet320_v9 == 1 ||
-	       triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
-	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 ||
+	       //triggerresultshelper_HLT_FatDiPFJetMass750_DR1p1_Deta1p5_v10 == 1 ||
+	       triggerresultshelper_HLT_PFNoPUHT650_v4 == 1 //||
 	       //triggerresultshelper_HLT_HT750_v7 == 1 ||
-	       triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
+	       //triggerresultshelper_HLT_DiPFJetAve400_v10 == 1
 	       ) ) continue;
 	}
       }
@@ -994,7 +981,7 @@ int main(int argc, char** argv)
 
       // Wtag scale factors:
       double SFWtag = 0.86;
-      double dSFWtag = 0.08;
+      double dSFWtag = 0.07;
       double w_Wtag = pow((SFWtag + sigmaW*dSFWtag), sW.size());
 
 
@@ -1501,18 +1488,18 @@ int main(int argc, char** argv)
 		  else if(isTTdilep)
 		    TTdilep->Fill("g1Mbg1W0Ll", w);
 
-		  if ( minDeltaPhiHat > 4){
-		    ofile.count("g1Mbg1W0Ll_mdPhiHatg4",w);
-		    h_MR_g1Mbg1W0Ll_mdPhiHatg4->Fill(MR, w);
-		    h_R2_g1Mbg1W0Ll_mdPhiHatg4->Fill(R2, w);
-		    h_MR_R2_g1Mbg1W0Ll_mdPhiHatg4->Fill(MR, R2, w);
-		    h_uw_MR_R2_g1Mbg1W0Ll_mdPhiHatg4->Fill(MR, R2, 1.);
+		  if ( minDeltaPhi > 0.5){
+		    ofile.count("g1Mbg1W0Ll_mdPhig0p5",w);
+		    h_MR_g1Mbg1W0Ll_mdPhig0p5->Fill(MR, w);
+		    h_R2_g1Mbg1W0Ll_mdPhig0p5->Fill(R2, w);
+		    h_MR_R2_g1Mbg1W0Ll_mdPhig0p5->Fill(MR, R2, w);
+		    h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5->Fill(MR, R2, 1.);
 		    if(isTTallhad)
-		      TTallhad->Fill("g1Mbg1W0Ll_mdPhiHatg4", w);
+		      TTallhad->Fill("g1Mbg1W0Ll_mdPhig0p5", w);
 		    else if(isTTsemilep)
-		      TTsemilep->Fill("g1Mbg1W0Ll_mdPhiHatg4", w);
+		      TTsemilep->Fill("g1Mbg1W0Ll_mdPhig0p5", w);
 		    else if(isTTdilep)
-		      TTdilep->Fill("g1Mbg1W0Ll_mdPhiHatg4", w);
+		      TTdilep->Fill("g1Mbg1W0Ll_mdPhig0p5", w);
 
 		    if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
 			|| sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
@@ -1522,7 +1509,7 @@ int main(int argc, char** argv)
 		      list_S_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
 		    }
 		 		    
-		  } // end of  minDeltaPhiHat > 4
+		  } // end of  minDeltaPhi > 0.5
 		} // end of sW.size() > 0
 	      } // end of nmediumbs > 0
 	      
@@ -1548,18 +1535,18 @@ int main(int argc, char** argv)
 		  else if(isTTdilep)
 		    TTdilep->Fill("0Lbg1uW0Ll", w);
 		  
-		  if (minDeltaPhiHat < 4){
-		    ofile.count("0Lbg1uW0Ll_mdPhiHat4",w);
-		    h_MR_0Lbg1uW0Ll_mdPhiHat4->Fill(MR, w);
-		    h_R2_0Lbg1uW0Ll_mdPhiHat4->Fill(R2, w);
-		    h_MR_R2_0Lbg1uW0Ll_mdPhiHat4->Fill(MR, R2, w);
-		    h_uw_MR_R2_0Lbg1uW0Ll_mdPhiHat4->Fill(MR, R2, 1.);
+		  if (minDeltaPhi < 0.3){
+		    ofile.count("0Lbg1uW0Ll_mdPhi0p3",w);
+		    h_MR_0Lbg1uW0Ll_mdPhi0p3->Fill(MR, w);
+		    h_R2_0Lbg1uW0Ll_mdPhi0p3->Fill(R2, w);
+		    h_MR_R2_0Lbg1uW0Ll_mdPhi0p3->Fill(MR, R2, w);
+		    h_uw_MR_R2_0Lbg1uW0Ll_mdPhi0p3->Fill(MR, R2, 1.);
 		    if(isTTallhad)
-		      TTallhad->Fill("0Lbg1uW0Ll_mdPhiHat4", w);
+		      TTallhad->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
 		    else if(isTTsemilep)
-		      TTsemilep->Fill("0Lbg1uW0Ll_mdPhiHat4", w);
+		      TTsemilep->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
 		    else if(isTTdilep)
-		      TTdilep->Fill("0Lbg1uW0Ll_mdPhiHat4", w);
+		      TTdilep->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
 
 		    if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
 			|| sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
@@ -1568,7 +1555,7 @@ int main(int argc, char** argv)
 		      list_Q[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		      list_Q_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
 		    }
-		  } // end of minDeltaPhiHat < 4
+		  } // end of minDeltaPhi < 0.3
 
 		} // end of aW.size() > 0
 				
@@ -1627,25 +1614,27 @@ int main(int argc, char** argv)
 
 	      // TTJets Control region
 	      if (mT < 100){
-		ofile.count("g1Mbg1W1LlmT100",w);
-		h_MR_g1Mbg1W1LlmT100->Fill(MR, w);
-		h_R2_g1Mbg1W1LlmT100->Fill(R2, w);
-		h_MR_R2_g1Mbg1W1LlmT100->Fill(MR, R2, w);
-		h_uw_MR_R2_g1Mbg1W1LlmT100->Fill(MR, R2, 1.);
-		if(isTTallhad)
-		  TTallhad->Fill("g1Mbg1W1LlmT100", w);
-		else if(isTTsemilep)
-		  TTsemilep->Fill("g1Mbg1W1LlmT100", w);
-		else if(isTTdilep)
-		  TTdilep->Fill("g1Mbg1W1LlmT100", w);
-		
-		if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
-		    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
-		  int bin_mother = (m_mother - mother_min)/step_mother;
-		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
-		  list_T[bin_mother][bin_LSP]->Fill(MR,R2,w);
-		  list_T_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
-		}
+		if ( minDeltaPhi > 0.5){
+		  ofile.count("g1Mbg1W1LlmT100_mdPhig0p5",w);
+		  h_MR_g1Mbg1W1LlmT100_mdPhig0p5->Fill(MR, w);
+		  h_R2_g1Mbg1W1LlmT100_mdPhig0p5->Fill(R2, w);
+		  h_MR_R2_g1Mbg1W1LlmT100_mdPhig0p5->Fill(MR, R2, w);
+		  h_uw_MR_R2_g1Mbg1W1LlmT100_mdPhig0p5->Fill(MR, R2, 1.);
+		  if(isTTallhad)
+		    TTallhad->Fill("g1Mbg1W1LlmT100_mdPhig0p5", w);
+		  else if(isTTsemilep)
+		    TTsemilep->Fill("g1Mbg1W1LlmT100_mdPhig0p5", w);
+		  else if(isTTdilep)
+		    TTdilep->Fill("g1Mbg1W1LlmT100_mdPhig0p5", w);
+		  
+		  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+		      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		    int bin_mother = (m_mother - mother_min)/step_mother;
+		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		    list_T[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		    list_T_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		  }
+		} // end of minDeltaPhi > 0.5 
 	      } // end mT < 100
 	    } // end sW.size()
 	  } // end nmediumbs > 0
@@ -1674,25 +1663,27 @@ int main(int argc, char** argv)
 	      
 	      // WJets Control Region
 	      if (mT < 100 && mT > 30){ 
-		ofile.count("0Lbg1Y1LlmT",w);
-		h_MR_0Lbg1Y1LlmT->Fill(MR, w);
-		h_R2_0Lbg1Y1LlmT->Fill(R2, w);
-		h_MR_R2_0Lbg1Y1LlmT->Fill(MR, R2, w);
-		h_uw_MR_R2_0Lbg1Y1LlmT->Fill(MR, R2, 1.);
-		if(isTTallhad)
-		  TTallhad->Fill("0Lbg1Y1LlmT", w);
-		else if(isTTsemilep)
-		  TTsemilep->Fill("0Lbg1Y1LlmT", w);
-		else if(isTTdilep)
-		  TTdilep->Fill("0Lbg1Y1LlmT", w);
+		if ( minDeltaPhi > 0.5){
+		  ofile.count("0Lbg1Y1LlmT_mdPhig0p5",w);
+		  h_MR_0Lbg1Y1LlmT_mdPhig0p5->Fill(MR, w);
+		  h_R2_0Lbg1Y1LlmT_mdPhig0p5->Fill(R2, w);
+		  h_MR_R2_0Lbg1Y1LlmT_mdPhig0p5->Fill(MR, R2, w);
+		  h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p5->Fill(MR, R2, 1.);
+		  if(isTTallhad)
+		    TTallhad->Fill("0Lbg1Y1LlmT_mdPhig0p5", w);
+		  else if(isTTsemilep)
+		    TTsemilep->Fill("0Lbg1Y1LlmT_mdPhig0p5", w);
+		  else if(isTTdilep)
+		    TTdilep->Fill("0Lbg1Y1LlmT_mdPhig0p5", w);
 
-		if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
-		    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
-		  int bin_mother = (m_mother - mother_min)/step_mother;
-		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
-		  list_W[bin_mother][bin_LSP]->Fill(MR,R2,w);
-		  list_W_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
-		}
+		  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
+		      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		    int bin_mother = (m_mother - mother_min)/step_mother;
+		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		    list_W[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		    list_W_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		  }
+		} // end minDeltaPhi > 0.5
 	      } // end mT < 100 && mT > 30
 	    } // end sY.size()
 	  } // end nloosebs > 0
