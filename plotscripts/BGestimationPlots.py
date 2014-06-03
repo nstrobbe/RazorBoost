@@ -7,7 +7,8 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/"
+    #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140528_newWtagger_global/"
 
     #region = "g1Mb0Wg1uW0Ll"
     #region = "g1Mbg1W0Ll_mdPhiHat4"
@@ -23,7 +24,8 @@ if __name__ == '__main__':
 
     inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/rzrBoostMC_data.root" # data histograms
     inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/rzrBoostMC_bg.root" # data histograms
-    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/BGestimate_"+region+"_QCDWJTTJ_2.root" # bg estimate histograms
+    #inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/BGestimate_"+region+"_QCDWJTTJ_2.root" # bg estimate histograms
+    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140528_newWtagger_global/BGestimate_"+region+"_QCDWJTTJ_2.root" # bg estimate histograms
 
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
@@ -66,8 +68,8 @@ if __name__ == '__main__':
                                             name="Full MC BG estimate", color=rt.kRed+2,
                                             title=htitle, drawoption="E0", fillstyle=3002,
                                             appear_in_ratio="Yes", xtitle=var)
-        hdictlist=[hdict_estimate,hdict_bg,hdict_data]
-        #hdictlist=[hdict_estimate,hdict_data]
+        #hdictlist=[hdict_estimate,hdict_bg,hdict_data]
+        hdictlist=[hdict_estimate,hdict_data]
         canvasname = var+"_comparison_data_estimate_"+region
         rtitle = "#frac{BG estimate}{Data}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,

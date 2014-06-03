@@ -22,15 +22,16 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
+  // Uncomment appropriate line to switch between sezen and nadja
+  TString base = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/";
+  //TString base = "/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/";
+
   // ----------------------------------------------------------------
   // -- Get the trigger histogram: // old name: extr_eff0_sm2.root --
   // ----------------------------------------------------------------
 
   TFile* fhlt; 
-  fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  //if (!fhlt){
-    fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  //}
+  fhlt = TFile::Open(base+"hlteff/hlteff_HT_jpt_singlel.root");
   if (!fhlt){
     cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
     return 1;
@@ -153,10 +154,7 @@ int main(int argc, char** argv)
       pileupname = "pileup_weights_AB_sig53X.root";
   }
   TFile* fpileup;
-  fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
-  if (!fpileup){
-    fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
-  }
+  fpileup = TFile::Open(base+"pileup/"+pileupname);
   if (!fpileup){
     cout << "Could not find pileup weights root file... Where did you put it??" << endl;
     return 1;
@@ -170,15 +168,12 @@ int main(int argc, char** argv)
   TFile* fbeff;
 
   if (sample == "TTJets" or sample == "Top" or sample == "TTX") {
-    //fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_TTJets.root");
-    fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/btageff_TTJets.root");
+    fbeff = TFile::Open(base+"btageff/btageff_TTJets.root");
   } else if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
 	     || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
-    //fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
-    fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
+    fbeff = TFile::Open(base+"btageff/btageff_T1ttcc.root");
   } else {
-    //fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_QCD.root");
-    fbeff = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/btageff/btageff_QCD.root");
+    fbeff = TFile::Open(base+"btageff/btageff_QCD.root");
   }
   TH1D* h_pt_b_CSVMeff = (TH1D*)fbeff->Get("h_pt_b_CSVMeff");
   TH1D* h_pt_c_CSVMeff = (TH1D*)fbeff->Get("h_pt_c_CSVMeff");
@@ -325,6 +320,20 @@ int main(int argc, char** argv)
   TH1D* h_pt_closestCA8jet = new TH1D("h_pt_closestCA8jet","h_pt_closestCA8jet",50,0,1000);
   TH1D* h_pt_closestCA8jet_Wmass = new TH1D("h_pt_closestCA8jet_Wmass","h_pt_closestCA8jet_Wmass",50,0,1000);
   TH1D* h_pt_closestCA8jet_Wmass_tagged = new TH1D("h_pt_closestCA8jet_Wmass_tagged","h_pt_closestCA8jet_Wmass_tagged",50,0,1000);
+
+  int nbn_wtag = 4;
+  Double_t bn_wtag_tmp[] = {0.,200.,250.,350.,1000.};
+  Double_t* bn_wtag = getVariableBinEdges(nbn_wtag+1,bn_wtag_tmp);
+  TH1D* h_pt_closestCA8jet_varbin = new TH1D("h_pt_closestCA8jet_varbin","h_pt_closestCA8jet_varbin",nbn_wtag,bn_wtag);
+  TH1D* h_pt_closestCA8jet_Wmass_varbin = new TH1D("h_pt_closestCA8jet_Wmass_varbin","h_pt_closestCA8jet_Wmass_varbin",nbn_wtag,bn_wtag);
+  TH1D* h_pt_closestCA8jet_Wmass_tagged_varbin = new TH1D("h_pt_closestCA8jet_Wmass_tagged_varbin","h_pt_closestCA8jet_Wmass_tagged_varbin",nbn_wtag,bn_wtag);
+
+  int nbn_wtag2 = 6;
+  Double_t bn_wtag_tmp2[] = {0.,100.,150.,200.,250.,300.,1000.};
+  Double_t* bn_wtag2 = getVariableBinEdges(nbn_wtag2+1,bn_wtag_tmp2);
+  TH1D* h_pt_closestCA8jet_varbin2 = new TH1D("h_pt_closestCA8jet_varbin2","h_pt_closestCA8jet_varbin2",nbn_wtag2,bn_wtag2);
+  TH1D* h_pt_closestCA8jet_Wmass_varbin2 = new TH1D("h_pt_closestCA8jet_Wmass_varbin2","h_pt_closestCA8jet_Wmass_varbin2",nbn_wtag2,bn_wtag2);
+  TH1D* h_pt_closestCA8jet_Wmass_tagged_varbin2 = new TH1D("h_pt_closestCA8jet_Wmass_tagged_varbin2","h_pt_closestCA8jet_Wmass_tagged_varbin2",nbn_wtag2,bn_wtag2);
 
   // Plots of relevant quantities with tag for the cut flow
   TH1D* h_nW_Pileup = new TH1D("h_nW_Pileup", "h_nW_Pileup", 5, 0, 5);
@@ -2185,9 +2194,26 @@ int main(int argc, char** argv)
 				  genparticlehelper[iWd2].eta, genparticlehelper[iWd2].phi);
 	    h_gen_dRqq->Fill(dRqq);
             h_gen_Wpt_dRqq->Fill(Ws[i].pt, dRqq);
-	    
+	  } else {
+	    nlep++;
+	  }
+	}
+	if (nlep==0)
+	  isTTallhad = true;
+	else if(nlep==1)
+	  isTTsemilep = true;
+	else if(nlep==2)
+	  isTTdilep = true;
+      }
+
+      if(isTTsemilep){
+	for (unsigned int i=0; i<Ws.size(); i++) {
+	  int iWd1 = Ws[i].firstDaughter;
+	  int iWd2 = Ws[i].lastDaughter;
+	  if (fabs(genparticlehelper[iWd1].pdgId) < 5 ||
+	      fabs(genparticlehelper[iWd2].pdgId) < 5 ) {
 	    // make some plots for the Wtag efficiency, given a hadronic W
-	    // first match gen W with CA8 jet
+	    // first match gen W with CA8 jet, ask it to be within cone size
 	    double dRgenCA8 = 999.;
 	    int matched_index = -1;
 	    for (int j=0; j<(int)jethelper4.size(); ++j){
@@ -2212,11 +2238,24 @@ int main(int argc, char** argv)
 	      }
 	      if (!found_bjet_in_cone){
 		h_pt_closestCA8jet->Fill(jethelper4[matched_index].pt,w);
+		if(jethelper4[matched_index].pt>=1000){
+		  h_pt_closestCA8jet_varbin->Fill(999,w);
+		  h_pt_closestCA8jet_varbin2->Fill(999,w);
+		} else {
+		  h_pt_closestCA8jet_varbin->Fill(jethelper4[matched_index].pt,w);
+		  h_pt_closestCA8jet_varbin2->Fill(jethelper4[matched_index].pt,w);
+		}
 		// now check whether the matched jet has mass in proper window
 		if (jethelper4[matched_index].mass > 70 && jethelper4[matched_index].mass < 100){
-		//if (jethelper4[matched_index].mass > 65 && jethelper4[matched_index].mass < 105){
+		  //if (jethelper4[matched_index].mass > 65 && jethelper4[matched_index].mass < 105){
 		  h_pt_closestCA8jet_Wmass->Fill(jethelper4[matched_index].pt,w);
-		  
+		  if(jethelper4[matched_index].pt>=1000){
+		    h_pt_closestCA8jet_Wmass_varbin->Fill(999,w);
+		    h_pt_closestCA8jet_Wmass_varbin2->Fill(999,w);
+		  } else {
+		    h_pt_closestCA8jet_Wmass_varbin->Fill(jethelper4[matched_index].pt,w);
+		    h_pt_closestCA8jet_Wmass_varbin2->Fill(jethelper4[matched_index].pt,w);
+		  }
 		  // now check whether it is also tagged
 		  // Match with the unpruned:
 		  double prjmatch = 0;
@@ -2237,24 +2276,24 @@ int main(int argc, char** argv)
 		    if (tau21 < 0.50) {
 		    //if (tau21 < 0.46) {
 		      //if (tau3 < 0.135){
-			h_pt_closestCA8jet_Wmass_tagged->Fill(jethelper4[matched_index].pt,w);
-		      //}
+		      h_pt_closestCA8jet_Wmass_tagged->Fill(jethelper4[matched_index].pt,w);
+		      if(jethelper4[matched_index].pt>=1000){
+			h_pt_closestCA8jet_Wmass_tagged_varbin->Fill(999,w);
+			h_pt_closestCA8jet_Wmass_tagged_varbin2->Fill(999,w);
+		      } else {
+			h_pt_closestCA8jet_Wmass_tagged_varbin->Fill(jethelper4[matched_index].pt,w);
+			h_pt_closestCA8jet_Wmass_tagged_varbin2->Fill(jethelper4[matched_index].pt,w);
+		      }
 		    }
 		  }
 		}
 	      }
 	    }
-	  } else {
-	    nlep++;
 	  }
 	}
-	if (nlep==0)
-	  isTTallhad = true;
-	else if(nlep==1)
-	  isTTsemilep = true;
-	else if(nlep==2)
-	  isTTdilep = true;
       }
+
+
       if(isTTallhad)
 	TTallhad->Fill("Pileup",w);
       else if(isTTsemilep)

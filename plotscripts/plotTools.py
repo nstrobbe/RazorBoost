@@ -28,7 +28,7 @@ def ConstructHDict(h, name="name", color=rt.kBlue, title="title", appear_in_rati
     hdict["color"] = color                       # the color for the histogram
     hdict["title"] = title                       # title of the histogram
     hdict["appear in ratio"] = appear_in_ratio   # can be "Yes", "No", "Ref"
-    hdict["appear in legend"] = appear_in_legend # can be "Yes", "No", "Ref"
+    hdict["appear in legend"] = appear_in_legend # can be True or False
     hdict["linestyle"] = linestyle               # line style
     hdict["linewidth"] = linewidth               # line width
     hdict["markerstyle"] = markerstyle           # marker style
@@ -43,7 +43,7 @@ def ConstructHDict(h, name="name", color=rt.kBlue, title="title", appear_in_rati
 # ---------------------------------------------- #
 # -- Constructor for legend dictionary        -- #
 # ---------------------------------------------- # 
-def ConstructLDict(xmin,xmax,ymin,ymax,title="",ncolumns=1):
+def ConstructLDict(xmin,xmax,ymin,ymax,title="",ncolumns=1,fillstyle=1001):
     legdict = {}
     legdict["xmin"] = xmin
     legdict["ymin"] = ymin
@@ -51,6 +51,7 @@ def ConstructLDict(xmin,xmax,ymin,ymax,title="",ncolumns=1):
     legdict["ymax"] = ymax
     legdict["title"] = title
     legdict["ncolumns"] = ncolumns
+    legdict["fillstyle"] = fillstyle
     return legdict
 
 # -----------------------------------------------#
@@ -432,9 +433,11 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
     canvas = rt.TCanvas(cname,"")
     canvas.SetLeftMargin(0.15)
     canvas.SetBottomMargin(0.15)
+    #canvas.SetTopMargin(0.17)
     if logscale:
         canvas.SetLogy(1)
     canvas.cd()
+
     
     # Make the legend
     legend = rt.TLegend(0.67,0.5,0.87,0.87,"")
@@ -442,6 +445,7 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
         legend = rt.TLegend(legdict["xmin"],legdict["ymin"],legdict["xmax"],legdict["ymax"],legdict["title"])
         legend.SetNColumns(legdict["ncolumns"])
     legend.SetFillColor(0)
+    legend.SetFillStyle(legdict["fillstyle"])
     legend.SetBorderSize(0)
     
     # Get histograms from a list of dictionaries, and plot them 
@@ -484,6 +488,7 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
 
         h.SetLineColor(hdict["color"])
         h.SetLineWidth(hdict["linewidth"])
+        h.SetLineStyle(hdict["linestyle"])
         if hdict["fillstyle"] != 0:
             h.SetFillStyle(hdict["fillstyle"])
             h.SetFillColor(hdict["color"])
@@ -501,9 +506,12 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
                 legoption = "epl"
             legend.AddEntry(h,hdict["name"],legoption)
         if logscale:
+            #h.SetMinimum(0.1)
             h.SetMinimum(0.00005)
             if scale == "Yes":
                 h.SetMaximum(1)
+        else:
+            h.SetMinimum(0.5)
 
         drawoption = hdict["drawoption"]
         if first > 0:
@@ -577,15 +585,16 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
 
     # Get signal histograms
     hsignal = []
-    for hdict in hdictlist_sig:
-        if not hdict["histogram"]:
-            print hdict["name"], "doesn't exist, will stop making this plot now"
-            return
-        h = hdict["histogram"].Clone()
-        h.Sumw2()
-        h.SetFillColor(hdict["color"])
-        h.SetLineColor(hdict["color"])
-        hsignal.append(h)
+    if hdictlist_sig != 0:
+        for hdict in hdictlist_sig:
+            if not hdict["histogram"]:
+                print hdict["name"], "doesn't exist, will stop making this plot now"
+                return
+            h = hdict["histogram"].Clone()
+            h.Sumw2()
+            h.SetFillColor(hdict["color"])
+            h.SetLineColor(hdict["color"])
+            hsignal.append(h)
 
     # make a stack of all the mc, will use the reverse order of the list
     mc = rt.THStack()
