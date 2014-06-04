@@ -511,7 +511,7 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
             if scale == "Yes":
                 h.SetMaximum(1)
         else:
-            h.SetMinimum(0.5)
+            h.SetMinimum(0.)
 
         drawoption = hdict["drawoption"]
         if first > 0:

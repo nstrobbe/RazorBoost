@@ -894,7 +894,7 @@ int main(int argc, char** argv)
 	    eCSVL = geteff1D(h_pt_lc_CSVLeff, pt);
 	  }
 	  SFCSVL = (SFCSVLFl + sigmabtagFl*dSFCSVLFl);
-	  SFCSVM = (SFCSVMFl + sigmabtagFs*dSFCSVMFl);
+	  SFCSVM = (SFCSVMFl + sigmabtagFl*dSFCSVMFl);
 	}
 
 	// CSVM
@@ -942,9 +942,10 @@ int main(int argc, char** argv)
 	// Put the jet in a TLorentzVector and scale it with JEC SF
 	TLorentzVector jlCA8nojecSF;
 	jlCA8nojecSF.SetPtEtaPhiE(jethelper4[i].pt, jethelper4[i].eta,
-			jethelper4[i].phi, jethelper4[i].energy);
+				  jethelper4[i].phi, jethelper4[i].energy);
 	TLorentzVector jlCA8;
-	jlCA8.SetPxPyPzE(jlCA8nojecSF.Px()*jecSFCA8, jlCA8nojecSF.Py()*jecSFCA8, jlCA8nojecSF.Pz()*jecSFCA8, jlCA8nojecSF.E()*jecSFCA8);
+	jlCA8.SetPxPyPzE(jlCA8nojecSF.Px()*jecSFCA8, jlCA8nojecSF.Py()*jecSFCA8, 
+			 jlCA8nojecSF.Pz()*jecSFCA8, jlCA8nojecSF.E()*jecSFCA8);
 	jethelper4[i].pt = jlCA8.Pt();
         if (!(jethelper4[i].pt > 30) ) continue;
         if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;

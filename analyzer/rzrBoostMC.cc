@@ -317,6 +317,8 @@ int main(int argc, char** argv)
   TH2D* h_mdrp_yasym = new TH2D("h_mdrp_yasym", "h_mdrp_yasym", 20, 0, 1, 20, 0, 1);
   TH2D* h_mdrp2_yasym = new TH2D("h_mdrp2_yasym", "h_mdrp2_yasym", 20, 0, 1, 20, 0, 1);
 
+  TH1D* h_deltaR_CA8_AK5 = new TH1D("h_deltaR_CA8_AK5","h_deltaR_CA8_AK5",50,0,5);
+
   TH1D* h_pt_closestCA8jet = new TH1D("h_pt_closestCA8jet","h_pt_closestCA8jet",50,0,1000);
   TH1D* h_pt_closestCA8jet_Wmass = new TH1D("h_pt_closestCA8jet_Wmass","h_pt_closestCA8jet_Wmass",50,0,1000);
   TH1D* h_pt_closestCA8jet_Wmass_tagged = new TH1D("h_pt_closestCA8jet_Wmass_tagged","h_pt_closestCA8jet_Wmass_tagged",50,0,1000);
@@ -1981,8 +1983,18 @@ int main(int argc, char** argv)
 	//if (!(tau21 < 0.46) ) continue;
 	//if (!(tau3 < 0.135) ) continue;
         sW.push_back(jethelper4[i]);
+	// check overlap with AK5 jets
+	if(sW.size() == 1){
+	  double deltaR_min = 100;
+	  for (int ak5=0; ak5<sjet.size(); ak5++){
+	    if(ak5>2) continue;
+	    double deltaR_CA8_AK5 = fdeltaR(jethelper4[i].eta, jethelper4[i].phi, sjet[ak5].eta, sjet[ak5].phi);
+	    if(deltaR_CA8_AK5 < deltaR_min)
+	      deltaR_min = deltaR_CA8_AK5;
+	  }
+	  h_deltaR_CA8_AK5->Fill(deltaR_min);
+	}
       }
-
 
       // Wtag scale factors:
       double SFWtag = 0.86;
