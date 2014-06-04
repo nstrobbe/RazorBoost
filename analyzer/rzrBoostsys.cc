@@ -309,7 +309,7 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhig0p5", "h_MR_R2_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
   TH2D * h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5", "h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
-  // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhiHat < 4 (RA2b value)
+  // QCD control region: 0 Lb; >= 1 uW; 0 Ll + minDeltaPhi < 0.3
   TH1D * h_MR_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_MR_0Lbg1uW0Ll_mdPhi0p3", "h_MR_0Lbg1uW0Ll_mdPhi0p3", nbins_MR, bins_MR);
   TH1D * h_R2_0Lbg1uW0Ll_mdPhi0p3 = new TH1D("h_R2_0Lbg1uW0Ll_mdPhi0p3", "h_R2_0Lbg1uW0Ll_mdPhi0p3", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lbg1uW0Ll_mdPhi0p3 = new TH2D("h_MR_R2_0Lbg1uW0Ll_mdPhi0p3", "h_MR_R2_0Lbg1uW0Ll_mdPhi0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
@@ -326,6 +326,28 @@ int main(int argc, char** argv)
   TH1D * h_R2_0Lbg1Y1LlmT_mdPhig0p5 = new TH1D("h_R2_0Lbg1Y1LlmT_mdPhig0p5", "h_R2_0Lbg1Y1LlmT_mdPhig0p5", nbins_R2, bins_R2);
   TH2D * h_MR_R2_0Lbg1Y1LlmT_mdPhig0p5 = new TH2D("h_MR_R2_0Lbg1Y1LlmT_mdPhig0p5", "h_MR_R2_0Lbg1Y1LlmT_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
   TH2D * h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p5 = new TH2D("h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p5", "h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
+
+  // mindphi 0.3 histograms
+
+  // g1Mb g1W 0Ll ; Signal box: >= 1 Mb; >= 1 W; 0 Ll
+  TH1D * h_MR_g1Mbg1W0Ll_mdPhig0p3 = new TH1D("h_MR_g1Mbg1W0Ll_mdPhig0p3", "h_MR_g1Mbg1W0Ll_mdPhig0p3", nbins_MR, bins_MR);
+  TH1D * h_R2_g1Mbg1W0Ll_mdPhig0p3 = new TH1D("h_R2_g1Mbg1W0Ll_mdPhig0p3", "h_R2_g1Mbg1W0Ll_mdPhig0p3", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhig0p3 = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhig0p3", "h_MR_R2_g1Mbg1W0Ll_mdPhig0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p3 = new TH2D("h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p3", "h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
+  // g1Mbg1W1LlmT ; TTj control region: >= 1 Mb; >= 1 W; 1 Ll; mT<100
+  TH1D * h_MR_g1Mbg1W1LlmT100_mdPhig0p3 = new TH1D("h_MR_g1Mbg1W1LlmT100_mdPhig0p3", "h_MR_g1Mbg1W1LlmT100_mdPhig0p3", nbins_MR, bins_MR);
+  TH1D * h_R2_g1Mbg1W1LlmT100_mdPhig0p3 = new TH1D("h_R2_g1Mbg1W1LlmT100_mdPhig0p3", "h_R2_g1Mbg1W1LlmT100_mdPhig0p3", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_g1Mbg1W1LlmT100_mdPhig0p3 = new TH2D("h_MR_R2_g1Mbg1W1LlmT100_mdPhig0p3", "h_MR_R2_g1Mbg1W1LlmT100_mdPhig0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_g1Mbg1W1LlmT100_mdPhig0p3 = new TH2D("h_uw_MR_R2_g1Mbg1W1LlmT100_mdPhig0p3", "h_uw_MR_R2_g1Mbg1W1LlmT100_mdPhig0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
+  // 0Lbg1Y1LlmT ; Wj control region: == 0 Lb; >= 1 Y; 1 Ll; 30<mT<100
+  TH1D * h_MR_0Lbg1Y1LlmT_mdPhig0p3 = new TH1D("h_MR_0Lbg1Y1LlmT_mdPhig0p3", "h_MR_0Lbg1Y1LlmT_mdPhig0p3", nbins_MR, bins_MR);
+  TH1D * h_R2_0Lbg1Y1LlmT_mdPhig0p3 = new TH1D("h_R2_0Lbg1Y1LlmT_mdPhig0p3", "h_R2_0Lbg1Y1LlmT_mdPhig0p3", nbins_R2, bins_R2);
+  TH2D * h_MR_R2_0Lbg1Y1LlmT_mdPhig0p3 = new TH2D("h_MR_R2_0Lbg1Y1LlmT_mdPhig0p3", "h_MR_R2_0Lbg1Y1LlmT_mdPhig0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p3 = new TH2D("h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p3", "h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
+
 
   // Define the order of bins in the counts histogram:
   
@@ -494,6 +516,16 @@ int main(int argc, char** argv)
   TH2D* list_T_uw[nbins_mother][nbins_LSP];
   TH2D* list_W_uw[nbins_mother][nbins_LSP];
 
+  // mindphi 0.3
+  TH2D* list_S0p3[nbins_mother][nbins_LSP];
+  TH2D* list_T0p3[nbins_mother][nbins_LSP];
+  TH2D* list_W0p3[nbins_mother][nbins_LSP];
+
+  TH2D* list_S0p3_uw[nbins_mother][nbins_LSP];
+  TH2D* list_T0p3_uw[nbins_mother][nbins_LSP];
+  TH2D* list_W0p3_uw[nbins_mother][nbins_LSP];
+
+
   int step_mother = (mother_max - mother_min)/nbins_mother;
   int step_LSP = (LSP_max - LSP_min)/nbins_LSP;
   if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
@@ -520,6 +552,21 @@ int main(int argc, char** argv)
 	list_T_uw[counter_i][counter_j] = new TH2D(nameTuw,nameTuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
 	list_Q_uw[counter_i][counter_j] = new TH2D(nameQuw,nameQuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
 	list_W_uw[counter_i][counter_j] = new TH2D(nameWuw,nameWuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+
+	// mindphi 0.3
+	TString nameS0p3 = "h_S0p3_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameT0p3 = "h_T0p3_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameW0p3 = "h_W0p3_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	list_S0p3[counter_i][counter_j] = new TH2D(nameS0p3,nameS0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_T0p3[counter_i][counter_j] = new TH2D(nameT0p3,nameT0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_W0p3[counter_i][counter_j] = new TH2D(nameW0p3,nameW0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+
+	TString nameSuw0p3 = "h_uw_S0p3_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameTuw0p3 = "h_uw_T0p3_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	TString nameWuw0p3 = "h_uw_W0p3_" + sample + "_" + to_string(i) + "_" + to_string(j);
+	list_S0p3_uw[counter_i][counter_j] = new TH2D(nameSuw0p3,nameSuw0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_T0p3_uw[counter_i][counter_j] = new TH2D(nameTuw0p3,nameTuw0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+	list_W0p3_uw[counter_i][counter_j] = new TH2D(nameWuw0p3,nameWuw0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
 
 	counter_j++;
       }
@@ -1511,6 +1558,23 @@ int main(int argc, char** argv)
 		    }
 		 		    
 		  } // end of  minDeltaPhi > 0.5
+
+		  if ( minDeltaPhi > 0.3){
+		    ofile.count("g1Mbg1W0Ll_mdPhig0p3",w);
+		    h_MR_g1Mbg1W0Ll_mdPhig0p3->Fill(MR, w);
+		    h_R2_g1Mbg1W0Ll_mdPhig0p3->Fill(R2, w);
+		    h_MR_R2_g1Mbg1W0Ll_mdPhig0p3->Fill(MR, R2, w);
+		    h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p3->Fill(MR, R2, 1.);
+
+		    if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+			|| sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		      int bin_mother = (m_mother - mother_min)/step_mother;
+		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		      list_S0p3[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		      list_S0p3_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		    }
+		  } // end of  minDeltaPhi > 0.3
+
 		} // end of sW.size() > 0
 	      } // end of nmediumbs > 0
 	      
@@ -1636,6 +1700,22 @@ int main(int argc, char** argv)
 		    list_T_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
 		  }
 		} // end of minDeltaPhi > 0.5 
+
+		if ( minDeltaPhi > 0.3){
+		  ofile.count("g1Mbg1W1LlmT100_mdPhig0p3",w);
+		  h_MR_g1Mbg1W1LlmT100_mdPhig0p3->Fill(MR, w);
+		  h_R2_g1Mbg1W1LlmT100_mdPhig0p3->Fill(R2, w);
+		  h_MR_R2_g1Mbg1W1LlmT100_mdPhig0p3->Fill(MR, R2, w);
+		  h_uw_MR_R2_g1Mbg1W1LlmT100_mdPhig0p3->Fill(MR, R2, 1.);
+		  
+		  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+		      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		    int bin_mother = (m_mother - mother_min)/step_mother;
+		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		    list_T0p3[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		    list_T0p3_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		  }
+		} // end of minDeltaPhi > 0.3 
 	      } // end mT < 100
 	    } // end sW.size()
 	  } // end nmediumbs > 0
@@ -1685,6 +1765,21 @@ int main(int argc, char** argv)
 		    list_W_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
 		  }
 		} // end minDeltaPhi > 0.5
+		if ( minDeltaPhi > 0.3){
+		  ofile.count("0Lbg1Y1LlmT_mdPhig0p3",w);
+		  h_MR_0Lbg1Y1LlmT_mdPhig0p3->Fill(MR, w);
+		  h_R2_0Lbg1Y1LlmT_mdPhig0p3->Fill(R2, w);
+		  h_MR_R2_0Lbg1Y1LlmT_mdPhig0p3->Fill(MR, R2, w);
+		  h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p3->Fill(MR, R2, 1.);
+
+		  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
+		      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		    int bin_mother = (m_mother - mother_min)/step_mother;
+		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		    list_W0p3[bin_mother][bin_LSP]->Fill(MR,R2,w);
+		    list_W0p3_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		  }
+		} // end minDeltaPhi > 0.3
 	      } // end mT < 100 && mT > 30
 	    } // end sY.size()
 	  } // end nloosebs > 0
