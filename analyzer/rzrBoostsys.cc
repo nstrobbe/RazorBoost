@@ -27,8 +27,8 @@ int main(int argc, char** argv)
 {
 
   // Uncomment appropriate line to switch between sezen and nadja
-  //TString base = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/";
-  TString base = "/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/";
+  TString base = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/";
+  //TString base = "/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/";
 
   // Get the trigger histogram:
   TFile*  fhlt = TFile::Open(base+"hlteff/hlteff_HT_jpt_singlel.root");
@@ -1029,7 +1029,7 @@ int main(int argc, char** argv)
       for (unsigned int i=0; i<jethelper4.size(); i++) {
 	// begin JEC SF
 	double jecUnc = 0.;
-	AK5PFCHSJECunc(jethelper4[i].pt, jethelper4[i].eta, jecUnc);
+	AK7PFCHSJECunc(jethelper4[i].pt, jethelper4[i].eta, jecUnc);
 	double jecSFCA8 = 1. + (sigmaJECCA8 * fabs(jecUnc));
 	// Put the jet in a TLorentzVector and scale it with JEC SF
 	TLorentzVector jlCA8nojecSF;
