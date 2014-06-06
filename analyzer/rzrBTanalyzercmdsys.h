@@ -193,6 +193,11 @@ std::vector<int>	genparticlehelper_pdgId(200,0);
 std::vector<double>	genparticlehelper_phi(200,0);
 std::vector<double>	genparticlehelper_pt(200,0);
 std::vector<int>	genparticlehelper_status(200,0);
+int     geneventinfoproducthelper_id1;
+int     geneventinfoproducthelper_id2;
+double  geneventinfoproducthelper_q;
+double  geneventinfoproducthelper_x1;
+double  geneventinfoproducthelper_x2;
 double	genruninfoproduct_crossSection;
 double	genruninfoproduct_filterEfficiency;
 std::vector<float>	jethelper1_chargedEmEnergyFraction(200,0);
@@ -3769,6 +3774,11 @@ void selectVariables(itreestream& stream)
   stream.select("recoGenParticleHelper_genParticles.phi", genparticlehelper_phi);
   stream.select("recoGenParticleHelper_genParticles.pt", genparticlehelper_pt);
   stream.select("recoGenParticleHelper_genParticles.status", genparticlehelper_status);
+  stream.select("GenEventInfoProductHelper_generator.id1", geneventinfoproducthelper_id1);
+  stream.select("GenEventInfoProductHelper_generator.id2", geneventinfoproducthelper_id2);
+  stream.select("GenEventInfoProductHelper_generator.q", geneventinfoproducthelper_q);
+  stream.select("GenEventInfoProductHelper_generator.x1", geneventinfoproducthelper_x1);
+  stream.select("GenEventInfoProductHelper_generator.x2", geneventinfoproducthelper_x2);
   stream.select("GenRunInfoProduct_generator.crossSection", genruninfoproduct_crossSection);
   stream.select("GenRunInfoProduct_generator.filterEfficiency", genruninfoproduct_filterEfficiency);
   stream.select("patJetHelper_patJetsWithVarCHS.chargedEmEnergyFraction", jethelper1_chargedEmEnergyFraction);
@@ -4607,7 +4617,7 @@ decodeCommandLine(int argc, char** argv, commandLine& cl)
 
   // 6th (optional) command line argument
   if ( argc > 6 )
-        cl.systfilename = std::string(argv[5]);
+        cl.systfilename = std::string(argv[6]);
   else
         cl.systfilename = std::string("systematics.txt");
 
