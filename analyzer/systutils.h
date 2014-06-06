@@ -706,7 +706,87 @@ void eleLooseSFEFull(double pt, double eta, double& SFe, double& dSFe)
   SFe = _SFe[ieta][ipt];
   dSFe = _SFe_error[ieta][ipt];
 
-  
+}
+
+
+// Y tag SFs and SF errors:
+void YSFEFull(double pt, double& SF, double& dSF)
+{
+  const int npt = 13;
+
+  // pt bins:
+  double _ptmin[npt] = {0.,180.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.};
+  double _ptmax[npt] = {180.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.,3000.};
+
+  // SF and errors for Ys:
+  double _SF[npt] = {1.5, 1.18, 1.16, 1.23, 1.26, 1.28, 1.12, 1.17, 1.27, 1.33, 1.35, 1.34, 1.37};
+  double _SF_error[npt] = {0.8, 0.06, 0.04, 0.03, 0.03, 0.03, 0.02, 0.03, 0.02, 0.03, 0.04, 0.02, 0.02};
+
+  int ipt = 0;
+  for (int i=0; i<npt; i++) {
+    if (pt >= _ptmin[i] && pt < _ptmax[i]) {
+      ipt = i;
+      break;
+    }
+  }
+
+  SF = _SF[ipt];
+  dSF = _SF_error[ipt];  
+
+}
+
+
+// aW tag SFs and SF errors:
+void aWSFEFull(double pt, double& SF, double& dSF)
+{
+  const int npt = 13;
+
+  // pt bins:
+  double _ptmin[npt] = {0.,180.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.};
+  double _ptmax[npt] = {180.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.,3000.};
+
+  // SF and errors for Ys:
+  double _SF[npt] = {1.6, 1.28, 1.23, 1.28, 1.35, 1.41, 1.22, 1.23, 1.39, 1.46, 1.49, 1.50, 1.51};
+  double _SF_error[npt] = {1.1, 0.10, 0.05, 0.04, 0.03, 0.04, 0.03, 0.03, 0.03, 0.03, 0.04, 0.03, 0.02};
+
+  int ipt = 0;
+  for (int i=0; i<npt; i++) {
+    if (pt >= _ptmin[i] && pt < _ptmax[i]) {
+      ipt = i;
+      break;
+    }
+  }
+
+  SF = _SF[ipt];
+  dSF = _SF_error[ipt];  
+
+}
+
+
+// W tag Fastsim SFs and SF errors:
+void WSFEFast(double pt, double& SF, double& dSF)
+{
+  const int npt = 6;
+
+  // pt bins:
+  double _ptmin[npt] = {0., 100., 150., 200., 250., 300.};
+  double _ptmax[npt] = {100., 150., 200., 250., 300., 4000.};
+
+  // SF and errors for Ws:
+  double _SF[npt] = {1.352, 1.352, 1.267, 1.210, 1.074, 1.066};
+  double _SF_error[npt] = {0.175, 0.175, 0.020, 0.013, 0014, 0.015};
+
+  int ipt = 0;
+  for (int i=0; i<npt; i++) {
+    if (pt >= _ptmin[i] && pt < _ptmax[i]) {
+      ipt = i;
+      break;
+    }
+  }
+
+  SF = _SF[ipt];
+  dSF = _SF_error[ipt];  
+
 }
 
 

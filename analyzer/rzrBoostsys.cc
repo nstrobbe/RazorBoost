@@ -113,10 +113,14 @@ int main(int argc, char** argv)
   double sigmabtagFl = vsyst[3];
   double sigmabtagFs = vsyst[4];
   double sigmaW = vsyst[5];
-  double sigmaeleVeto = vsyst[6];
-  double sigmaPU = vsyst[7];
-  double sigmaISR = vsyst[8];
-  double sigmaTopPt = vsyst[9];
+  double sigmaWFast = vsyst[6];
+  double sigmaY = vsyst[7];
+  double sigmaaW = vsyst[8];
+  double sigmaeleVeto = vsyst[9];
+  double sigmaPU = vsyst[10];
+  double sigmaISR = vsyst[11];
+  double sigmaTopPt = vsyst[12];
+  double sigmaZnn = vsyst[13];
 
   string sample = "";
   if ( argc > 7 )
@@ -242,6 +246,10 @@ int main(int argc, char** argv)
   // --------------------------------------------------------------
   double weightnorm = 1.;
   if (xsect != -1 && totweight != -1 && lumi != -1) {
+    // Do the Znunu weighting:
+    if (fsample.find("ZJetsToNuNu")!=string::npos) {
+      xsect = xsect*(1 + sigmaZnn*0.30);
+    }
     weightnorm = (xsect*lumi)/totweight;
   }
 
@@ -584,7 +592,7 @@ int main(int argc, char** argv)
     {
       // Read event into memory
       stream.read(entry);
-      cout << "Event: " << entry << endl;    
+      //cout << "Event: " << entry << endl;    
       
       // Count events and get the total weight contibuted by the event
       h_totweight->Fill(1, geneventinfoproduct_weight);
@@ -832,8 +840,6 @@ int main(int argc, char** argv)
       ofile.count("Pileup",w);
 
 
-      cout << "xpu: " << endl;
-
       // ----------------------
       // -- object selection --
       // ----------------------
@@ -971,9 +977,6 @@ int main(int argc, char** argv)
       double wCSVM = PCSVMdata / PCSVMsim;
       double wCSVL = PCSVLdata / PCSVLsim;
 
-      //cout << sbjet.size() << " " << wCSVM << " " << slbjet.size() << " " << wCSVL << endl;
-      //continue;
-
 
       // CA8
       // W selection:
@@ -981,6 +984,18 @@ int main(int argc, char** argv)
       std::vector<jethelper4_s> sW;
       std::vector<jethelper4_s> aW;
       std::vector<jethelper4_s> sY;
+      // scale factors and errors
+      double SFW = 0.86;
+      double dSFW = 0.07;
+      double SFaW = 1.;
+      double SFY = 1.;
+      double SFWFast = 1.; 
+      double dSFaW = 0.;
+      double dSFY = 0.;
+      double dSFWFast = 0.;
+      double w_W = 1;
+      double w_Y = 1;
+      double w_aW = 1;
       for (unsigned int i=0; i<jethelper4.size(); i++) {
 	// begin JEC SF
 	double jecUnc = 0.;
@@ -1001,6 +1016,8 @@ int main(int argc, char** argv)
         //if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
 	sY.push_back(jethelper4[i]);
         sjet2.push_back(jethelper4[i]);
+	YSFEFull(jethelper4[i].pt, SFY, dSFY);
+	w_Y *= SFY + sigmaY*dSFY;
         // Match with the unpruned:
         double prjmatch = 0;
         int jpr = -1;
@@ -1020,17 +1037,23 @@ int main(int argc, char** argv)
 	//if (tau21 >= 0.46 || tau3 >= 0.135) {
 	if (tau21 >= 0.50) {
           aW.push_back(jethelper4[i]);
+	  aWSFEFull(jethelper4[i].pt, SFaW, dSFaW);
+	  w_aW *= SFaW + sigmaaW*dSFaW;
         }
 	if (!(tau21 < 0.50) ) continue;
 	//if (!(tau21 < 0.46) ) continue;
 	//if (!(tau3 < 0.135) ) continue;
+	WSFEFast(jethelper4[i].pt, SFWFast, dSFWFast);
+	// For FastSim
+	if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+	    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
+	  w_W *= (SFW + sigmaW*dSFW)*(SFWFast + sigmaWFast*dSFWFast);
+	// For FullSim
+	} else {
+	  w_W *= (SFW + sigmaW*dSFW);
+	}
         sW.push_back(jethelper4[i]);
       }
-
-      // Wtag scale factors:
-      double SFWtag = 0.86;
-      double dSFWtag = 0.07;
-      double w_Wtag = pow((SFWtag + sigmaW*dSFWtag), sW.size());
 
 
       // Muons - veto:
@@ -1373,8 +1396,6 @@ int main(int argc, char** argv)
 	w = w*w_TopPt_nominal;
       
 
-      cout << "xbefore sel" << endl;
-
       // ---------------------
       // -- event selection --
       // ---------------------
@@ -1526,7 +1547,7 @@ int main(int argc, char** argv)
 		// g1Mb g1W 0Ll -- SIGNAL region
 		if( sW.size() > 0){
 		  if (eventhelper_isRealData!=1) {
-		    w = w*w_Wtag;
+		    w = w*w_W;
 		  }
 		  ofile.count("g1Mbg1W0Ll",w);
 		  if(isTTallhad)
@@ -1592,6 +1613,9 @@ int main(int argc, char** argv)
 		
 		// 0Lbg1uW0Ll -- QCD control region
 		if( aW.size() > 0){
+		  if (eventhelper_isRealData!=1) {
+		    w = w*w_aW;
+		  }
 		  ofile.count("0Lbg1uW0Ll",w);
 		  if(isTTallhad)
 		    TTallhad->Fill("0Lbg1uW0Ll", w);
@@ -1667,7 +1691,7 @@ int main(int argc, char** argv)
 	    
 	    if( sW.size() > 0 ){
 	      if (eventhelper_isRealData!=1) {
-		w = w*w_Wtag;
+		w = w*w_W;
 	      }
 	      ofile.count("g1Mbg1W1Ll",w);
 	      if(isTTallhad)
@@ -1734,6 +1758,9 @@ int main(int argc, char** argv)
 	      TTdilep->Fill("0Lb1Ll", w);
 	    
 	    if( sY.size() > 0 ){
+	      if (eventhelper_isRealData!=1) {
+		w = w*w_Y;
+	      }
 	      ofile.count("0Lbg1Y1Ll",w);
 	      if(isTTallhad)
 		TTallhad->Fill("0Lbg1Y1Ll", w);

@@ -48,7 +48,7 @@ nrunstot = 0
 # Number of input files per run
 nf = 7
 # Integrated luminosity in pb-1s
-intlumi = 19789
+intlumi = 19712
 # Loop over the datasets
 for d in datasets:
     # Read the sample name, and when relevant,
