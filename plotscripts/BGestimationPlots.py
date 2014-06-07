@@ -8,7 +8,8 @@ import plotTools
 if __name__ == '__main__':
 
     #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/"
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140528_newWtagger_global/"
+    #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140528_newWtagger_global/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140606_TopinTTJets/"
 
     #region = "g1Mb0Wg1uW0Ll"
     #region = "g1Mbg1W0Ll_mdPhiHat4"
@@ -25,7 +26,8 @@ if __name__ == '__main__':
     inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/rzrBoostMC_data.root" # data histograms
     inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/rzrBoostMC_bg.root" # data histograms
     #inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/BGestimate_"+region+"_QCDWJTTJ_2.root" # bg estimate histograms
-    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140528_newWtagger_global/BGestimate_"+region+"_QCDWJTTJ_2.root" # bg estimate histograms
+    #inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140528_newWtagger_global/BGestimate_"+region+"_QCDWJTTJ_2.root" # bg estimate histograms
+    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140606_TopinTTJets/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
 
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)

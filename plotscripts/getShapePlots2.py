@@ -16,6 +16,7 @@ if __name__ == '__main__':
     outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass"
     basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/"
     inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
+    inputfile_Top = basedir + "rzrBoostMC_Top.root"
     inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
     inputfile_WJets = basedir + "rzrBoostMC_WJetsToLNu.root"
     inputfile_DYJets = basedir + "rzrBoostMC_DYJetsToLL.root"
@@ -28,6 +29,7 @@ if __name__ == '__main__':
 
     outfile = TFile.Open(outputdir+"/shapeplots2.root","RECREATE")
     infile_TTJ = TFile.Open(inputfile_TTJ)
+    infile_Top = TFile.Open(inputfile_Top)
     infile_QCD = TFile.Open(inputfile_QCD)
     infile_WJets = TFile.Open(inputfile_WJets)
     infile_DYJets = TFile.Open(inputfile_DYJets)
@@ -123,6 +125,36 @@ if __name__ == '__main__':
         hdictlist=[hdict_TTJ_S, hdict_TTJ_T,hdict_WJ_S,hdict_WJ_T]
         canvasname = var+"_comparison_TTJ_WJ"
         rtitle = "#frac{other}{TTJets SIG}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    # compare TOP and TTjets in signal
+    for var in vars:
+        hdict_TTJ_S = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W0Ll_mdPhig0p5"),
+                                               name="TTJets in S region", color=rt.kMagenta+3,
+                                               title="Shape comparison for TTJets and Single Top in the Signal region",
+                                               appear_in_ratio="Ref", xtitle=var, drawoption="EP")
+        hdict_Top_S = plotTools.ConstructHDict(infile_Top.Get("h_"+var+"_g1Mbg1W0Ll_mdPhig0p5"),
+                                              name="Single top in S region", color=rt.kMagenta+1,
+                                              title="Shape comparison for TTJets and Single Top in the Signal region",
+                                              appear_in_ratio="Yes", xtitle=var, drawoption="EP")
+        hdictlist=[hdict_TTJ_S,hdict_Top_S]
+        canvasname = var+"_comparison_TTJ_Top_S"
+        rtitle = "#frac{Single top}{TTJ}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
+
+    # compare TOP and TTjets in TTJets control region
+    for var in vars:
+        hdict_TTJ_T = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W1LlmT100_mdPhig0p5"),
+                                               name="TTJets in T CR", color=rt.kMagenta+3,
+                                               title="Shape comparison for TTJets and Single Top in the TTJets Control region",
+                                               appear_in_ratio="Ref", xtitle=var,drawoption="EP")
+        hdict_Top_T = plotTools.ConstructHDict(infile_Top.Get("h_"+var+"_g1Mbg1W1LlmT100_mdPhig0p5"),
+                                              name="Single top in T CR", color=rt.kMagenta+1,
+                                              title="Shape comparison for TTJets and Single Top in the TTJets Control region",
+                                              appear_in_ratio="Yes", xtitle=var,drawoption="EP")
+        hdictlist=[hdict_TTJ_T,hdict_Top_T]
+        canvasname = var+"_comparison_TTJ_Top_T"
+        rtitle = "#frac{Single Top}{TTJ}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
 
     # build hdictlist for QCD:
