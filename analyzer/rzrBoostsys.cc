@@ -10,8 +10,8 @@
 #include "systutils.h"
 #include <math.h>
 //#include "JetCorrectionUncertainty.h"
-//#include "LHAPDF/LHAPDF.h"
-
+#include "LHAPDF/LHAPDF.h"
+#include "PDFweight.h"
 #include "TLorentzVector.h"
 
 #ifdef PROJECT_NAME
@@ -21,14 +21,14 @@
 #endif
 
 using namespace std;
-//using namespace LHAPDF;
+using namespace LHAPDF;
 //-----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
 
   // Uncomment appropriate line to switch between sezen and nadja
-  //TString base = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/";
-  TString base = "/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/";
+  TString base = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/";
+  //TString base = "/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/";
 
   // Get the trigger histogram:
   TFile*  fhlt = TFile::Open(base+"hlteff/hlteff_HT_jpt_singlel.root");
@@ -121,6 +121,7 @@ int main(int argc, char** argv)
   double sigmaISR = vsyst[11];
   double sigmaTopPt = vsyst[12];
   double sigmaZnn = vsyst[13];
+  int pdfnumber = vsyst[14];
 
   string sample = "";
   if ( argc > 7 )
@@ -248,7 +249,7 @@ int main(int argc, char** argv)
   if (xsect != -1 && totweight != -1 && lumi != -1) {
     // Do the Znunu weighting:
     if (fsample.find("ZJetsToNuNu")!=string::npos) {
-      xsect = xsect*(1 + sigmaZnn*0.30);
+      xsect = xsect*(1 + sigmaZnn*0.50);
     }
     weightnorm = (xsect*lumi)/totweight;
   }
@@ -310,6 +311,8 @@ int main(int argc, char** argv)
   }
 
   TH1D* h_totweight = new TH1D("h_totweight", "h_totweight", 1, 1, 2);
+
+  TH1D* h_pdfweight = new TH1D("h_pdfweight", "h_pdfweight", 40, 0, 2);
 
   // g1Mb g1W 0Ll ; Signal box: >= 1 Mb; >= 1 W; 0 Ll
   TH1D * h_MR_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_MR_g1Mbg1W0Ll_mdPhig0p5", "h_MR_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR);
@@ -583,6 +586,20 @@ int main(int argc, char** argv)
   }
 
 
+  // Get the PDF sets:
+  string pdforig = "cteq6l1";
+  if (fsample.find("powheg")!=string::npos) pdforig = "CT10nlo";
+  string pdfsys = "CT10_rand1234";
+  if (pdfnumber > 100 && pdfnumber <= 200) {
+    pdfsys = "MSTW2008lo68cl_rand1234";
+    pdfnumber = pdfnumber - 100;
+  }
+  if (pdfnumber > 200 && pdfnumber <= 300) {
+    pdfsys = "NNPDF23_lo_as_0130_qed";
+    pdfnumber = pdfnumber - 200;
+  }
+  PDFweight pdfweight(pdfsys, pdforig);
+
   //---------------------------------------------------------------------------
   // Loop over events
   //---------------------------------------------------------------------------
@@ -611,6 +628,19 @@ int main(int argc, char** argv)
       // addEvent if you wish to save only the selected objects.
       
       fillObjects();
+
+      // Test PDFs:
+      double x1 = geneventinfoproducthelper_x1;
+      double x2 = geneventinfoproducthelper_x2;
+      double Q  = geneventinfoproducthelper_q;
+      int id1   = geneventinfoproducthelper_id1;
+      int id2   = geneventinfoproducthelper_id2;
+      
+      double w_pdf = pdfweight(id1, id2, x1, x2, Q, pdfnumber);
+      //cout << x1 << " " << x2 << " " << Q << " " << id1 << " " << id2 << endl;
+      //cout << "PDF weight = " << w_pdf << endl;
+      h_pdfweight->Fill(w_pdf, w);
+      w *= w_pdf;
 
       // get mass point information for signal samples
       double mg = lheeventproducthelper_mg;
@@ -999,7 +1029,7 @@ int main(int argc, char** argv)
       for (unsigned int i=0; i<jethelper4.size(); i++) {
 	// begin JEC SF
 	double jecUnc = 0.;
-	AK5PFCHSJECunc(jethelper4[i].pt, jethelper4[i].eta, jecUnc);
+	AK7PFCHSJECunc(jethelper4[i].pt, jethelper4[i].eta, jecUnc);
 	double jecSFCA8 = 1. + (sigmaJECCA8 * fabs(jecUnc));
 	// Put the jet in a TLorentzVector and scale it with JEC SF
 	TLorentzVector jlCA8nojecSF;
