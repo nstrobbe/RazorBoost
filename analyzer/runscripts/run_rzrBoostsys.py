@@ -85,7 +85,7 @@ print firstline, lastline
 # Total number of runs
 nrunstot = 0
 # Number of input files per run
-nf = 5
+nf = 8
 # Integrated luminosity in pb-1s
 intlumi = 19712
 
@@ -179,13 +179,15 @@ for nsys in range(firstline, lastline):
             cscr = cscrtmp % names
             open(nmscr,'w').write(cscr)
             os.system('chmod +x '+nmscr)
-            os.chdir('/tmp/ssekmen/')
+            #os.chdir('/tmp/ssekmen/')
             #os.chdir("/tmp/nstrobbe/")
             os.system('bsub -q 1nh '+nmscr)
             #print names
             nrunstot = nrunstot + 1
 
     if nsys != lastline-1:
+        print 'I will sleep for 10mins to not choke the batch'
+        time.sleep(600)
         while not '.root' in os.popen('ls -lh '+drestmpnsys+'*.root').read():
             time.sleep(100)
             print 'No root file for systematic case '+str(nsys)+'... Going back to sleep.'
