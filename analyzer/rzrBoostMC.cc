@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------------
 #include "rzrBTanalyzercmd.h"
 #include "utils.h"
-#include "btagutils.h"
+#include "systutils.h"
 #include <math.h>
 
 #include "TLorentzVector.h"
@@ -36,7 +36,6 @@ int main(int argc, char** argv)
     cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
     return 1;
   }
-  //TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
   TH2D* h_hlteff = (TH2D*)fhlt->Get("h_HT_j1pt_0_effph");
     
   // ------------------------------
@@ -510,6 +509,7 @@ int main(int argc, char** argv)
   TH1D * h_R2_g1Mbg1W0Ll_mdPhig0p3 = new TH1D("h_R2_g1Mbg1W0Ll_mdPhig0p3", "h_R2_g1Mbg1W0Ll_mdPhig0p3", nbins_R2, bins_R2);
   TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhig0p3 = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhig0p3", "h_MR_R2_g1Mbg1W0Ll_mdPhig0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
   TH2D * h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p3 = new TH2D("h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p3", "h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p3", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhig0p3_notrigw = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhig0p3_notrigw", "h_MR_R2_g1Mbg1W0Ll_mdPhig0p3_notrigw", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D * h_njets_g1Mbg1W0Ll_mdPhig0p3 = new TH1D("h_njets_g1Mbg1W0Ll_mdPhig0p3","h_njets_g1Mbg1W0Ll_mdPhig0p3",15,0,15);
   TH1D * h_nbjets_g1Mbg1W0Ll_mdPhig0p3 = new TH1D("h_nbjets_g1Mbg1W0Ll_mdPhig0p3","h_nbjets_g1Mbg1W0Ll_mdPhig0p3",6,0,6);
@@ -528,6 +528,7 @@ int main(int argc, char** argv)
   TH1D * h_R2_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_R2_g1Mbg1W0Ll_mdPhig0p5", "h_R2_g1Mbg1W0Ll_mdPhig0p5", nbins_R2, bins_R2);
   TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhig0p5", "h_MR_R2_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
   TH2D * h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5", "h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
+  TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhig0p5_notrigw = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhig0p5_notrigw", "h_MR_R2_g1Mbg1W0Ll_mdPhig0p5_notrigw", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D * h_njets_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_njets_g1Mbg1W0Ll_mdPhig0p5","h_njets_g1Mbg1W0Ll_mdPhig0p5",15,0,15);
   TH1D * h_nbjets_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_nbjets_g1Mbg1W0Ll_mdPhig0p5","h_nbjets_g1Mbg1W0Ll_mdPhig0p5",6,0,6);
@@ -1838,11 +1839,11 @@ int main(int argc, char** argv)
 	double pt = cmgpfjet[i].pt;
 	double eta = cmgpfjet[i].eta;
 	double partonFlavour = cmgpfjet[i].partonFlavour;
-        btagCSVMEEFull(partonFlavour, pt, fabs(eta), SFCSVMFl, dSFCSVMFl);
-        btagCSVMEEFast(partonFlavour, pt, fabs(eta), SFCSVMFs, dSFCSVMFs);
+        btagCSVMSFFull(partonFlavour, pt, fabs(eta), SFCSVMFl, dSFCSVMFl);
+        btagCSVMSFFast(partonFlavour, pt, fabs(eta), SFCSVMFs, dSFCSVMFs);
 
-        btagCSVLEEFull(partonFlavour, pt, fabs(eta), SFCSVLFl, dSFCSVLFl);
-        btagCSVLEEFast(partonFlavour, pt, fabs(eta), SFCSVLFs, dSFCSVLFs);
+        btagCSVLSFFull(partonFlavour, pt, fabs(eta), SFCSVLFl, dSFCSVLFl);
+        btagCSVLSFFast(partonFlavour, pt, fabs(eta), SFCSVLFs, dSFCSVLFs);
 
 	double eCSVM = 0;
 	double eCSVL = 0;
@@ -1912,6 +1913,18 @@ int main(int argc, char** argv)
       std::vector<jethelper4_s> sW;
       std::vector<jethelper4_s> aW;
       std::vector<jethelper4_s> sY;
+      // scale factors and errors
+      double SFW = 0.86;
+      double dSFW = 0.07;
+      double SFaW = 1.;
+      double SFY = 1.;
+      double SFWFast = 1.; 
+      double dSFaW = 0.;
+      double dSFY = 0.;
+      double dSFWFast = 0.;
+      double w_W = 1;
+      double w_Y = 1;
+      double w_aW = 1;
       for (unsigned int i=0; i<jethelper4.size(); i++) {
         if (!(jethelper4[i].pt > 30) ) continue;
         if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;
@@ -1923,6 +1936,8 @@ int main(int argc, char** argv)
         if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
         //if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
 	sY.push_back(jethelper4[i]);
+	YSFEFull(jethelper4[i].pt, SFY, dSFY);
+	w_Y *= SFY;
         h_d1ptsel_d2ptsel->Fill(jethelper4[i].daughter_0_pt, jethelper4[i].daughter_1_pt);
         h_d1msel_d2msel->Fill(jethelper4[i].daughter_0_mass, jethelper4[i].daughter_1_mass);
         sjet2.push_back(jethelper4[i]);
@@ -1978,11 +1993,22 @@ int main(int argc, char** argv)
 	//if (tau21 >= 0.46 || tau3 >= 0.135) {
 	if (tau21 >= 0.50) {
           aW.push_back(jethelper4[i]);
+	  aWSFEFull(jethelper4[i].pt, SFaW, dSFaW);
+	  w_aW *= SFaW;
         }
 	if (!(tau21 < 0.50) ) continue;
 	//if (!(tau21 < 0.46) ) continue;
 	//if (!(tau3 < 0.135) ) continue;
         sW.push_back(jethelper4[i]);
+	WSFEFast(jethelper4[i].pt, SFWFast, dSFWFast);
+	// For FastSim
+	if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+	    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
+	  w_W *= SFW*SFWFast;
+	// For FullSim
+	} else {
+	  w_W *= SFW;
+	}
 	// check overlap with AK5 jets
 	if(sW.size() == 1){
 	  double deltaR_min = 100;
@@ -1997,8 +2023,8 @@ int main(int argc, char** argv)
       }
 
       // Wtag scale factors:
-      double SFWtag = 0.86;
-      double wWtag = pow(SFWtag, sW.size());
+      //double SFWtag = 0.86;
+      //double wWtag = pow(SFWtag, sW.size());
 
 
       // Muons - veto:
@@ -2034,6 +2060,14 @@ int main(int argc, char** argv)
 	if (!(fabs(cmgelectron[i].eta) < 1.442 && fabs(cmgelectron[i].eta) < 1.556) ) continue;
 	velectron.push_back(cmgelectron[i]);
       }
+      // electron SFs:
+      double SFeleVeto = 1.;
+      double dSFeleVeto = 0.;
+      if (velectron.size() == 1) {
+	eleLooseSFEFull(velectron[0].pt, fabs(velectron[0].eta), SFeleVeto, dSFeleVeto);
+      }
+      double w_eleVeto = SFeleVeto;
+
       // Electrons - tight
       std::vector<cmgelectron1_s> selectron;
       std::vector<TVector3> V3el;
@@ -2829,7 +2863,7 @@ int main(int argc, char** argv)
 		// g1Mb g1W 0Ll -- SIGNAL region
 		if( sW.size() > 0){
 		  if (eventhelper_isRealData!=1) {
-		    w = w*wWtag;
+		    w = w*w_W;
 		  }
 		  ofile.count("g1Mbg1W0Ll",w);
 		  h_MR_g1Mbg1W0Ll->Fill(MR, w);
@@ -2924,6 +2958,8 @@ int main(int argc, char** argv)
 		    h_R2_g1Mbg1W0Ll_mdPhig0p3->Fill(R2, w);
 		    h_MR_R2_g1Mbg1W0Ll_mdPhig0p3->Fill(MR, R2, w);
 		    h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p3->Fill(MR, R2, 1.);
+		    if (w_trigger>0)
+		      h_MR_R2_g1Mbg1W0Ll_mdPhig0p3_notrigw->Fill(MR, R2, w/w_trigger);
 
 		    h_njets_g1Mbg1W0Ll_mdPhig0p3->Fill(sjet.size(),w);
 		    h_nbjets_g1Mbg1W0Ll_mdPhig0p3->Fill(nmediumbs,w);
@@ -2958,6 +2994,8 @@ int main(int argc, char** argv)
 		    h_R2_g1Mbg1W0Ll_mdPhig0p5->Fill(R2, w);
 		    h_MR_R2_g1Mbg1W0Ll_mdPhig0p5->Fill(MR, R2, w);
 		    h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5->Fill(MR, R2, 1.);
+		    if (w_trigger>0)
+		      h_MR_R2_g1Mbg1W0Ll_mdPhig0p5_notrigw->Fill(MR, R2, w/w_trigger);
 
 		    h_njets_g1Mbg1W0Ll_mdPhig0p5->Fill(sjet.size(),w);
 		    h_nbjets_g1Mbg1W0Ll_mdPhig0p5->Fill(nmediumbs,w);
@@ -2988,6 +3026,9 @@ int main(int argc, char** argv)
 		} // end of sW.size() > 0
 		else { // sW.size() == 0
 		  if( aW.size() > 0) {
+		    if (eventhelper_isRealData!=1) {
+		      w = w*w_aW;
+		    }
 		    ofile.count("g1Mb0Wg1uW0Ll",w);
 		    h_MR_g1Mb0Wg1uW0Ll->Fill(MR, w);
 		    h_R2_g1Mb0Wg1uW0Ll->Fill(R2, w);
@@ -3037,6 +3078,9 @@ int main(int argc, char** argv)
 		
 		// 0Lbg1uW0Ll -- QCD control region
 		if( aW.size() > 0){
+		  if (eventhelper_isRealData!=1) {
+		    w = w*w_aW;
+		  }
 		  ofile.count("0Lbg1uW0Ll",w);
 		  h_MR_0Lbg1uW0Ll->Fill(MR, w);
 		  h_R2_0Lbg1uW0Ll->Fill(R2, w);
@@ -3188,7 +3232,7 @@ int main(int argc, char** argv)
 		// 0Lbg1W0Ll
 		if( sW.size() > 0){
 		  if (eventhelper_isRealData!=1) {
-		    w = w*wWtag;
+		    w = w*w_W;
 		  }
 		  ofile.count("0Lbg1W0Ll",w);
 		  h_MR_0Lbg1W0Ll->Fill(MR, w);
@@ -3214,9 +3258,12 @@ int main(int argc, char** argv)
 	if(nlooseleptons == 1){
 	  // Calculate mT 
 	  TLorentzVector lepton;
-	  if (nlooseelectrons == 1)
+	  if (nlooseelectrons == 1){
 	    lepton.SetPtEtaPhiE(velectron[0].pt, velectron[0].eta, velectron[0].phi, velectron[0].energy);
-	  else if (nloosemuons == 1)
+	    if (eventhelper_isRealData!=1) {
+	      w = w*w_eleVeto;
+	    }
+	  } else if (nloosemuons == 1)
 	    lepton.SetPtEtaPhiE(vmuon[0].pt, vmuon[0].eta, vmuon[0].phi, vmuon[0].energy);
 	  double mT = CalcMT(lepton,met);
 	  
@@ -3261,7 +3308,7 @@ int main(int argc, char** argv)
 	    
 	    if( sW.size() > 0 ){
 	      if (eventhelper_isRealData!=1) {
-		w = w*wWtag;
+		w = w*w_W;
 	      }
 	      ofile.count("g1Mbg1W1Ll",w);
 	      h_MR_g1Mbg1W1Ll->Fill(MR, w);
@@ -3498,6 +3545,9 @@ int main(int argc, char** argv)
 	      TTdilep->Fill("0Lb1Ll", w);
 	    
 	    if( sY.size() > 0 ){
+	      if (eventhelper_isRealData!=1) {
+		w = w*w_Y;
+	      }
 	      ofile.count("0Lbg1Y1Ll",w);
 	      h_MR_0Lbg1Y1Ll->Fill(MR, w);
 	      h_R2_0Lbg1Y1Ll->Fill(R2, w);
@@ -3920,6 +3970,9 @@ int main(int argc, char** argv)
 		TTdilep->Fill("0Lb2l0ol", w);
 
 	      if (nYs >= 1){ // Z no b, mu CR 
+		if (eventhelper_isRealData!=1) {
+		  w = w*w_Y;
+		}
 		ofile.count("0Lbg1Y2mu0el",w);
 		h_MR_0Lbg1Y2mu0el->Fill(MR, w);
 		h_R2_0Lbg1Y2mu0el->Fill(R2metmu, w);
@@ -4001,6 +4054,9 @@ int main(int argc, char** argv)
 		TTdilep->Fill("g1Mb2l0ol", w);
 	    
 	      if (nYs >= 1){ // Z with b, mu CR
+		if (eventhelper_isRealData!=1) {
+		  w = w*w_Y;
+		}
 		ofile.count("g1Mbg1Y2mu0el",w);
 		h_MR_g1Mbg1Y2mu0el->Fill(MR, w);
 		h_R2_g1Mbg1Y2mu0el->Fill(R2metmu, w);
@@ -4189,6 +4245,9 @@ int main(int argc, char** argv)
 		TTdilep->Fill("0Lb2l0ol", w);
 
 	      if (nYs >= 1){
+		if (eventhelper_isRealData!=1) {
+		  w = w*w_Y;
+		}
 		ofile.count("0Lbg1Y2el0mu",w);
 		h_MR_0Lbg1Y2el0mu->Fill(MR, w);
 		h_R2_0Lbg1Y2el0mu->Fill(R2metel, w);
@@ -4270,6 +4329,9 @@ int main(int argc, char** argv)
 		TTdilep->Fill("g1Mb2l0ol", w);
 	    
 	      if (nYs >= 1){
+		if (eventhelper_isRealData!=1) {
+		  w = w*w_Y;
+		}
 		ofile.count("g1Mbg1Y2el0mu",w);
 		h_MR_g1Mbg1Y2el0mu->Fill(MR, w);
 		h_R2_g1Mbg1Y2el0mu->Fill(R2metel, w);

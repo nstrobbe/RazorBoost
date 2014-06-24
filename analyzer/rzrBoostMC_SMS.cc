@@ -689,6 +689,14 @@ int main(int argc, char** argv)
 	if (!(fabs(cmgelectron[i].eta) < 1.442 && fabs(cmgelectron[i].eta) < 1.556) ) continue;
 	velectron.push_back(cmgelectron[i]);
       }
+      // electron SFs:
+      double SFeleVeto = 1.;
+      double dSFeleVeto = 0.;
+      if (velectron.size() == 1) {
+	eleLooseSFEFull(velectron[0].pt, fabs(velectron[0].eta), SFeleVeto, dSFeleVeto);
+      }
+      double w_eleVeto = SFeleVeto;
+
       // Electrons - tight
       std::vector<cmgelectron1_s> selectron;
       std::vector<TVector3> V3el;
@@ -1069,9 +1077,12 @@ int main(int argc, char** argv)
 	if(nlooseleptons == 1){
 	  // Calculate mT 
 	  TLorentzVector lepton;
-	  if (nlooseelectrons == 1)
+	  if (nlooseelectrons == 1){
 	    lepton.SetPtEtaPhiE(velectron[0].pt, velectron[0].eta, velectron[0].phi, velectron[0].energy);
-	  else if (nloosemuons == 1)
+	    if (eventhelper_isRealData!=1) {
+	      w = w*w_eleVeto;
+	    }
+	  } else if (nloosemuons == 1)
 	    lepton.SetPtEtaPhiE(vmuon[0].pt, vmuon[0].eta, vmuon[0].phi, vmuon[0].energy);
 	  double mT = CalcMT(lepton,met);
 	  

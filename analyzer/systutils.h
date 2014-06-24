@@ -774,7 +774,7 @@ void WSFEFast(double pt, double& SF, double& dSF)
 
   // SF and errors for Ws:
   double _SF[npt] = {1.352, 1.352, 1.267, 1.210, 1.074, 1.066};
-  double _SF_error[npt] = {0.175, 0.175, 0.020, 0.013, 0014, 0.015};
+  double _SF_error[npt] = {0.175, 0.175, 0.020, 0.013, 0.014, 0.015};
 
   int ipt = 0;
   for (int i=0; i<npt; i++) {
