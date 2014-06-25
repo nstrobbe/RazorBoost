@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------------
 #include "rzrBTanalyzercmd.h"
 #include "utils.h"
-#include "btagutils.h"
+#include "systutils.h"
 #include <math.h>
 
 #include "TLorentzVector.h"
@@ -22,16 +22,16 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
+  // Uncomment appropriate line to switch between sezen and nadja
+  TString base = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/";
+  //TString base = "/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/";
+
   // Get the trigger histogram:
-  TFile* fhlt = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  if (!fhlt){
-    fhlt = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/hlteff/hlteff_HT_jpt_singlel.root");
-  }
+  TFile* fhlt = TFile::Open(base+"hlteff/hlteff_HT_jpt_singlel.root");
   if (!fhlt){
     cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
     return 1;
   }
-  //TH2D* h_hlteff = (TH2D*)fhlt->Get("hBinValues");
   TH2D* h_hlteff = (TH2D*)fhlt->Get("h_HT_j1pt_0_effph");
     
   // Get file list and histogram filename from command line
@@ -120,7 +120,10 @@ int main(int argc, char** argv)
     cout << "Will do pileup reweighting" << endl;
   }
 
-  // Get the pileup histogram:
+  // ---------------------------------------
+  // --- Get the correct pileup histogram --
+  // ---------------------------------------
+
   TString pileupname = "pileup_weights.root";
   if (sample == "T1ttcc_old" || sample == "T2tt" ){
     pileupname = "pileup_weights_sig52X.root";
@@ -128,10 +131,7 @@ int main(int argc, char** argv)
   if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t"){
     pileupname = "pileup_weights_sig53X.root";
   }
-  TFile* fpileup = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/pileup/"+pileupname);
-  if (!fpileup){
-    fpileup = TFile::Open("/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/pileup/"+pileupname);
-  }
+  TFile* fpileup = TFile::Open(base+"pileup/"+pileupname);
   if (!fpileup){
     cout << "Could not find pileup weights root file... Where did you put it??" << endl;
     return 1;
@@ -145,12 +145,17 @@ int main(int argc, char** argv)
   TFile* fbeff;
 
   if (sample == "TTJets" or sample == "Top" or sample == "TTX") {
-    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_TTJets.root");
+    fbeff = TFile::Open(base+"btageff/btageff_TTJets.root");
   } else if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t" || sample == "T2tt") {
-    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_T1ttcc.root");
+    fbeff = TFile::Open(base+"btageff/btageff_T1ttcc.root");
   } else {
-    fbeff = TFile::Open("/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/btageff/btageff_QCD.root");
+    fbeff = TFile::Open(base+"btageff/btageff_QCD.root");
   }
+  if (!fbeff){
+    cout << "Could not find btag root file... Where did you put it??" << endl;
+    return 1;
+  }
+
   TH1D* h_pt_b_CSVMeff = (TH1D*)fbeff->Get("h_pt_b_CSVMeff");
   TH1D* h_pt_c_CSVMeff = (TH1D*)fbeff->Get("h_pt_c_CSVMeff");
   //TH1D* h_pt_l_CSVMeff = (TH1D*)fbeff->Get("h_pt_l_CSVMeff");
@@ -237,6 +242,10 @@ int main(int argc, char** argv)
   TH2D* h_mstop_mLSP_g2Mbg1W0Ll = new TH2D("h_mstop_mLSP_g2Mbg1W0Ll","h_mstop_mLSP_g2Mbg1W0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4","h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4","h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhi0p3 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhi0p3","h_mstop_mLSP_g1Mbg1W0Ll_mdPhi0p3",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhig0p3 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhig0p3","h_mstop_mLSP_g1Mbg1W0Ll_mdPhig0p3",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhi0p5 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhi0p5","h_mstop_mLSP_g1Mbg1W0Ll_mdPhi0p5",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_mstop_mLSP_g1Mbg1W0Ll_mdPhig0p5","h_mstop_mLSP_g1Mbg1W0Ll_mdPhig0p5",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mb0Wg1uW0Ll = new TH2D("h_mstop_mLSP_g1Mb0Wg1uW0Ll","h_mstop_mLSP_g1Mb0Wg1uW0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
  
   TH2D* h_mstop_mLSP_0Lb0Ll = new TH2D("h_mstop_mLSP_0Lb0Ll","h_mstop_mLSP_0Lb0Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
@@ -251,6 +260,7 @@ int main(int argc, char** argv)
   TH2D* h_mstop_mLSP_g1Mb1Ll = new TH2D("h_mstop_mLSP_g1Mb1Ll","h_mstop_mLSP_g1Mb1Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W1Ll = new TH2D("h_mstop_mLSP_g1Mbg1W1Ll","h_mstop_mLSP_g1Mbg1W1Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_g1Mbg1W1LlmT100","h_mstop_mLSP_g1Mbg1W1LlmT100",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_g1Mbg1W1LlmT100_mdPhig0p5 = new TH2D("h_mstop_mLSP_g1Mbg1W1LlmT100_mdPhig0p5","h_mstop_mLSP_g1Mbg1W1LlmT100_mdPhig0p5",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_1Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_1Mbg1W1LlmT100","h_mstop_mLSP_1Mbg1W1LlmT100",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g2Mbg1W1LlmT100 = new TH2D("h_mstop_mLSP_g2Mbg1W1LlmT100","h_mstop_mLSP_g2Mbg1W1LlmT100",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_g1Mbg1W1LlmT = new TH2D("h_mstop_mLSP_g1Mbg1W1LlmT","h_mstop_mLSP_g1Mbg1W1LlmT",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
@@ -259,6 +269,7 @@ int main(int argc, char** argv)
   TH2D* h_mstop_mLSP_0Lbg1Y1Ll = new TH2D("h_mstop_mLSP_0Lbg1Y1Ll","h_mstop_mLSP_0Lbg1Y1Ll",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_0Lbg1Y1LlmT100 = new TH2D("h_mstop_mLSP_0Lbg1Y1LlmT100","h_mstop_mLSP_0Lbg1Y1LlmT100",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_0Lbg1Y1LlmT = new TH2D("h_mstop_mLSP_0Lbg1Y1LlmT","h_mstop_mLSP_0Lbg1Y1LlmT",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
+  TH2D* h_mstop_mLSP_0Lbg1Y1LlmT_mdPhig0p5 = new TH2D("h_mstop_mLSP_0Lbg1Y1LlmT_mdPhig0p5","h_mstop_mLSP_0Lbg1Y1LlmT_mdPhig0p5",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
 
   TH2D* h_mstop_mLSP_2munoZmass = new TH2D("h_mstop_mLSP_2munoZmass","h_mstop_mLSP_2munoZmass",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
   TH2D* h_mstop_mLSP_2mu = new TH2D("h_mstop_mLSP_2mu","h_mstop_mLSP_2mu",nbins_mother,mother_min,mother_max,nbins_LSP,LSP_min,LSP_max);
@@ -506,11 +517,11 @@ int main(int argc, char** argv)
 	double pt = cmgpfjet[i].pt;
 	double eta = cmgpfjet[i].eta;
 	double partonFlavour = cmgpfjet[i].partonFlavour;
-        btagCSVMEEFull(partonFlavour, pt, fabs(eta), SFCSVMFl, dSFCSVMFl);
-        btagCSVMEEFast(partonFlavour, pt, fabs(eta), SFCSVMFs, dSFCSVMFs);
+        btagCSVMSFFull(partonFlavour, pt, fabs(eta), SFCSVMFl, dSFCSVMFl);
+        btagCSVMSFFast(partonFlavour, pt, fabs(eta), SFCSVMFs, dSFCSVMFs);
 
-        btagCSVLEEFull(partonFlavour, pt, fabs(eta), SFCSVLFl, dSFCSVLFl);
-        btagCSVLEEFast(partonFlavour, pt, fabs(eta), SFCSVLFs, dSFCSVLFs);
+        btagCSVLSFFull(partonFlavour, pt, fabs(eta), SFCSVLFl, dSFCSVLFl);
+        btagCSVLSFFast(partonFlavour, pt, fabs(eta), SFCSVLFs, dSFCSVLFs);
 
 	double eCSVM = 0;
 	double eCSVL = 0;
@@ -530,8 +541,6 @@ int main(int argc, char** argv)
 	    eCSVM = geteff2D(h_pt_eta_l_CSVMeff, pt, fabs(eta));
 	    eCSVL = geteff2D(h_pt_eta_l_CSVLeff, pt, fabs(eta));
 	  }
-	  if (eCSVM == 0 || eCSVL == 0)
-	    cout << "Problem is still there" << endl;
 	  SFCSVL = (SFCSVLFl + sigmaSFFl*dSFCSVLFl)*(SFCSVLFs + sigmaSFFs*dSFCSVLFs);
 	  SFCSVM = (SFCSVMFl + sigmaSFFl*dSFCSVMFl)*(SFCSVMFs + sigmaSFFs*dSFCSVMFs);
 	} else { // FullSim
@@ -582,41 +591,30 @@ int main(int argc, char** argv)
       std::vector<jethelper4_s> sW;
       std::vector<jethelper4_s> aW;
       std::vector<jethelper4_s> sY;
+      // scale factors and errors
+      double SFW = 0.86;
+      double dSFW = 0.07;
+      double SFaW = 1.;
+      double SFY = 1.;
+      double SFWFast = 1.; 
+      double dSFaW = 0.;
+      double dSFY = 0.;
+      double dSFWFast = 0.;
+      double w_W = 1;
+      double w_Y = 1;
+      double w_aW = 1;
       for (unsigned int i=0; i<jethelper4.size(); i++) {
         if (!(jethelper4[i].pt > 30) ) continue;
-        if (!(fabs(jethelper4[i].eta) < 3) ) continue;
+        if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;
 
 	// New Andreas cuts:
-        //if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
-        if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
+        if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
+        //if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
 	sY.push_back(jethelper4[i]);
         //cout << jethelper4[i].pt << endl;
         sjet2.push_back(jethelper4[i]);
-        double massdrop = 1;
-        double daughmass = -9;
-        if (jethelper4[i].daughter_0_mass > jethelper4[i].daughter_1_mass) {
-          daughmass = jethelper4[i].daughter_0_mass;
-        } else {
-          daughmass = jethelper4[i].daughter_1_mass;
-        };
-        massdrop = daughmass / jethelper4[i].mass;
-        double massdrop2 = 1;
-        double daughmass2 = -9;
-        if (jethelper4[i].daughter_0_pt > jethelper4[i].daughter_1_pt) {
-          daughmass2 = jethelper4[i].daughter_0_mass;
-        } else {
-          daughmass2 = jethelper4[i].daughter_1_mass;
-        };
-        massdrop2 = daughmass2 / jethelper4[i].mass;
-        double dRd1d2 = fdeltaR(jethelper4[i].daughter_0_eta,
-                                jethelper4[i].daughter_0_phi,
-                                jethelper4[i].daughter_1_eta,
-                                jethelper4[i].daughter_1_phi
-                                );
-        double yasym = (TMath::Min(pow(jethelper4[i].daughter_0_pt, 2),
-                                  pow(jethelper4[i].daughter_1_pt, 2))*
-                       pow(dRd1d2,2))/
-          pow(jethelper4[i].mass,2);
+	YSFEFull(jethelper4[i].pt, SFY, dSFY);
+	w_Y *= SFY;
 
         // Match with the unpruned:
         double prjmatch = 0;
@@ -634,38 +632,26 @@ int main(int argc, char** argv)
 	if (!(prjmatch==1)) continue;
 	double tau21 = jethelper5[jpr].tau2 / jethelper5[jpr].tau1;
 	double tau3 = jethelper5[jpr].tau3;
-        //if (!(massdrop < 0.31)) continue;
 	//if (tau21 >= 0.46 || tau3 >= 0.135) {
 	if (tau21 >= 0.50) {
           aW.push_back(jethelper4[i]);
-        }
+	  aWSFEFull(jethelper4[i].pt, SFaW, dSFaW);
+	  w_aW *= SFaW;
+	}
 	if (!(tau21 < 0.50) ) continue;
 	//if (!(tau21 < 0.46) ) continue;
 	//if (!(tau3 < 0.135) ) continue;
+	WSFEFast(jethelper4[i].pt, SFWFast, dSFWFast);
+	// For FastSim
+	if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
+	    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
+	  w_W *= SFW * SFWFast;
+        // For FullSim
+	} else {
+	  w_W *= SFW;
+	}
         sW.push_back(jethelper4[i]);
       }
-
-      // W selection:
-      std::vector<jethelper4_s> sWAK5;
-      for (unsigned int i=0; i<jethelper4.size(); i++) {
-        if (!(jethelper4[i].pt > 30) ) continue;
-        if (!(fabs(jethelper4[i].eta) < 3) ) continue;
-
-	// New Andreas cuts:
-        //if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
-        if (!(jethelper4[i].mass > 65 && jethelper4[i].mass < 105)) continue;
-        double massdrop = 1;
-        double daughmass = -9;
-        if (jethelper4[i].daughter_0_mass > jethelper4[i].daughter_1_mass) {
-          daughmass = jethelper4[i].daughter_0_mass;
-        } else {
-          daughmass = jethelper4[i].daughter_1_mass;
-        };
-        massdrop = daughmass / jethelper4[i].mass;
-        if (!(massdrop < 0.31)) continue;
-        sWAK5.push_back(jethelper4[i]);
-      }
-
 
 
       // Muons - veto:
@@ -703,6 +689,14 @@ int main(int argc, char** argv)
 	if (!(fabs(cmgelectron[i].eta) < 1.442 && fabs(cmgelectron[i].eta) < 1.556) ) continue;
 	velectron.push_back(cmgelectron[i]);
       }
+      // electron SFs:
+      double SFeleVeto = 1.;
+      double dSFeleVeto = 0.;
+      if (velectron.size() == 1) {
+	eleLooseSFEFull(velectron[0].pt, fabs(velectron[0].eta), SFeleVeto, dSFeleVeto);
+      }
+      double w_eleVeto = SFeleVeto;
+
       // Electrons - tight
       std::vector<cmgelectron1_s> selectron;
       std::vector<TVector3> V3el;
@@ -975,11 +969,16 @@ int main(int argc, char** argv)
 	      h_mstop_mLSP_trackIso->Fill(m_mother,mz1,w);
 	      
 	      if (nmediumbs > 0){
-		w = w*wCSVM;
+		if (eventhelper_isRealData!=1) {
+		  w = w*wCSVM;
+		}
 		h_mstop_mLSP_g1Mb0Ll->Fill(m_mother,mz1,w);
 
 		// g1Mb g1W 0Ll -- SIGNAL region
 		if( sW.size() > 0){
+		  if (eventhelper_isRealData!=1) {
+		    w = w*w_W;
+		  }
 		  h_mstop_mLSP_g1Mbg1W0Ll->Fill(m_mother,mz1,w);
 		  
 		  if (nmediumbs == 1){
@@ -990,6 +989,18 @@ int main(int argc, char** argv)
 
 		  if (minDeltaPhiHat > 4){
 		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHatg4->Fill(m_mother,mz1,w);
+		  } else {
+		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4->Fill(m_mother,mz1,w);
+		  }
+		  
+		  if (minDeltaPhi > 0.3){
+		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhig0p3->Fill(m_mother,mz1,w);
+		  } else {
+		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhi0p3->Fill(m_mother,mz1,w);
+		  }
+		  
+		  if (minDeltaPhi > 0.5){
+		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhig0p5->Fill(m_mother,mz1,w);
 
 		    // Fill the histograms for the likelihood 
 		    if (runForLikelihood){
@@ -1000,31 +1011,34 @@ int main(int argc, char** argv)
 		    }
 
 		  } else {
-		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhiHat4->Fill(m_mother,mz1,w);
+		    h_mstop_mLSP_g1Mbg1W0Ll_mdPhi0p5->Fill(m_mother,mz1,w);
 		  }
 		  
 		} // end of sW.size() > 0
 		else if (aW.size() > 0){
+		  if (eventhelper_isRealData!=1) {
+		    w = w*w_aW;
+		  }
 		  h_mstop_mLSP_g1Mb0Wg1uW0Ll->Fill(m_mother,mz1,w);
 		}
 	      } // end of nmediumbs > 0
 	      
 	      if (nloosebs == 0){
-		w = w*wCSVL;
+		if (eventhelper_isRealData!=1) {
+		  w = w*wCSVL;
+		}
 		h_mstop_mLSP_0Lb0Ll->Fill(m_mother,mz1,w);
 		
 		// 0Lbg1uW0Ll -- QCD control region
 		if( aW.size() > 0){
+		  if (eventhelper_isRealData!=1) {
+		    w = w*w_aW;
+		  }
 		  h_mstop_mLSP_0Lbg1uW0Ll->Fill(m_mother,mz1,w);
 		  
 		  // cut on mindDeltaPhi
 		  if (minDeltaPhi < 0.3){
 		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhi0p3->Fill(m_mother,mz1,w);
-		  } // end of minDeltaPhi < 0.3
-
-		  if (minDeltaPhiHat < 4){
-		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4->Fill(m_mother,mz1,w);
-
 		    // Fill the histograms for the likelihood 
 		    if (runForLikelihood){
 		      int bin_stop = (m_mother - mother_min)/step_mother;
@@ -1032,6 +1046,10 @@ int main(int argc, char** argv)
 		      list_Q[bin_stop][bin_LSP]->Fill(MR,R2,w*w_norm);
 		      list_Q_uw[bin_stop][bin_LSP]->Fill(MR,R2,1);
 		    }
+		  } // end of minDeltaPhi < 0.3
+
+		  if (minDeltaPhiHat < 4){
+		    h_mstop_mLSP_0Lbg1uW0Ll_mdPhiHat4->Fill(m_mother,mz1,w);
 		  } // end of minDeltaPhiHat < 4
 
 		  if (minDeltaPhiHat < 5){
@@ -1041,6 +1059,9 @@ int main(int argc, char** argv)
 		
 		// 0Lbg1W0Ll
 		if( sW.size() > 0){
+		  if (eventhelper_isRealData!=1) {
+		    w = w*w_W;
+		  }
 		  h_mstop_mLSP_0Lbg1W0Ll->Fill(m_mother,mz1,w);
 		} // end of sW.size() > 0
 		
@@ -1056,9 +1077,12 @@ int main(int argc, char** argv)
 	if(nlooseleptons == 1){
 	  // Calculate mT 
 	  TLorentzVector lepton;
-	  if (nlooseelectrons == 1)
+	  if (nlooseelectrons == 1){
 	    lepton.SetPtEtaPhiE(velectron[0].pt, velectron[0].eta, velectron[0].phi, velectron[0].energy);
-	  else if (nloosemuons == 1)
+	    if (eventhelper_isRealData!=1) {
+	      w = w*w_eleVeto;
+	    }
+	  } else if (nloosemuons == 1)
 	    lepton.SetPtEtaPhiE(vmuon[0].pt, vmuon[0].eta, vmuon[0].phi, vmuon[0].energy);
 	  double mT = CalcMT(lepton,met);
 	  
@@ -1069,20 +1093,25 @@ int main(int argc, char** argv)
 	    h_mstop_mLSP_g1Mb1Ll->Fill(m_mother,mz1,w);
 	    
 	    if( sW.size() > 0 ){
+	      if (eventhelper_isRealData!=1) {
+		w = w*w_W;
+	      }
 	      h_mstop_mLSP_g1Mbg1W1Ll->Fill(m_mother,mz1,w);
 
 	      // TTJets Control region
 	      if (mT < 100){
 		h_mstop_mLSP_g1Mbg1W1LlmT100->Fill(m_mother,mz1,w);
-
-		// Fill the histograms for the likelihood 
-		if (runForLikelihood){
-		  int bin_stop = (m_mother - mother_min)/step_mother;
-		  int bin_LSP = (mz1 - LSP_min)/step_LSP;
-		  list_T[bin_stop][bin_LSP]->Fill(MR,R2,w*w_norm);
-		  list_T_uw[bin_stop][bin_LSP]->Fill(MR,R2,1);
-		}
-		
+		if ( minDeltaPhi > 0.5){
+		  h_mstop_mLSP_g1Mbg1W1LlmT100_mdPhig0p5->Fill(m_mother,mz1,w);
+		  
+		  // Fill the histograms for the likelihood 
+		  if (runForLikelihood){
+		    int bin_stop = (m_mother - mother_min)/step_mother;
+		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		    list_T[bin_stop][bin_LSP]->Fill(MR,R2,w*w_norm);
+		    list_T_uw[bin_stop][bin_LSP]->Fill(MR,R2,1);
+		  }
+		}		
 		if (nmediumbs == 1){
 		  h_mstop_mLSP_1Mbg1W1LlmT100->Fill(m_mother,mz1,w);
 		} else {
@@ -1103,6 +1132,9 @@ int main(int argc, char** argv)
 	    h_mstop_mLSP_0Lb1Ll->Fill(m_mother,mz1,w);
 	    
 	    if( sY.size() > 0 ){
+	      if (eventhelper_isRealData!=1) {
+		w = w*w_Y;
+	      }
 	      h_mstop_mLSP_0Lbg1Y1Ll->Fill(m_mother,mz1,w);
 	      
 	      // WJets Control Region
@@ -1113,12 +1145,15 @@ int main(int argc, char** argv)
 		if (mT > 30){
 		  h_mstop_mLSP_0Lbg1Y1LlmT->Fill(m_mother,mz1,w);
 
-		  // Fill the histograms for the likelihood 
-		  if (runForLikelihood){
-		    int bin_stop = (m_mother - mother_min)/step_mother;
-		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
-		    list_W[bin_stop][bin_LSP]->Fill(MR,R2,w*w_norm);
-		    list_W_uw[bin_stop][bin_LSP]->Fill(MR,R2,1.);
+		  if( minDeltaPhi > 0.5){
+		    h_mstop_mLSP_0Lbg1Y1LlmT_mdPhig0p5->Fill(m_mother,mz1,w);
+		    // Fill the histograms for the likelihood 
+		    if (runForLikelihood){
+		      int bin_stop = (m_mother - mother_min)/step_mother;
+		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
+		      list_W[bin_stop][bin_LSP]->Fill(MR,R2,w*w_norm);
+		      list_W_uw[bin_stop][bin_LSP]->Fill(MR,R2,1.);
+		    }
 		  }
 		} // end mT > 30
 	      } // end mT < 100
@@ -1174,6 +1209,9 @@ int main(int argc, char** argv)
 	      h_mstop_mLSP_g1Mb2l0ol->Fill(m_mother,mz1,w);
 	      
 	      if (nYs >= 1){ // Z with b, mu CR
+		if (eventhelper_isRealData!=1) {
+		  w = w*w_Y;
+		}
 		h_mstop_mLSP_g1Mbg1Y2mu0el->Fill(m_mother,mz1,w);
 		h_mstop_mLSP_g1Mbg1Y2l0ol->Fill(m_mother,mz1,w);
 	      } // end nYs >= 1
@@ -1212,6 +1250,9 @@ int main(int argc, char** argv)
 	      h_mstop_mLSP_0Lb2l0ol->Fill(m_mother,mz1,w);
 
 	      if (nYs >= 1){
+		if (eventhelper_isRealData!=1) {
+		  w = w*w_Y;
+		}
 		h_mstop_mLSP_0Lbg1Y2el0mu->Fill(m_mother,mz1,w);
 		h_mstop_mLSP_0Lbg1Y2l0ol->Fill(m_mother,mz1,w);
 	      }// nYs >= 1
@@ -1223,6 +1264,9 @@ int main(int argc, char** argv)
 	      h_mstop_mLSP_g1Mb2l0ol->Fill(m_mother,mz1,w);
 	    
 	      if (nYs >= 1){
+		if (eventhelper_isRealData!=1) {
+		  w = w*w_Y;
+		}
 		h_mstop_mLSP_g1Mbg1Y2el0mu->Fill(m_mother,mz1,w);
 		h_mstop_mLSP_g1Mbg1Y2l0ol->Fill(m_mother,mz1,w);
 	      } // end nYs >= 1

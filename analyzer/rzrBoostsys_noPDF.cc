@@ -21,7 +21,7 @@
 #endif
 
 using namespace std;
-using namespace LHAPDF;
+//using namespace LHAPDF;
 //-----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
   double sigmaISR = vsyst[11];
   double sigmaTopPt = vsyst[12];
   double sigmaZnn = vsyst[13];
-  int pdfnumber = vsyst[14];
+  //int pdfnumber = vsyst[14];
 
   string sample = "";
   if ( argc > 7 )
@@ -585,7 +585,7 @@ int main(int argc, char** argv)
     }
   }
 
-
+  /* We're not doing PDFs in this analyzer
   // Get the PDF sets:
   string pdforig = "cteq6l1";
   if (fsample.find("powheg")!=string::npos) pdforig = "CT10nlo";
@@ -599,7 +599,7 @@ int main(int argc, char** argv)
     pdfnumber = pdfnumber - 200;
   }
   PDFweight pdfweight(pdfsys, pdforig);
-
+  */
   //---------------------------------------------------------------------------
   // Loop over events
   //---------------------------------------------------------------------------
@@ -628,15 +628,16 @@ int main(int argc, char** argv)
       // addEvent if you wish to save only the selected objects.
       
       fillObjects();
-
+      /*
       // Test PDFs:
       double x1 = geneventinfoproducthelper_x1;
       double x2 = geneventinfoproducthelper_x2;
       double Q  = geneventinfoproducthelper_q;
       int id1   = geneventinfoproducthelper_id1;
       int id2   = geneventinfoproducthelper_id2;
-      
-      double w_pdf = pdfweight(id1, id2, x1, x2, Q, pdfnumber);
+      */
+      //double w_pdf = pdfweight(id1, id2, x1, x2, Q, pdfnumber);
+      double w_pdf = 1.;
       //cout << x1 << " " << x2 << " " << Q << " " << id1 << " " << id2 << endl;
       //cout << "PDF weight = " << w_pdf << endl;
       h_pdfweight->Fill(w_pdf, w);
@@ -1085,7 +1086,6 @@ int main(int argc, char** argv)
 	}
         sW.push_back(jethelper4[i]);
       }
-
 
       // Muons - veto:
       // From https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMuonId#Tight_Muon
