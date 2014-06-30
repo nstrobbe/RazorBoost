@@ -5,8 +5,8 @@ from string import *
 
 anl = 'rzrBoostsys'
 
-#dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
-dwork = '/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/'
+dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
+#dwork = '/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/'
 dflist = dwork+'filelists/'
 dflisttmp = dwork+'fileliststmp/'
 druns = dwork+'runs/'
@@ -18,8 +18,8 @@ nmscrtmp = dtemplates+'scr_'+anl+'.py'
 cscrtmp = open(nmscrtmp).read()
 nmjobtmp = dtemplates+'job.job'
 cjobtmp = open(nmjobtmp).read()
-dres = dwork+'results/'
-drestmp = dwork+'resultstmp/'
+dres = dwork+'results_sys/'
+drestmp = dwork+'resultstmp_sys/'
 exe = dwork+anl
 
 # Get the samples list file:
@@ -64,11 +64,11 @@ for s in sysdirs:
         print 'hadd -f '+nmhisto+' '+nmhistostmp
         os.system('hadd -f '+nmhisto+' '+nmhistostmp)
 
-    os.system('hadd -f '+dresnsys+'/'+anl+'_data.root '+dresnsys+'/'+anl+'_Jet*.root '+dresnsys+'/'+anl+'_HT*.root')
     os.system('hadd -f '+dresnsys+'/'+anl+'_QCD.root '+dresnsys+'/'+anl+'_QCD*.root')
     os.system('hadd -f '+dresnsys+'/'+anl+'_TTJets.root '+dresnsys+'/'+anl+'_TTJets*.root '+dresnsys+'/'+anl+'_Tbar*.root '+dresnsys+'/'+anl+'_T_*.root')
     os.system('hadd -f '+dresnsys+'/'+anl+'_WJetsToLNu.root '+dresnsys+'/'+anl+'_WJetsToLNu*.root')
-    os.system('hadd -f '+dresnsys+'/'+anl+'_BGoth.root '+dresnsys+'/'+anl+'_WW*.root '+dresnsys+'/'+anl+'_ZZ*.root '+dresnsys+'/'+anl+'_WZ*.root'+dresnsys+'/'+anl+'_ZJetsToNuNu*.root '+dresnsys+'/'+anl+'_DYJetsToLL_HT*.root '+dresnsys+'/'+anl+'_WZZ*aMCatNLO*.root '+dresnsys+'/'+anl+'_WWW*aMCatNLO*.root '+dresnsys+'/'+anl+'_WWZ*.root '  +dresnsys+'/'+anl+'_WWG*.root '+dresnsys+'/'+anl+'_ZZZ*.root'+dresnsys+'/'+anl+'_ttbarZ*.root '+dresnsys+'/'+anl+'_TTbarW*.root '+dresnsys+'/'+anl+'_TTG*.root '+dresnsys+'/'+anl+'_TTWW*.root'+dresnsys+'/'+anl+'_Wbb*.root '+dresnsys+'/'+anl+'_DYToCC*.root '+dresnsys+'/'+anl+'_DYToBB*.root')
+
+    os.system('hadd -f '+dresnsys+'/'+anl+'_BGoth.root '+dresnsys+'/'+anl+'_WW_*.root '+dresnsys+'/'+anl+'_ZZ_*.root '+dresnsys+'/'+anl+'_WZ_*.root '+dresnsys+'/'+anl+'_ZJetsToNuNu*.root '+dresnsys+'/'+anl+'_DYJetsToLL_HT*.root '+dresnsys+'/'+anl+'_WZZ*aMCatNLO*.root '+dresnsys+'/'+anl+'_WWW*aMCatNLO*.root '+dresnsys+'/'+anl+'_WWZ*.root '  +dresnsys+'/'+anl+'_WWG*.root '+dresnsys+'/'+anl+'_ZZZ*.root '+dresnsys+'/'+anl+'_ttbarZ*.root '+dresnsys+'/'+anl+'_TTbarW*.root '+dresnsys+'/'+anl+'_TTG*.root '+dresnsys+'/'+anl+'_TTWW*.root '+dresnsys+'/'+anl+'_Wbb*.root '+dresnsys+'/'+anl+'_DYToCC*.root '+dresnsys+'/'+anl+'_DYToBB*.root')
 
 
 
