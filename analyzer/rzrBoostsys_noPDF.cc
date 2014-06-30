@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 // File:        rzrBTanalyzer.cc
 // Description: Analyzer for ntuples created by TheNtupleMaker
@@ -116,12 +115,13 @@ int main(int argc, char** argv)
   double sigmaWFast = vsyst[6];
   double sigmaY = vsyst[7];
   double sigmaaW = vsyst[8];
-  double sigmaeleVeto = vsyst[9];
-  double sigmaPU = vsyst[10];
-  double sigmaISR = vsyst[11];
-  double sigmaTopPt = vsyst[12];
-  double sigmaZnn = vsyst[13];
-  //int pdfnumber = vsyst[14];
+  double sigmaWfake = vsyst[9];
+  double sigmaeleVeto = vsyst[10];
+  double sigmaPU = vsyst[11];
+  double sigmaISR = vsyst[12];
+  double sigmaTopPt = vsyst[13];
+  double sigmaZnn = vsyst[14];
+  //int pdfnumber = vsyst[15];
 
   string sample = "";
   if ( argc > 7 )
@@ -1020,9 +1020,11 @@ int main(int argc, char** argv)
       double dSFW = 0.07;
       double SFaW = 1.;
       double SFY = 1.;
+      double SFWfake = 1.;
       double SFWFast = 1.; 
       double dSFaW = 0.;
       double dSFY = 0.;
+      double dSFWfake = 0.;
       double dSFWFast = 0.;
       double w_W = 1;
       double w_Y = 1;
@@ -1076,13 +1078,28 @@ int main(int argc, char** argv)
 	//if (!(tau21 < 0.46) ) continue;
 	//if (!(tau3 < 0.135) ) continue;
 	WSFEFast(jethelper4[i].pt, SFWFast, dSFWFast);
+	WFakeSFEFull(jethelper4[i].pt, SFWfake, dSFWfake);
 	// For FastSim
 	if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
 	    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
 	  w_W *= (SFW + sigmaW*dSFW)*(SFWFast + sigmaWFast*dSFWFast);
 	// For FullSim
 	} else {
-	  w_W *= (SFW + sigmaW*dSFW);
+	  // check whether jet matches a genlevel W
+	  bool matched = false;
+	  for (unsigned int g=0; g<genparticlehelper.size() && !matched; g++) {
+	    if (genparticlehelper[g].status != 3) continue;
+	    if (fabs(genparticlehelper[g].pdgId) != 24) continue;
+	    double dr = fdeltaR(jethelper4[i].eta,jethelper4[i].phi, genparticlehelper[g].eta,genparticlehelper[g].phi);
+	    if (dr < 0.8){
+	      matched = true;
+	    }
+	  }
+	  if(matched){
+	    w_W *= (SFW + sigmaW*dSFW);
+	  } else {
+	    w_W *= (SFWfake + sigmaWfake*dSFWfake);
+	  }
 	}
         sW.push_back(jethelper4[i]);
       }

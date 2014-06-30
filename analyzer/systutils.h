@@ -735,6 +735,32 @@ void YSFEFull(double pt, double& SF, double& dSF)
 
 }
 
+// W fake SFs and SF errors:
+void WFakeSFEFull(double pt, double& SF, double& dSF)
+{
+  const int npt = 14;
+
+  // pt bins:
+  double _ptmin[npt] = {0.,180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.};
+  double _ptmax[npt] = {180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.,3000.};
+
+  // SF and errors for Ys:
+  double _SF[npt] = {0.78, 0.84, 1.05, 1.01, 1.15, 1.15, 1.14, 1.02, 1.13, 1.16, 1.18, 1.18, 1.15, 1.18};
+  double _SF_error[npt] = {0.69, 0.17, 0.07, 0.04, 0.04 ,0.03, 0.03, 0.02 ,0.02, 0.02, 0.03, 0.03, 0.02, 0.02};
+
+  int ipt = 0;
+  for (int i=0; i<npt; i++) {
+    if (pt >= _ptmin[i] && pt < _ptmax[i]) {
+      ipt = i;
+      break;
+    }
+  }
+
+  SF = _SF[ipt];
+  dSF = _SF_error[ipt];  
+
+}
+
 
 // aW tag SFs and SF errors:
 void aWSFEFull(double pt, double& SF, double& dSF)

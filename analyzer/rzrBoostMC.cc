@@ -1918,9 +1918,11 @@ int main(int argc, char** argv)
       double dSFW = 0.07;
       double SFaW = 1.;
       double SFY = 1.;
+      double SFWfake = 1.;
       double SFWFast = 1.; 
       double dSFaW = 0.;
       double dSFY = 0.;
+      double dSFWfake = 0.;
       double dSFWFast = 0.;
       double w_W = 1;
       double w_Y = 1;
@@ -2007,7 +2009,21 @@ int main(int argc, char** argv)
 	  w_W *= SFW*SFWFast;
 	// For FullSim
 	} else {
-	  w_W *= SFW;
+	  // check whether jet matches a genlevel W
+	  bool matched = false;
+	  for (unsigned int g=0; g<genparticlehelper.size() && !matched; g++) {
+	    if (genparticlehelper[g].status != 3) continue;
+	    if (fabs(genparticlehelper[g].pdgId) != 24) continue;
+	    double dr = fdeltaR(jethelper4[i].eta,jethelper4[i].phi, genparticlehelper[g].eta,genparticlehelper[g].phi);
+	    if (dr < 0.8){
+	      matched = true;
+	    }
+	  }
+	  if(matched){
+	    w_W *= SFW;
+	  } else {
+	    w_W *= SFWfake;
+	  }
 	}
 	// check overlap with AK5 jets
 	if(sW.size() == 1){
