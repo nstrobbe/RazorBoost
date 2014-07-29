@@ -604,7 +604,7 @@ int main(int argc, char** argv)
       double w_Y = 1;
       double w_aW = 1;
       for (unsigned int i=0; i<jethelper4.size(); i++) {
-        if (!(jethelper4[i].pt > 30) ) continue;
+        if (!(jethelper4[i].pt > 200) ) continue;
         if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;
 
 	// New Andreas cuts:

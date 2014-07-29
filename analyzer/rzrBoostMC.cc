@@ -541,6 +541,8 @@ int main(int argc, char** argv)
   TH1D * h_jet1pt_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_jet1pt_g1Mbg1W0Ll_mdPhig0p5","h_jet1pt_g1Mbg1W0Ll_mdPhig0p5",20,0,1000);
   TH1D * h_jet2pt_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_jet2pt_g1Mbg1W0Ll_mdPhig0p5","h_jet2pt_g1Mbg1W0Ll_mdPhig0p5",20,0,1000);
   TH1D * h_jet3pt_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_jet3pt_g1Mbg1W0Ll_mdPhig0p5","h_jet3pt_g1Mbg1W0Ll_mdPhig0p5",20,0,1000);
+  TH1D * h_Wpt_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_Wpt_g1Mbg1W0Ll_mdPhig0p5","h_Wpt_g1Mbg1W0Ll_mdPhig0p5",20,0,1000);
+  TH1D * h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5","h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5",50,0,5);
 
   // signal box + mindeltaphi < 0.5
   TH1D * h_MR_g1Mbg1W0Ll_mdPhi0p5 = new TH1D("h_MR_g1Mbg1W0Ll_mdPhi0p5", "h_MR_g1Mbg1W0Ll_mdPhi0p5", nbins_MR, bins_MR);
@@ -581,6 +583,7 @@ int main(int argc, char** argv)
   TH1D* h_PV_0Lbg1uW0Ll = new TH1D("h_PV_0Lbg1uW0Ll", "h_PV_0Lbg1uW0Ll", 50, 0, 50);
 
   TH1D * h_minDeltaPhi_0Lbg1uW0Ll = new TH1D("h_minDeltaPhi_0Lbg1uW0Ll", "h_minDeltaPhi_0Lbg1uW0Ll", 50, 0, 5);
+  TH1D * h_minDeltaPhi_0Lbg1uW0Ll_rebin = new TH1D("h_minDeltaPhi_0Lbg1uW0Ll_rebin", "h_minDeltaPhi_0Lbg1uW0Ll_rebin", 20, 0, 5);
   TH2D * h_MR_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_MR_minDeltaPhi_0Lbg1uW0Ll", "h_MR_minDeltaPhi_0Lbg1uW0Ll", nbins_MR, bins_MR, 50, 0, 5);
   TH2D * h_R2_minDeltaPhi_0Lbg1uW0Ll = new TH2D("h_R2_minDeltaPhi_0Lbg1uW0Ll", "h_R2_minDeltaPhi_0Lbg1uW0Ll", nbins_R2, bins_R2, 50, 0, 5);
   
@@ -692,6 +695,7 @@ int main(int argc, char** argv)
   TH2D * h_MR_R2_g1Mbg1W1Ll = new TH2D("h_MR_R2_g1Mbg1W1Ll", "h_MR_R2_g1Mbg1W1Ll", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
   TH1D * h_mT_g1Mbg1W1Ll = new TH1D("h_mT_g1Mbg1W1Ll", "h_mT_g1Mbg1W1Ll", 50, 0, 500);
+  TH1D * h_mT_g1Mbg1W1Ll_rebin = new TH1D("h_mT_g1Mbg1W1Ll_rebin", "h_mT_g1Mbg1W1Ll_rebin", 25, 0, 500);
   TH2D * h_MR_mT_g1Mbg1W1Ll = new TH2D("h_MR_mT_g1Mbg1W1Ll", "h_MR_mT_g1Mbg1W1Ll", nbins_MR, bins_MR, 50, 0, 500);
   TH2D * h_R2_mT_g1Mbg1W1Ll = new TH2D("h_R2_mT_g1Mbg1W1Ll", "h_R2_mT_g1Mbg1W1Ll", nbins_R2, bins_R2, 50, 0, 500);
 
@@ -721,6 +725,7 @@ int main(int argc, char** argv)
   TH2D * h_MR_minDeltaPhiHat_g1Mbg1W1LlmT100 = new TH2D("h_MR_minDeltaPhiHat_g1Mbg1W1LlmT100", "h_MR_minDeltaPhiHat_g1Mbg1W1LlmT100", nbins_MR, bins_MR, 30, 0, 15);
   TH2D * h_R2_minDeltaPhiHat_g1Mbg1W1LlmT100 = new TH2D("h_R2_minDeltaPhiHat_g1Mbg1W1LlmT100", "h_R2_minDeltaPhiHat_g1Mbg1W1LlmT100", nbins_R2, bins_R2, 30, 0, 15);
   TH1D * h_minDeltaPhi_g1Mbg1W1LlmT100 = new TH1D("h_minDeltaPhi_g1Mbg1W1LlmT100", "h_minDeltaPhi_g1Mbg1W1LlmT100", 50, 0, 5);
+  TH1D * h_minDeltaPhi_g1Mbg1W1LlmT100_rebin = new TH1D("h_minDeltaPhi_g1Mbg1W1LlmT100_rebin", "h_minDeltaPhi_g1Mbg1W1LlmT100_rebin", 20, 0, 5);
   TH2D * h_MR_minDeltaPhi_g1Mbg1W1LlmT100 = new TH2D("h_MR_minDeltaPhi_g1Mbg1W1LlmT100", "h_MR_minDeltaPhi_g1Mbg1W1LlmT100", nbins_MR, bins_MR, 50, 0, 5);
   TH2D * h_R2_minDeltaPhi_g1Mbg1W1LlmT100 = new TH2D("h_R2_minDeltaPhi_g1Mbg1W1LlmT100", "h_R2_minDeltaPhi_g1Mbg1W1LlmT100", nbins_R2, bins_R2, 50, 0, 5);
 
@@ -825,6 +830,7 @@ int main(int argc, char** argv)
   TH1D* h_PV_0Lbg1Y1Ll = new TH1D("h_PV_0Lbg1Y1Ll", "h_PV_0Lbg1Y1Ll", 50, 0, 50);
 
   TH1D * h_mT_0Lbg1Y1Ll = new TH1D("h_mT_0Lbg1Y1Ll", "h_mT_0Lbg1Y1Ll", 50, 0, 500);
+  TH1D * h_mT_0Lbg1Y1Ll_rebin = new TH1D("h_mT_0Lbg1Y1Ll_rebin", "h_mT_0Lbg1Y1Ll_rebin", 25, 0, 500);
   TH2D * h_MR_mT_0Lbg1Y1Ll = new TH2D("h_MR_mT_0Lbg1Y1Ll", "h_MR_mT_0Lbg1Y1Ll", nbins_MR, bins_MR, 50, 0, 500);
   TH2D * h_R2_mT_0Lbg1Y1Ll = new TH2D("h_R2_mT_0Lbg1Y1Ll", "h_R2_mT_0Lbg1Y1Ll", nbins_R2, bins_R2, 50, 0, 500);
 
@@ -868,6 +874,7 @@ int main(int argc, char** argv)
   TH2D * h_MR_minDeltaPhiHat_0Lbg1Y1LlmT = new TH2D("h_MR_minDeltaPhiHat_0Lbg1Y1LlmT", "h_MR_minDeltaPhiHat_0Lbg1Y1LlmT", nbins_MR, bins_MR, 30, 0, 15);
   TH2D * h_R2_minDeltaPhiHat_0Lbg1Y1LlmT = new TH2D("h_R2_minDeltaPhiHat_0Lbg1Y1LlmT", "h_R2_minDeltaPhiHat_0Lbg1Y1LlmT", nbins_R2, bins_R2, 30, 0, 15);
   TH1D * h_minDeltaPhi_0Lbg1Y1LlmT = new TH1D("h_minDeltaPhi_0Lbg1Y1LlmT", "h_minDeltaPhi_0Lbg1Y1LlmT", 50, 0, 5);
+  TH1D * h_minDeltaPhi_0Lbg1Y1LlmT_rebin = new TH1D("h_minDeltaPhi_0Lbg1Y1LlmT_rebin", "h_minDeltaPhi_0Lbg1Y1LlmT_rebin", 20, 0, 5);
   TH2D * h_MR_minDeltaPhi_0Lbg1Y1LlmT = new TH2D("h_MR_minDeltaPhi_0Lbg1Y1LlmT", "h_MR_minDeltaPhi_0Lbg1Y1LlmT", nbins_MR, bins_MR, 50, 0, 5);
   TH2D * h_R2_minDeltaPhi_0Lbg1Y1LlmT = new TH2D("h_R2_minDeltaPhi_0Lbg1Y1LlmT", "h_R2_minDeltaPhi_0Lbg1Y1LlmT", nbins_R2, bins_R2, 50, 0, 5);
 
@@ -1933,7 +1940,7 @@ int main(int argc, char** argv)
       double w_Y = 1;
       double w_aW = 1;
       for (unsigned int i=0; i<jethelper4.size(); i++) {
-        if (!(jethelper4[i].pt > 30) ) continue;
+        if (!(jethelper4[i].pt > 200) ) continue;
         if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;
         h_jmass_jpt->Fill(jethelper4[i].mass, jethelper4[i].pt);
         h_d1pt_d2pt->Fill(jethelper4[i].daughter_0_pt, jethelper4[i].daughter_1_pt);
@@ -3030,6 +3037,15 @@ int main(int argc, char** argv)
 		    h_jet1pt_g1Mbg1W0Ll_mdPhig0p5->Fill(sjet[0].pt,w);
 		    h_jet2pt_g1Mbg1W0Ll_mdPhig0p5->Fill(sjet[1].pt,w);
 		    h_jet3pt_g1Mbg1W0Ll_mdPhig0p5->Fill(sjet[2].pt,w);
+		    h_Wpt_g1Mbg1W0Ll_mdPhig0p5->Fill(sW[0].pt,w);
+		    // find closest b-jet to W
+		    double mdR = 99.;
+		    for(int sb=0; sb<sbjet.size(); sb++){
+		      double fdR = fdeltaR(sW[0].eta,sW[0].phi,sbjet[sb].eta,sbjet[sb].phi);
+		      if (fdR < mdR)
+			mdR = fdR;
+		    }
+		    h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5->Fill(mdR,w);
 		    if(isTTallhad)
 		      TTallhad->Fill("g1Mbg1W0Ll_mdPhig0p5", w);
 		    else if(isTTsemilep)
@@ -3115,6 +3131,7 @@ int main(int argc, char** argv)
 		  h_PV_0Lbg1uW0Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 
 		  h_minDeltaPhi_0Lbg1uW0Ll->Fill(minDeltaPhi, w);
+		  h_minDeltaPhi_0Lbg1uW0Ll_rebin->Fill(minDeltaPhi, w);
 		  h_MR_minDeltaPhi_0Lbg1uW0Ll->Fill(MR, minDeltaPhi, w);
 		  h_R2_minDeltaPhi_0Lbg1uW0Ll->Fill(R2, minDeltaPhi, w);
 
@@ -3343,6 +3360,7 @@ int main(int argc, char** argv)
 	      h_MR_R2_g1Mbg1W1Ll->Fill(MR, R2, w);
 
 	      h_mT_g1Mbg1W1Ll->Fill(mT, w);
+	      h_mT_g1Mbg1W1Ll_rebin->Fill(mT, w);
 	      h_MR_mT_g1Mbg1W1Ll->Fill(MR, mT, w);
 	      h_R2_mT_g1Mbg1W1Ll->Fill(R2, mT, w);
 
@@ -3381,6 +3399,7 @@ int main(int argc, char** argv)
 		h_MR_minDeltaPhiHat_g1Mbg1W1LlmT100->Fill(MR, minDeltaPhiHat, w);
 		h_R2_minDeltaPhiHat_g1Mbg1W1LlmT100->Fill(R2, minDeltaPhiHat, w);
 		h_minDeltaPhi_g1Mbg1W1LlmT100->Fill(minDeltaPhi, w);
+		h_minDeltaPhi_g1Mbg1W1LlmT100_rebin->Fill(minDeltaPhi, w);
 		h_MR_minDeltaPhi_g1Mbg1W1LlmT100->Fill(MR, minDeltaPhi, w);
 		h_R2_minDeltaPhi_g1Mbg1W1LlmT100->Fill(R2, minDeltaPhi, w);
 		h_PV_g1Mbg1W1LlmT100->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger*w_TopPt_nominal*w_ISR_nominal);
@@ -3582,6 +3601,7 @@ int main(int argc, char** argv)
 	      h_PV_0Lbg1Y1Ll->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 	      
 	      h_mT_0Lbg1Y1Ll->Fill(mT, w);
+	      h_mT_0Lbg1Y1Ll_rebin->Fill(mT, w);
 	      h_MR_mT_0Lbg1Y1Ll->Fill(MR, mT, w);
 	      h_R2_mT_0Lbg1Y1Ll->Fill(R2, mT, w);
 	      
@@ -3643,6 +3663,7 @@ int main(int argc, char** argv)
 		  h_MR_minDeltaPhiHat_0Lbg1Y1LlmT->Fill(MR, minDeltaPhiHat, w);
 		  h_R2_minDeltaPhiHat_0Lbg1Y1LlmT->Fill(R2, minDeltaPhiHat, w);
 		  h_minDeltaPhi_0Lbg1Y1LlmT->Fill(minDeltaPhi, w);
+		  h_minDeltaPhi_0Lbg1Y1LlmT_rebin->Fill(minDeltaPhi, w);
 		  h_MR_minDeltaPhi_0Lbg1Y1LlmT->Fill(MR, minDeltaPhi, w);
 		  h_R2_minDeltaPhi_0Lbg1Y1LlmT->Fill(R2, minDeltaPhi, w);
 		  if(isTTallhad)

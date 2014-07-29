@@ -124,6 +124,9 @@ int main(int argc, char** argv)
   double sigmaZnn = vsyst[14];
   int pdfnumber = vsyst[15];
 
+  // do JEC fully correlated
+  sigmaJECCA8 = sigmaJEC;
+
   string sample = "";
   if ( argc > 7 )
     sample = string(argv[7]);
@@ -919,8 +922,10 @@ int main(int argc, char** argv)
 	w_pileup = h_pileup->GetBinContent(pileup_bin);      
 	w_pileup_up = h_pileup_up->GetBinContent(pileup_bin);      
 	w_pileup_down = h_pileup_down->GetBinContent(pileup_bin);      
-	double dw_pileup_up = max(w_pileup_up, w_pileup_down) - w_pileup;
-	double dw_pileup_down = w_pileup - min(w_pileup_up, w_pileup_down);
+	double dw_pileup_up = w_pileup_up - w_pileup;
+	double dw_pileup_down = w_pileup - w_pileup_down;
+	//double dw_pileup_up = max(w_pileup_up, w_pileup_down) - w_pileup;
+	//double dw_pileup_down = w_pileup - min(w_pileup_up, w_pileup_down);
 	//cout << "PU: " << w_pileup << " " << dw_pileup_up << " " << dw_pileup_down << endl;
 	if (sigmaPU >= 0.) {
 	  w_pileup += sigmaPU*dw_pileup_up; 
@@ -1107,7 +1112,7 @@ int main(int argc, char** argv)
 			 jlCA8nojecSF.Pz()*jecSFCA8, jlCA8nojecSF.E()*jecSFCA8);
 	jethelper4[i].pt = jlCA8.Pt();
 	jethelper4[i].mass = jlCA8.M();
-        if (!(jethelper4[i].pt > 30) ) continue;
+        if (!(jethelper4[i].pt > 200) ) continue;
         if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;
 	// New Andreas cuts:
         if (!(jethelper4[i].mass > 70 && jethelper4[i].mass < 100)) continue;
