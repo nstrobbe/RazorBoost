@@ -490,6 +490,13 @@ int main(int argc, char** argv)
   int mother_max = 1000; 
   int LSP_min = 0; 
   int LSP_max = 500; 
+  string bins_SMS[] = {"310_300","325_300","350_300","375_300",
+		       "410_400","425_400","450_400","475_400",
+		       "510_500","525_500","550_500","575_500",
+		       "610_600","625_600","650_600","675_600",
+		       "710_700","725_700","750_700","775_700",
+		       "810_800","825_800","850_800","875_800"};
+  
 
   if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t"){
     // mother is gluino
@@ -501,12 +508,17 @@ int main(int argc, char** argv)
     LSP_max = 550; 
   } else if (sample == "T1ttcc_old"){
     // "mother" is stop as scan has fixed gluino mass
-    nbins_mother = 113;
+    /*
+    nbins_mother = 114;
     nbins_LSP = 6;
     mother_min = 310; 
     mother_max = 880; 
     LSP_min = 300; 
     LSP_max = 900; 
+    */
+    nbins_mother = 24;
+    nbins_LSP = 1;
+
   } else if (sample == "T2tt"){
     // mother is stop
     nbins_mother = 35;
@@ -541,7 +553,7 @@ int main(int argc, char** argv)
   int step_mother = (mother_max - mother_min)/nbins_mother;
   int step_LSP = (LSP_max - LSP_min)/nbins_LSP;
   if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
-      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+      || sample == "T2tt" || sample == "T1t1t"){
     int counter_i = 0;
     int counter_j = 0;
     for(int i=mother_min; i<mother_max; i+=step_mother){
@@ -582,6 +594,50 @@ int main(int argc, char** argv)
 
 	counter_j++;
       }
+      counter_i++;
+    }
+  }
+  if ( sample == "T1ttcc_old" ){
+    int counter_i = 0;
+    int counter_j = 0;
+    for(int i=0; i<nbins_mother; i++){
+      TString mother = bins_SMS[i].substr(0,3);
+      TString LSP = bins_SMS[i].substr(4,3);
+
+      TString nameS = "h_S_" + sample + "_" + mother + "_" + LSP;
+      TString nameT = "h_T_" + sample + "_" + mother + "_" + LSP;
+      TString nameQ = "h_Q_" + sample + "_" + mother + "_" + LSP;
+      TString nameW = "h_W_" + sample + "_" + mother + "_" + LSP;
+      list_S[counter_i][counter_j] = new TH2D(nameS,nameS,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_T[counter_i][counter_j] = new TH2D(nameT,nameT,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_Q[counter_i][counter_j] = new TH2D(nameQ,nameQ,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_W[counter_i][counter_j] = new TH2D(nameW,nameW,nbins_MR,bins_MR,nbins_R2,bins_R2);
+
+      //cout << nameS << endl;
+      TString nameSuw = "h_uw_S_" + sample + "_" + mother + "_" + LSP;
+      TString nameTuw = "h_uw_T_" + sample + "_" + mother + "_" + LSP;
+      TString nameQuw = "h_uw_Q_" + sample + "_" + mother + "_" + LSP;
+      TString nameWuw = "h_uw_W_" + sample + "_" + mother + "_" + LSP;
+      list_S_uw[counter_i][counter_j] = new TH2D(nameSuw,nameSuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_T_uw[counter_i][counter_j] = new TH2D(nameTuw,nameTuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_Q_uw[counter_i][counter_j] = new TH2D(nameQuw,nameQuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_W_uw[counter_i][counter_j] = new TH2D(nameWuw,nameWuw,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      
+      // mindphi 0.3
+      TString nameS0p3 = "h_S0p3_" + sample + "_" + mother + "_" + LSP;
+      TString nameT0p3 = "h_T0p3_" + sample + "_" + mother + "_" + LSP;
+      TString nameW0p3 = "h_W0p3_" + sample + "_" + mother + "_" + LSP;
+      list_S0p3[counter_i][counter_j] = new TH2D(nameS0p3,nameS0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_T0p3[counter_i][counter_j] = new TH2D(nameT0p3,nameT0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_W0p3[counter_i][counter_j] = new TH2D(nameW0p3,nameW0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      
+      TString nameSuw0p3 = "h_uw_S0p3_" + sample + "_" + mother + "_" + LSP;
+      TString nameTuw0p3 = "h_uw_T0p3_" + sample + "_" + mother + "_" + LSP;
+      TString nameWuw0p3 = "h_uw_W0p3_" + sample + "_" + mother + "_" + LSP;
+      list_S0p3_uw[counter_i][counter_j] = new TH2D(nameSuw0p3,nameSuw0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_T0p3_uw[counter_i][counter_j] = new TH2D(nameTuw0p3,nameTuw0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      list_W0p3_uw[counter_i][counter_j] = new TH2D(nameWuw0p3,nameWuw0p3,nbins_MR,bins_MR,nbins_R2,bins_R2);
+      
       counter_i++;
     }
   }
@@ -657,6 +713,14 @@ int main(int argc, char** argv)
 	int bin_mother = (m_mother - mother_min)/step_mother;
 	int bin_LSP = (mz1 - LSP_min)/step_LSP;
 	w = w/h_smscounts->GetBinContent(bin_mother+1,bin_LSP+1);	
+      }
+
+      if (sample == "T1ttcc_old"){
+	int bin_mother = (m_mother - 310.)/((880.-310.)/113.);
+	int bin_LSP = (int) ((mz1 - 300)/100.);
+	w = w/h_smscounts->GetBinContent(bin_mother+1,bin_LSP+1);	
+	//cout << m_mother << " " << mz1 << endl;
+	//cout << "event weight, bin_mother, bin_LSP, bin content " << w << " " << bin_mother << " " << bin_LSP << " " << h_smscounts->GetBinContent(bin_mother+1,bin_LSP+1) << endl;
       }
 
 
@@ -1620,11 +1684,17 @@ int main(int argc, char** argv)
 		      TTdilep->Fill("g1Mbg1W0Ll_mdPhig0p5", w);
 
 		    if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
-			|| sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+			 || sample == "T2tt" || sample == "T1t1t"){
 		      int bin_mother = (m_mother - mother_min)/step_mother;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		      list_S[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		      list_S_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		    }
+		    if (sample == "T1ttcc_old"){
+		      string name = to_string(int(m_mother)) + "_" + to_string(int(mz1));
+		      int bin_mother = distance(bins_SMS,find(bins_SMS,bins_SMS+24,name));
+		      list_S[bin_mother][0]->Fill(MR,R2,w);
+		      list_S_uw[bin_mother][0]->Fill(MR,R2,1.);
 		    }
 		 		    
 		  } // end of  minDeltaPhi > 0.5
@@ -1637,11 +1707,17 @@ int main(int argc, char** argv)
 		    h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p3->Fill(MR, R2, 1.);
 
 		    if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
-			|| sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+			|| sample == "T2tt" || sample == "T1t1t"){
 		      int bin_mother = (m_mother - mother_min)/step_mother;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		      list_S0p3[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		      list_S0p3_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		    }
+		    if (sample == "T1ttcc_old"){
+		      string name = to_string(int(m_mother)) + "_" + to_string(int(mz1));
+		      int bin_mother = distance(bins_SMS,find(bins_SMS,bins_SMS+24,name));
+		      list_S0p3[bin_mother][0]->Fill(MR,R2,w);
+		      list_S0p3_uw[bin_mother][0]->Fill(MR,R2,1.);
 		    }
 		  } // end of  minDeltaPhi > 0.3
 
@@ -1687,11 +1763,17 @@ int main(int argc, char** argv)
 		      TTdilep->Fill("0Lbg1uW0Ll_mdPhi0p3", w);
 
 		    if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
-			|| sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+			|| sample == "T2tt" || sample == "T1t1t"){
 		      int bin_mother = (m_mother - mother_min)/step_mother;
 		      int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		      list_Q[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		      list_Q_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		    if (sample == "T1ttcc_old"){
+		      string name = to_string(int(m_mother)) + "_" + to_string(int(mz1));
+		      int bin_mother = distance(bins_SMS,find(bins_SMS,bins_SMS+24,name));
+		      list_Q[bin_mother][0]->Fill(MR,R2,w);
+		      list_Q_uw[bin_mother][0]->Fill(MR,R2,1.);
+		    }
 		    }
 		  } // end of minDeltaPhi < 0.3
 
@@ -1766,11 +1848,17 @@ int main(int argc, char** argv)
 		    TTdilep->Fill("g1Mbg1W1LlmT100_mdPhig0p5", w);
 		  
 		  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
-		      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		      || sample == "T2tt" || sample == "T1t1t"){
 		    int bin_mother = (m_mother - mother_min)/step_mother;
 		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		    list_T[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		    list_T_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		  }
+		  if (sample == "T1ttcc_old"){
+		    string name = to_string(int(m_mother)) + "_" + to_string(int(mz1));
+		    int bin_mother = distance(bins_SMS,find(bins_SMS,bins_SMS+24,name));
+		    list_T[bin_mother][0]->Fill(MR,R2,w);
+		    list_T_uw[bin_mother][0]->Fill(MR,R2,1.);
 		  }
 		} // end of minDeltaPhi > 0.5 
 
@@ -1782,11 +1870,17 @@ int main(int argc, char** argv)
 		  h_uw_MR_R2_g1Mbg1W1LlmT100_mdPhig0p3->Fill(MR, R2, 1.);
 		  
 		  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
-		      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		      || sample == "T2tt" || sample == "T1t1t"){
 		    int bin_mother = (m_mother - mother_min)/step_mother;
 		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		    list_T0p3[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		    list_T0p3_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		  }
+		  if (sample == "T1ttcc_old"){
+		    string name = to_string(int(m_mother)) + "_" + to_string(int(mz1));
+		    int bin_mother = distance(bins_SMS,find(bins_SMS,bins_SMS+24,name));
+		    list_T0p3[bin_mother][0]->Fill(MR,R2,w);
+		    list_T0p3_uw[bin_mother][0]->Fill(MR,R2,1.);
 		  }
 		} // end of minDeltaPhi > 0.3 
 	      } // end mT < 100
@@ -1834,11 +1928,17 @@ int main(int argc, char** argv)
 		    TTdilep->Fill("0Lbg1Y1LlmT_mdPhig0p5", w);
 
 		  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
-		      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		      || sample == "T2tt" || sample == "T1t1t"){
 		    int bin_mother = (m_mother - mother_min)/step_mother;
 		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		    list_W[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		    list_W_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		  }
+		  if (sample == "T1ttcc_old"){
+		    string name = to_string(int(m_mother)) + "_" + to_string(int(mz1));
+		    int bin_mother = distance(bins_SMS,find(bins_SMS,bins_SMS+24,name));
+		    list_W[bin_mother][0]->Fill(MR,R2,w);
+		    list_W_uw[bin_mother][0]->Fill(MR,R2,1.);
 		  }
 		} // end minDeltaPhi > 0.5
 		if ( minDeltaPhi > 0.3){
@@ -1849,11 +1949,17 @@ int main(int argc, char** argv)
 		  h_uw_MR_R2_0Lbg1Y1LlmT_mdPhig0p3->Fill(MR, R2, 1.);
 
 		  if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80"
-		      || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t"){
+		      || sample == "T2tt" || sample == "T1t1t"){
 		    int bin_mother = (m_mother - mother_min)/step_mother;
 		    int bin_LSP = (mz1 - LSP_min)/step_LSP;
 		    list_W0p3[bin_mother][bin_LSP]->Fill(MR,R2,w);
 		    list_W0p3_uw[bin_mother][bin_LSP]->Fill(MR,R2,1.);
+		  }
+		  if (sample == "T1ttcc_old"){
+		    string name = to_string(int(m_mother)) + "_" + to_string(int(mz1));
+		    int bin_mother = distance(bins_SMS,find(bins_SMS,bins_SMS+24,name));
+		    list_W0p3[bin_mother][0]->Fill(MR,R2,w);
+		    list_W0p3_uw[bin_mother][0]->Fill(MR,R2,1.);
 		  }
 		} // end minDeltaPhi > 0.3
 	      } // end mT < 100 && mT > 30

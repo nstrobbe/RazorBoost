@@ -16,8 +16,8 @@ parser.add_option("--AB", action="store_true", dest="RunsAB", default=False, hel
 
 anl = 'rzrBoostsys'
 
-#dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
-dwork = '/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/'
+dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
+#dwork = '/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/'
 dflist = dwork+'filelists/'
 dflisttmp = dwork+'fileliststmp/'
 druns = dwork+'runs/'
@@ -30,7 +30,7 @@ cscrtmp = open(nmscrtmp).read()
 nmjobtmp = dtemplates+'job.job'
 cjobtmp = open(nmjobtmp).read()
 dres = dwork+'results/'
-drestmp = dwork+'resultstmp/'
+drestmp = dwork+'resultstmp_sys/'
 exe = dwork+anl
 
 # Do some cleaning:
@@ -96,13 +96,13 @@ for nsys in range(firstline, lastline):
     print 'Executing systematic: '+str(nsys)
 
     drestmpnsys = drestmp+'sys'+str(nsys)+'/'
-    if os.path.exists(drestmpnsys):
-        os.system('rm -rf '+drestmpnsys)
-    os.mkdir(drestmpnsys)
+    if not os.path.exists(drestmpnsys):
+        #os.system('rm -rf '+drestmpnsys)
+        os.mkdir(drestmpnsys)
     dscrnsys = dscr+'sys'+str(nsys)+'/'
-    if os.path.exists(dscrnsys):
-        os.system('rm -rf '+dscrnsys)
-    os.mkdir(dscrnsys)
+    if not os.path.exists(dscrnsys):
+        #os.system('rm -rf '+dscrnsys)
+        os.mkdir(dscrnsys)
     nmnsys = dscrnsys+'systematics_'+str(nsys)+'.txt'
     open(nmnsys, 'w').write(systlines[nsys])
     names['nmnsys'] = nmnsys
@@ -180,14 +180,14 @@ for nsys in range(firstline, lastline):
             open(nmscr,'w').write(cscr)
             os.system('chmod +x '+nmscr)
             #os.chdir('/tmp/ssekmen/')
-            #os.chdir("/tmp/nstrobbe/")
+            os.chdir("/tmp/nstrobbe/")
             os.system('bsub -q 1nh '+nmscr)
             #print names
             nrunstot = nrunstot + 1
 
     if nsys != lastline-1:
         print 'I will sleep for 10mins to not choke the batch'
-        time.sleep(600)
+        time.sleep(300)
         while not '.root' in os.popen('ls -lh '+drestmpnsys+'*.root').read():
             time.sleep(100)
             print 'No root file for systematic case '+str(nsys)+'... Going back to sleep.'

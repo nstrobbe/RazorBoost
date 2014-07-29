@@ -1,1 +1,1 @@
-/afs/cern.ch/work/n/nstrobbe/public/RazorBoost/SMS_new/T1ttcc_1000_325_300.root
+/afs/cern.ch/work/n/nstrobbe/public/RazorBoost/SMS_final/T1ttcc_skim_1000_325_300.root

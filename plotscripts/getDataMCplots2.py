@@ -7,9 +7,13 @@ import plotTools
 
 if __name__ == '__main__':
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/"
-    analyzer ="rzrBoostMC"
+    #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass"
+    #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/"
+    #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140610_FullStatusReport"
+    #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140610_FullStatusReport/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140707_noTopPt"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140707_noTopPt/summary/"
+    analyzer = "rzrBoostMC"
     
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
@@ -17,7 +21,7 @@ if __name__ == '__main__':
     outfile = TFile.Open(outputdir+"/plots.root","RECREATE")
 
     # Integrated luminosity in fb-1s
-    intlumi = 19.789 # ABCD
+    intlumi = 19.712 # ABCD
 
     plotTools.SetBoostStyle()
     
@@ -34,7 +38,7 @@ if __name__ == '__main__':
         f = TFile.Open(inputdir+analyzer+"_"+d+".root")
         flist.append(f)
     # signal
-    sig_datasets = ["T1ttcc_325_300"]
+    sig_datasets = ["T1ttcc_1000_325_300"]
     sig_colors   = [rt.kGray]
     fsiglist = []
     for d in sig_datasets:
@@ -177,7 +181,8 @@ if __name__ == '__main__':
               , "h_PV_1j", "h_PV_reweighted_1j"
               , "h_PV_HLT", "h_PV_reweighted_HLT"
               , "h_PV_SIG", "h_PV_reweighted_SIG" 
-              , "h_PV_g1Mbg1W1LlmT100", "h_PV_reweighted_g1Mbg1W1LlmT100"
+              , "h_PV_g1Mbg1W1LlmT100", "h_PV_reweighted_g1Mbg1W1LlmT100",
+              "h_deltaR_CA8_AK5"
               ]
     htitle = "Data/MC comparison plot"
     sels = ["","",
@@ -185,7 +190,8 @@ if __name__ == '__main__':
             "njets >= 1", "njets >= 1",
             "njets >= 3", "njets >= 3",
             "SIG", "SIG",
-            "g1Mbg1W1LlmT100", "g1Mbg1W1LlmT100"]
+            "g1Mbg1W1LlmT100", "g1Mbg1W1LlmT100",
+            "No Selection"]
     for hname in hnames:
         var = hname.split("_")[1]
         
@@ -323,7 +329,7 @@ if __name__ == '__main__':
 
     # Make plot of signal region without data
     vars = ["MR","R2"]
-    cuts = ["g1Mbg1W0Ll_mdPhiHatg4","g1Mbg1W0Ll_mdPhig0p3"]
+    cuts = ["g1Mbg1W0Ll_mdPhiHatg4","g1Mbg1W0Ll_mdPhig0p3","g1Mbg1W0Ll_mdPhig0p5"]
     sf = [100,0.01]
     for cut in cuts:
         for vi,var in enumerate(vars):

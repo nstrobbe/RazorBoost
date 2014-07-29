@@ -530,6 +530,11 @@ int main(int argc, char** argv)
   TH2D * h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5", "h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR, nbins_R2, bins_R2);
   TH2D * h_MR_R2_g1Mbg1W0Ll_mdPhig0p5_notrigw = new TH2D("h_MR_R2_g1Mbg1W0Ll_mdPhig0p5_notrigw", "h_MR_R2_g1Mbg1W0Ll_mdPhig0p5_notrigw", nbins_MR, bins_MR, nbins_R2, bins_R2);
 
+  TH2D * h_MR_nPV_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_MR_nPV_g1Mbg1W0Ll_mdPhig0p5", "h_MR_nPV_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR, 60,0,60);
+  TH2D * h_R2_nPV_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_R2_nPV_g1Mbg1W0Ll_mdPhig0p5", "h_R2_nPV_g1Mbg1W0Ll_mdPhig0p5", nbins_R2, bins_R2, 60,0,60);
+  TH2D * h_njets_nPV_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_njets_nPV_g1Mbg1W0Ll_mdPhig0p5", "h_njets_nPV_g1Mbg1W0Ll_mdPhig0p5", 10,0,10, 60,0,60);
+  TH2D * h_mdPhi_nPV_g1Mbg1W0Ll_mdPhig0p5 = new TH2D("h_mdPhi_nPV_g1Mbg1W0Ll_mdPhig0p5", "h_mdPhi_nPV_g1Mbg1W0Ll_mdPhig0p5", 10,0.5,1., 60,0,60);
+
   TH1D * h_njets_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_njets_g1Mbg1W0Ll_mdPhig0p5","h_njets_g1Mbg1W0Ll_mdPhig0p5",15,0,15);
   TH1D * h_nbjets_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_nbjets_g1Mbg1W0Ll_mdPhig0p5","h_nbjets_g1Mbg1W0Ll_mdPhig0p5",6,0,6);
   TH1D * h_met_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_met_g1Mbg1W0Ll_mdPhig0p5","h_met_g1Mbg1W0Ll_mdPhig0p5",20,0,1000);
@@ -2003,6 +2008,7 @@ int main(int argc, char** argv)
 	//if (!(tau3 < 0.135) ) continue;
         sW.push_back(jethelper4[i]);
 	WSFEFast(jethelper4[i].pt, SFWFast, dSFWFast);
+	WFakeSFEFull(jethelper4[i].pt, SFWfake, dSFWfake);
 	// For FastSim
 	if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" 
 	    || sample == "T1ttcc_old" || sample == "T2tt" || sample == "T1t1t") {
@@ -3012,6 +3018,11 @@ int main(int argc, char** argv)
 		    h_uw_MR_R2_g1Mbg1W0Ll_mdPhig0p5->Fill(MR, R2, 1.);
 		    if (w_trigger>0)
 		      h_MR_R2_g1Mbg1W0Ll_mdPhig0p5_notrigw->Fill(MR, R2, w/w_trigger);
+
+		    h_MR_nPV_g1Mbg1W0Ll_mdPhig0p5->Fill(MR,num_vertices,1.);
+		    h_R2_nPV_g1Mbg1W0Ll_mdPhig0p5->Fill(R2,num_vertices,1.);
+		    h_njets_nPV_g1Mbg1W0Ll_mdPhig0p5->Fill(sjet.size(),num_vertices,1.);
+		    h_mdPhi_nPV_g1Mbg1W0Ll_mdPhig0p5->Fill(minDeltaPhi,num_vertices,1.);
 
 		    h_njets_g1Mbg1W0Ll_mdPhig0p5->Fill(sjet.size(),w);
 		    h_nbjets_g1Mbg1W0Ll_mdPhig0p5->Fill(nmediumbs,w);

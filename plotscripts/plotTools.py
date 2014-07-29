@@ -437,15 +437,14 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
     if logscale:
         canvas.SetLogy(1)
     canvas.cd()
-
     
     # Make the legend
     legend = rt.TLegend(0.67,0.5,0.87,0.87,"")
     if legdict != 0:
         legend = rt.TLegend(legdict["xmin"],legdict["ymin"],legdict["xmax"],legdict["ymax"],legdict["title"])
         legend.SetNColumns(legdict["ncolumns"])
+        legend.SetFillStyle(legdict["fillstyle"])
     legend.SetFillColor(0)
-    legend.SetFillStyle(legdict["fillstyle"])
     legend.SetBorderSize(0)
     
     # Get histograms from a list of dictionaries, and plot them 
@@ -525,7 +524,8 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
         first = first+1
         
     print "Drew all histograms"
-    legend.Draw("same") 
+
+    #legend.Draw("same") 
     
     canvas.cd()
     canvas.SaveAs(outputdir+"/"+cname+".pdf")
@@ -540,7 +540,7 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
 # TODO:  add option to run without data histogram
 def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
                , outputdir="plots", outfile=0, cname="canvas", plotinfo="Selection X"
-               , ratiotitle="ratio", logscale=False, scale="No", scalefactor=1, intlumi=19.789):
+               , ratiotitle="ratio", logscale=False, scale="No", scalefactor=1, intlumi=19.712):
 
     # First do some checks on the input
     if outfile == 0:

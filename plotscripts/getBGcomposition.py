@@ -140,12 +140,14 @@ if __name__ == '__main__':
     counts_dilep = {}
         
     # Integrated luminosity in fb-1s
-    intlumi = 19.789
+    intlumi = 19.712
 
     # input information
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass"
+    #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass"
+    #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140610_FullStatusReport"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140701"
     analyzer = "rzrBoostMC"
-    signame = "T1ttcc_325_300"
+    signame = "T1ttcc_1000_325_300"
     sigxs = 0.0243547
     
     # get signal info

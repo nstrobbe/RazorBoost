@@ -12,7 +12,7 @@ anl = sys.argv[1]
 samplesfile = sys.argv[2]
 
 
-dwork = '/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/'
+dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
 dflist = dwork+'filelists/'
 dflisttmp = dwork+'fileliststmp/'
 druns = dwork+'runs/'
@@ -24,8 +24,8 @@ nmscrtmp = dtemplates+'scr_'+anl+'.py'
 cscrtmp = open(nmscrtmp).read()
 nmjobtmp = dtemplates+'job.job'
 cjobtmp = open(nmjobtmp).read()
-dres = dwork+'results/'
-drestmp = dwork+'resultstmp/'
+dres = dwork+'results_sys_sigs/'
+drestmp = dwork+'resultstmp_sys/'
 exe = dwork+anl
 
 
@@ -44,6 +44,7 @@ for s in systmpdirs:
     s = split(strip(s), '/')[-1]
     print s
     if 'sys' in s:
+        #if float(s.replace("sys","")) >= 448:
         sysdirs.append(s)
 
 print sysdirs
@@ -51,9 +52,9 @@ print sysdirs
 # Total number of runs
 nrunstot = 0
 # Number of input files per run
-nf = 3
+nf = 8
 # Integrated luminosity in pb-1s
-intlumi = 19789
+intlumi = 19712
 # Loop over the datasets
 
 print 'MISSING FILES: \n'
@@ -105,8 +106,8 @@ for d in datasets:
             if not os.path.exists(nmhistotmp):
                 if os.path.exists(nmflisttmp):
                     print nmhistotmp
-                    os.chdir("/tmp/ssekmen/")
-                    os.system('bsub -q 1nd '+nmscr)
+                    os.chdir("/tmp/nstrobbe/")
+                    os.system('bsub -q 1nh '+nmscr)
                     nrunstot = nrunstot + 1
 
 

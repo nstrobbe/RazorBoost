@@ -1077,6 +1077,7 @@ int main(int argc, char** argv)
 	if (!(tau21 < 0.50) ) continue;
 	//if (!(tau21 < 0.46) ) continue;
 	//if (!(tau3 < 0.135) ) continue;
+        sW.push_back(jethelper4[i]);
 	WSFEFast(jethelper4[i].pt, SFWFast, dSFWFast);
 	WFakeSFEFull(jethelper4[i].pt, SFWfake, dSFWfake);
 	// For FastSim
@@ -1101,7 +1102,6 @@ int main(int argc, char** argv)
 	    w_W *= (SFWfake + sigmaWfake*dSFWfake);
 	  }
 	}
-        sW.push_back(jethelper4[i]);
       }
 
       // Muons - veto:

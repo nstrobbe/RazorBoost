@@ -13,8 +13,12 @@ if __name__ == '__main__':
     #outputdir = sys.argv[1]
     #inputfile = sys.argv[2] # total bg histograms
 
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass"
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/"
+    #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass"
+    #basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/"
+    #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140610_FullStatusReport"
+    #basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140610_FullStatusReport/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140701"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140701/summary/"
     inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
     inputfile_Top = basedir + "rzrBoostMC_Top.root"
     inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
@@ -23,6 +27,7 @@ if __name__ == '__main__':
     inputfile_ZJetsToNuNu = basedir + "rzrBoostMC_ZJetsToNuNu.root"
     inputfile_data = basedir + "rzrBoostMC_data.root"
     inputfile_bg = basedir + "../rzrBoostMC_bg.root"
+    inputfile_1000_325_300 = basedir + "rzrBoostMC_T1ttcc_1000_325_300.root"
     
     if not os.path.isdir(outputdir):
         os.mkdir(outputdir)
@@ -36,9 +41,10 @@ if __name__ == '__main__':
     infile_Zinv = TFile.Open(inputfile_ZJetsToNuNu)
     infile_data = TFile.Open(inputfile_data)
     infile_bg = TFile.Open(inputfile_bg)
+    infile_1000_325_300 = TFile.Open(inputfile_1000_325_300)
 
     # Integrated luminosity in fb-1s
-    intlumi = 19.789 # ABCD
+    intlumi = 19.712 # ABCD
 
     # set root styles
     plotTools.SetBoostStyle()
@@ -101,6 +107,20 @@ if __name__ == '__main__':
                                              appear_in_ratio="Yes", xtitle=var)
         hdictlist=[hdict_SIG,hdict_TTJmt]
         canvasname = var+"_comparison_TTJ_TvsS"
+        rtitle = "#frac{T}{S}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes",legdict=leg)
+
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W0Ll_mdPhig0p5"),
+                                             name=" S region", color=rt.kBlack,
+                                             title="Shape comparison for TTJets in S and T region",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_TTJmt = plotTools.ConstructHDict(infile_TTJ.Get("h_"+var+"_g1Mbg1W1LlmT100_mdPhig0p5"),
+                                             name=" T region", color=rt.kCyan+2,
+                                             title="Shape comparison for TTJets in Sand T region",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_SIG,hdict_TTJmt]
+        canvasname = var+"_comparison_TTJ_TvsS_mdphi"
         rtitle = "#frac{T}{S}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes",legdict=leg)
 
@@ -214,6 +234,21 @@ if __name__ == '__main__':
         rtitle = "#frac{S}{Q}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes",legdict=leg)
 
+    # build hdictlist for QCD with mdphi:
+    for var in vars:
+        hdict_QCD_mdphihat4 = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_0Lbg1uW0Ll_mdPhi0p3"),
+                                             name=" Q region", color=rt.kMagenta,
+                                             title="Shape comparison for QCD MC in the Q region and the S region",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_SIG_mdphihatg4 = plotTools.ConstructHDict(infile_QCD.Get("h_"+var+"_g1Mbg1W0Ll_mdPhig0p5"),
+                                             name=" S region", color=rt.kBlue-3,
+                                             title="Shape comparison for QCD MC in the Q region and in the S region",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_QCD_mdphihat4,hdict_SIG_mdphihatg4]
+        canvasname = var+"_comparison_QCD_QvsS_mdphi"
+        rtitle = "#frac{S}{Q}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes",legdict=leg)
+
     # build hdictlist for Wjets:
     for var in vars:
         hdict_SIG = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_g1Mbg1W0Ll"),
@@ -245,6 +280,21 @@ if __name__ == '__main__':
                                              appear_in_ratio="Yes", xtitle=var)
         hdictlist=[hdict_SIG,hdict_WJets_mt]
         canvasname = var+"_comparison_WJ_WvsS"
+        rtitle = "#frac{W}{S}"
+        plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes",legdict=leg)
+
+    # build hdictlist for Wjets:
+    for var in vars:
+        hdict_SIG = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_g1Mbg1W0Ll_mdPhig0p5"),
+                                             name="S region", color=rt.kBlack,
+                                             title="Shape comparison for WJets in the S and W region",
+                                             appear_in_ratio="Ref", xtitle=var)
+        hdict_WJets_mt = plotTools.ConstructHDict(infile_WJets.Get("h_"+var+"_0Lbg1Y1LlmT_mdPhig0p5"),
+                                             name="W region", color=rt.kGreen+2,
+                                             title="Shape comparison for WJets in the S and W region",
+                                             appear_in_ratio="Yes", xtitle=var)
+        hdictlist=[hdict_SIG,hdict_WJets_mt]
+        canvasname = var+"_comparison_WJ_WvsS_mdphi"
         rtitle = "#frac{W}{S}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes",legdict=leg)
 
@@ -446,6 +496,27 @@ if __name__ == '__main__':
         rtitle = "#frac{min#Delta#Phi > 4}{min#Delta#Phi < 4}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,ratiotitle=rtitle,scale="Yes")
 
+    ########################################################
+    # Make comparison of gen level W pt
+    hname = "h_gen_Wpt"
+    htitle = ""
+    xt = "generator W pT"
+    legd4 = plotTools.ConstructLDict(0.5,0.87,0.7,0.85)
+    hdict_TTJ = plotTools.ConstructHDict(infile_TTJ.Get(hname),
+                                         name="TTJets", color=rt.kRed, 
+                                         title=htitle,
+                                         xtitle=xt)
+    hdict_1000_325_300 = plotTools.ConstructHDict(infile_1000_325_300.Get(hname),
+                                         name="T1ttcc_1000_325_300", color=rt.kTeal, 
+                                         title=htitle,
+                                         xtitle=xt)
+    #hdict_1200_125_100 = plotTools.ConstructHDict(infile_1000_125_100.Get(hname),
+    #                                     name="T1ttcc_1000_125_100", color=rt.kTeal, 
+    #                                     title=htitle,
+    #                                     xtitle=xt)
+    hdictlist=[hdict_TTJ,hdict_1000_325_300]
+    canvasname = "comparison_genWpt"
+    plotTools.Plot1D(hdictlist,outputdir,outfile,cname=canvasname,scale="Yes",legdict=legd4)
 
 
     outfile.Close()
@@ -455,3 +526,5 @@ if __name__ == '__main__':
     infile_DYJets.Close()
     infile_Zinv.Close()
     infile_data.Close()
+    infile_bg.Close()
+    infile_1000_325_300.Close()
