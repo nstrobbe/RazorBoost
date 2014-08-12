@@ -9,8 +9,8 @@ if __name__ == '__main__':
 
     #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140610_FullStatusReport"
     #inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140610_FullStatusReport/summary/"
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140729_preApp_comments"
-    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140729_preApp_comments/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140730_preApp_comments"
+    inputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140730_preApp_comments/summary/"
     analyzer = "rzrBoostMC"
     
     if not os.path.isdir(outputdir):
@@ -173,7 +173,7 @@ if __name__ == '__main__':
             hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
 
             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
-                                 cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection "+cut,
+                                 cname="DataMC_%s_%s_rebin"%(var,cut), plotinfo="Selection "+cut,
                                  ratiotitle="Data/MC", logscale=True, scale="No")
 
 
@@ -223,7 +223,7 @@ if __name__ == '__main__':
         hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
 
         plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
-                             cname="DataMC_"+hname.replace("h_","").replace("_rebin",""), plotinfo="Selection "+hname.replace("h_mT_","").replace("_rebin",""),
+                             cname="DataMC_"+hname.replace("h_",""), plotinfo="Selection "+hname.replace("h_mT_","").replace("_rebin",""),
                              ratiotitle="Data/MC", logscale=True, scale="No")
 
     ##############################################################################################################
@@ -271,7 +271,7 @@ if __name__ == '__main__':
 
     vars = ["njets","nbjets","met","jet1pt","jet2pt","jet3pt",
             "leptonpt","lepton1pt","lepton2pt",
-            "HT","PV"]
+            "HT","PV","Wpt"]
 
     cuts = ["SIG","g1Mbg1W0Ll","g1Mbg1W0Ll_mdPhiHatg4","g1Mb0Wg1uW0Ll",
             "0Lb0Ll","0Lbg1uW0Ll","0Lbg1uW0Ll_mdPhi0p3","0Lbg1uW0Ll_mdPhi0p5","0Lbg1uW0Ll_mdPhiHat4","0Lbg1uW0Ll_mdPhiHat5",
@@ -306,6 +306,35 @@ if __name__ == '__main__':
             plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
                                  cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
                                  ratiotitle="Data/MC", logscale=True, scale="No")
+
+
+    vars = ["deltaR_bW"]
+
+    cuts = ["g1Mbg1W0Ll_mdPhig0p5"
+            ]
+
+    for cut in cuts:
+        for var in vars:
+            hname = "h_%s_%s" % (var,cut)
+            htitle = "Data/MC comparison plot"
+            hlist = []
+            for i in range(len(mc_datasets)):
+                if not flist[i]: continue
+                hdict = plotTools.ConstructHDict(flist[i].Get(hname),name=mc_datasets[i],color=mc_colors[i],title=htitle)
+                hlist.append(hdict)
+        
+            hsiglist = []
+            for i in range(len(sig_datasets)):
+                if not fsiglist[i]: continue
+                hdict = plotTools.ConstructHDict(fsiglist[i].Get(hname),name=sig_datasets[i],color=sig_colors[i],title=htitle)
+                hsiglist.append(hdict)
+
+            hdict_data = plotTools.ConstructHDict(fdata.Get(hname),name="data",color=rt.kBlack,title=htitle,xtitle=var,ytitle="Events",markerstyle=20)
+
+            # now make the actual plot
+            plotTools.PlotDataMC(hlist,hdict_data,hsiglist,legdict=legd,outputdir=outputdir, outfile=outfile,
+                                 cname="DataMC_%s_%s"%(var,cut), plotinfo="Selection %s"%(cut),
+                                 ratiotitle="Data/MC", logscale=False, scale="No")
 
 
     ##############################################################################################################

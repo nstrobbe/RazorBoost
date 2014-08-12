@@ -3,14 +3,14 @@
 import os,sys
 from string import *
 
-anl = 'rzrBoostsys'
+anl = 'rzrBoostsys_noPDF'
 
 dwork = '/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/RazorBoost/analyzer/'
 #dwork = '/afs/cern.ch/work/s/ssekmen/RazorBoost/analyzer/'
 dflist = dwork+'filelists/'
 dflisttmp = dwork+'fileliststmp/'
 druns = dwork+'runs/'
-dscr = dwork+'scripts/'
+dscr = dwork+'scripts_noPDF/'
 djob = dwork+'jobs/'
 dtemplates = dwork+'templates/'
 #nmscrtmp = dtemplates+'scr_'+anl+'.py'
@@ -18,8 +18,8 @@ nmscrtmp = dtemplates+'scr_'+anl+'.py'
 cscrtmp = open(nmscrtmp).read()
 nmjobtmp = dtemplates+'job.job'
 cjobtmp = open(nmjobtmp).read()
-dres = dwork+'results_sys/'
-drestmp = dwork+'resultstmp_sys/'
+dres = dwork+'results_sys_noPDF/'
+drestmp = dwork+'resultstmp_sys_noPDF/'
 exe = dwork+anl
 
 # Get the samples list file:

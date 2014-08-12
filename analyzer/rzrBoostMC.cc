@@ -474,6 +474,7 @@ int main(int argc, char** argv)
   TH2D * h_R2_minDeltaPhiHat_g1Mbg1W0Ll = new TH2D("h_R2_minDeltaPhiHat_g1Mbg1W0Ll", "h_R2_minDeltaPhiHat_g1Mbg1W0Ll", nbins_R2, bins_R2, 30, 0, 15);
 
   TH1D * h_minDeltaPhi_g1Mbg1W0Ll = new TH1D("h_minDeltaPhi_g1Mbg1W0Ll", "h_minDeltaPhi_g1Mbg1W0Ll", 50, 0, 1);
+  TH1D * h_minDeltaPhi_g1Mbg1W0Ll_rebin = new TH1D("h_minDeltaPhi_g1Mbg1W0Ll_rebin", "h_minDeltaPhi_g1Mbg1W0Ll_rebin", 20, 0, 5);
   TH2D * h_MR_minDeltaPhi_g1Mbg1W0Ll = new TH2D("h_MR_minDeltaPhi_g1Mbg1W0Ll", "h_MR_minDeltaPhi_g1Mbg1W0Ll", nbins_MR, bins_MR, 50, 0, 5);
   TH2D * h_R2_minDeltaPhi_g1Mbg1W0Ll = new TH2D("h_R2_minDeltaPhi_g1Mbg1W0Ll", "h_R2_minDeltaPhi_g1Mbg1W0Ll", nbins_R2, bins_R2, 50, 0, 5);
 
@@ -542,7 +543,7 @@ int main(int argc, char** argv)
   TH1D * h_jet2pt_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_jet2pt_g1Mbg1W0Ll_mdPhig0p5","h_jet2pt_g1Mbg1W0Ll_mdPhig0p5",20,0,1000);
   TH1D * h_jet3pt_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_jet3pt_g1Mbg1W0Ll_mdPhig0p5","h_jet3pt_g1Mbg1W0Ll_mdPhig0p5",20,0,1000);
   TH1D * h_Wpt_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_Wpt_g1Mbg1W0Ll_mdPhig0p5","h_Wpt_g1Mbg1W0Ll_mdPhig0p5",20,0,1000);
-  TH1D * h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5","h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5",50,0,5);
+  TH1D * h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5","h_deltaR_bW_g1Mbg1W0Ll_mdPhig0p5",11,0,4.4);
 
   // signal box + mindeltaphi < 0.5
   TH1D * h_MR_g1Mbg1W0Ll_mdPhi0p5 = new TH1D("h_MR_g1Mbg1W0Ll_mdPhi0p5", "h_MR_g1Mbg1W0Ll_mdPhi0p5", nbins_MR, bins_MR);
@@ -1193,6 +1194,10 @@ int main(int argc, char** argv)
   TH1D* h_gen_W1pt_g1Mb0Ll = new TH1D("h_gen_W1pt_g1Mb0Ll", "h_gen_W1pt_g1Mb0Ll", 50, 0, 1000);
   TH1D* h_gen_dRqq_g1Mb0Ll = new TH1D("h_gen_dRqq_g1Mb0Ll", "h_gen_dRqq_g1Mb0Ll", 200, 0, 5);
   TH2D* h_gen_W1pt_dRqq_g1Mb0Ll = new TH2D("h_gen_W1pt_dRqq_g1Mb0Ll", "h_gen_W1pt_dRqq_g1Mb0Ll", 200, 0, 1000, 200, 0, 5);
+
+  // other plots
+  TH1D * h_Nmin1_njets_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_Nmin1_njets_g1Mbg1W0Ll_mdPhig0p5","h_Nmin1_njets_g1Mbg1W0Ll_mdPhig0p5",15,0,15);
+
 
   // ------------------------------------------------------
   // -- Define the order of bins in the counts histogram --
@@ -2633,6 +2638,23 @@ int main(int argc, char** argv)
       else if(isTTdilep)
 	TTdilep->Fill("vertexg0", w);
 
+
+      // make N-1 plot for njet distribution
+      if (sjet.size() >= 2 
+	  && sjet[0].pt > 200
+	  && MR > 800 
+	  && R2 > 0.08
+	  && velectron.size() == 0
+	  && vmuon.size() == 0
+	  && eventhelperextra_trackIso == 0
+	  && sbjet.size() > 0
+	  && sW.size() > 0){
+	if (eventhelper_isRealData!=1)
+	  h_Nmin1_njets_g1Mbg1W0Ll_mdPhig0p5->Fill(sjet.size(),w*w_trigger*wCSVM*w_W);
+	else
+	  h_Nmin1_njets_g1Mbg1W0Ll_mdPhig0p5->Fill(sjet.size(),w);
+      }
+
       // at least three jets
       if (!(sjet.size() >= 3)) continue;
       ofile.count("njetge3", w);
@@ -2912,6 +2934,7 @@ int main(int argc, char** argv)
 		  h_MR_minDeltaPhiHat_g1Mbg1W0Ll->Fill(MR, minDeltaPhiHat, w);
 		  h_R2_minDeltaPhiHat_g1Mbg1W0Ll->Fill(R2, minDeltaPhiHat, w);
 		  h_minDeltaPhi_g1Mbg1W0Ll->Fill(minDeltaPhi, w);
+		  h_minDeltaPhi_g1Mbg1W0Ll_rebin->Fill(minDeltaPhi, w);
 		  h_MR_minDeltaPhi_g1Mbg1W0Ll->Fill(MR, minDeltaPhi, w);
 		  h_R2_minDeltaPhi_g1Mbg1W0Ll->Fill(R2, minDeltaPhi, w);
 		  if(isTTallhad)

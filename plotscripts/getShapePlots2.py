@@ -17,8 +17,8 @@ if __name__ == '__main__':
     #basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/summary/"
     #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140610_FullStatusReport"
     #basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140610_FullStatusReport/summary/"
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140701"
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140701/summary/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/plots_20140730_preApp_comments"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140730_preApp_comments/summary/"
     inputfile_TTJ = basedir + "rzrBoostMC_TTJets.root"
     inputfile_Top = basedir + "rzrBoostMC_Top.root"
     inputfile_QCD = basedir + "rzrBoostMC_QCD.root"
@@ -507,7 +507,7 @@ if __name__ == '__main__':
                                          title=htitle,
                                          xtitle=xt)
     hdict_1000_325_300 = plotTools.ConstructHDict(infile_1000_325_300.Get(hname),
-                                         name="T1ttcc_1000_325_300", color=rt.kTeal, 
+                                         name="T1ttcc_1000_325_300", color=rt.kCyan+2, 
                                          title=htitle,
                                          xtitle=xt)
     #hdict_1200_125_100 = plotTools.ConstructHDict(infile_1000_125_100.Get(hname),
@@ -516,6 +516,24 @@ if __name__ == '__main__':
     #                                     xtitle=xt)
     hdictlist=[hdict_TTJ,hdict_1000_325_300]
     canvasname = "comparison_genWpt"
+    plotTools.Plot1D(hdictlist,outputdir,outfile,cname=canvasname,scale="Yes",legdict=legd4)
+
+    ########################################################
+    # Make comparison of W pt in signal region
+    hname = "h_Wpt_g1Mbg1W0Ll_mdPhig0p5"
+    htitle = ""
+    xt = "W pT"
+    legd4 = plotTools.ConstructLDict(0.5,0.87,0.7,0.85)
+    hdict_bg = plotTools.ConstructHDict(infile_bg.Get(hname),
+                                         name="Total background (MC)", color=rt.kRed, 
+                                         title=htitle,
+                                         xtitle=xt,drawoption="histE2")
+    hdict_1000_325_300 = plotTools.ConstructHDict(infile_1000_325_300.Get(hname),
+                                         name="T1ttcc_1000_325_300", color=rt.kCyan+2, 
+                                         title=htitle,
+                                         xtitle=xt,drawoption="histE2")
+    hdictlist=[hdict_bg,hdict_1000_325_300]
+    canvasname = "comparison_Wpt"
     plotTools.Plot1D(hdictlist,outputdir,outfile,cname=canvasname,scale="Yes",legdict=legd4)
 
 
