@@ -2297,8 +2297,8 @@ int main(int argc, char** argv)
 	    double dRgenCA8 = 999.;
 	    int matched_index = -1;
 	    for (int j=0; j<(int)jethelper4.size(); ++j){
-	      if (!(jethelper4[i].pt > 30) ) continue;
-	      if (!(fabs(jethelper4[i].eta) < 2.4) ) continue;
+	      if (!(jethelper4[j].pt > 200) ) continue;
+	      if (!(fabs(jethelper4[j].eta) < 2.4) ) continue;
 	      double dRgenCA8_temp = fdeltaR(Ws[i].eta, Ws[i].phi,
 					     jethelper4[j].eta,jethelper4[j].phi);
 	      if (dRgenCA8_temp < dRgenCA8 && dRgenCA8_temp < 0.8){

@@ -25,7 +25,7 @@ cscrtmp = open(nmscrtmp).read()
 nmjobtmp = dtemplates+'job.job'
 cjobtmp = open(nmjobtmp).read()
 dres = dwork+'results_sys/'
-drestmp = dwork+'resultstmp_sys_noPDF/'
+drestmp = dwork+'resultstmp_sys/'
 exe = dwork+anl
 
 

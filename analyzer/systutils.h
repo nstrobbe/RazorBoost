@@ -712,15 +712,17 @@ void eleLooseSFEFull(double pt, double eta, double& SFe, double& dSFe)
 // Y tag SFs and SF errors:
 void YSFEFull(double pt, double& SF, double& dSF)
 {
-  const int npt = 13;
+  const int npt = 12;
 
   // pt bins:
-  double _ptmin[npt] = {0.,180.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.};
-  double _ptmax[npt] = {180.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.,3000.};
+  double _ptmin[npt] = {200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.};
+  double _ptmax[npt] = {220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.,3000.};
 
   // SF and errors for Ys:
-  double _SF[npt] = {1.5, 1.18, 1.16, 1.23, 1.26, 1.28, 1.12, 1.17, 1.27, 1.33, 1.35, 1.34, 1.37};
-  double _SF_error[npt] = {0.8, 0.06, 0.04, 0.03, 0.03, 0.03, 0.02, 0.03, 0.02, 0.03, 0.04, 0.02, 0.02};
+  //double _SF[npt] = {1.5, 1.18, 1.16, 1.23, 1.26, 1.28, 1.12, 1.17, 1.27, 1.33, 1.35, 1.34, 1.37};
+  //double _SF_error[npt] = {0.8, 0.06, 0.04, 0.03, 0.03, 0.03, 0.02, 0.03, 0.02, 0.03, 0.04, 0.02, 0.02};
+  double _SF[npt]       = {1.14,1.12,1.19,1.25,1.27,1.13,1.20,1.30,1.33,1.34,1.34,1.37};
+  double _SF_error[npt] = {0.06,0.04,0.03,0.03,0.03,0.02,0.03,0.02,0.02,0.03,0.02,0.02};
 
   int ipt = 0;
   for (int i=0; i<npt; i++) {
@@ -738,17 +740,17 @@ void YSFEFull(double pt, double& SF, double& dSF)
 // W fake SFs and SF errors:
 void WFakeSFEFull(double pt, double& SF, double& dSF)
 {
-  const int npt = 14;
+  const int npt = 12;
 
   // pt bins:
-  double _ptmin[npt] = {0.,180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.};
-  double _ptmax[npt] = {180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.,3000.};
+  double _ptmin[npt] = {200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.};
+  double _ptmax[npt] = {220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.,3000.};
 
   // SF and errors for Ys:
   //double _SF[npt] = {0.78, 0.84, 1.05, 1.01, 1.15, 1.15, 1.14, 1.02, 1.13, 1.16, 1.18, 1.18, 1.15, 1.18};
   //double _SF_error[npt] = {0.69, 0.17, 0.07, 0.04, 0.04 ,0.03, 0.03, 0.02 ,0.02, 0.02, 0.03, 0.03, 0.02, 0.02};
-  double _SF[npt] = {1.7, 0.84, 1.06, 0.98, 1.17, 1.17, 1.14, 1.04, 1.15, 1.17, 1.18, 1.16, 1.15, 1.17};
-  double _SF_error[npt] = {1.5, 0.18, 0.08, 0.05, 0.04, 0.03, 0.03, 0.02, 0.02, 0.02, 0.03, 0.04, 0.02, 0.02};
+  double _SF[npt]       = {1.04,1.01,1.16,1.16,1.15,1.03,1.14,1.17,1.18,1.18,1.15,1.18};
+  double _SF_error[npt] = {0.07,0.04,0.04,0.03,0.03,0.02,0.02,0.02,0.03,0.03,0.02,0.02};
 
   int ipt = 0;
   for (int i=0; i<npt; i++) {
@@ -767,15 +769,17 @@ void WFakeSFEFull(double pt, double& SF, double& dSF)
 // aW tag SFs and SF errors:
 void aWSFEFull(double pt, double& SF, double& dSF)
 {
-  const int npt = 13;
+  const int npt = 12;
 
   // pt bins:
-  double _ptmin[npt] = {0.,180.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.};
-  double _ptmax[npt] = {180.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.,3000.};
+  double _ptmin[npt] = {200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.};
+  double _ptmax[npt] = {220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,500.,3000.};
 
   // SF and errors for Ys:
-  double _SF[npt] = {1.6, 1.28, 1.23, 1.28, 1.35, 1.41, 1.22, 1.23, 1.39, 1.46, 1.49, 1.50, 1.51};
-  double _SF_error[npt] = {1.1, 0.10, 0.05, 0.04, 0.03, 0.04, 0.03, 0.03, 0.03, 0.03, 0.04, 0.03, 0.02};
+  //double _SF[npt] = {1.6, 1.28, 1.23, 1.28, 1.35, 1.41, 1.22, 1.23, 1.39, 1.46, 1.49, 1.50, 1.51};
+  //double _SF_error[npt] = {1.1, 0.10, 0.05, 0.04, 0.03, 0.04, 0.03, 0.03, 0.03, 0.03, 0.04, 0.03, 0.02};
+  double _SF[npt]       = {1.22,1.19,1.22,1.32,1.38,1.20,1.24,1.41,1.45,1.47,1.49,1.51};
+  double _SF_error[npt] = {0.08,0.06,0.04,0.04,0.05,0.03,0.03,0.03,0.03,0.04,0.03,0.02};
 
   int ipt = 0;
   for (int i=0; i<npt; i++) {
@@ -794,15 +798,17 @@ void aWSFEFull(double pt, double& SF, double& dSF)
 // W tag Fastsim SFs and SF errors:
 void WSFEFast(double pt, double& SF, double& dSF)
 {
-  const int npt = 6;
+  const int npt = 3;
 
   // pt bins:
-  double _ptmin[npt] = {0., 100., 150., 200., 250., 300.};
-  double _ptmax[npt] = {100., 150., 200., 250., 300., 4000.};
+  double _ptmin[npt] = {200., 250., 350.};
+  double _ptmax[npt] = {250., 350., 4000.};
 
   // SF and errors for Ws:
-  double _SF[npt] = {1.352, 1.352, 1.267, 1.210, 1.074, 1.066};
-  double _SF_error[npt] = {0.175, 0.175, 0.020, 0.013, 0.014, 0.015};
+  //double _SF[npt] = {1.352, 1.352, 1.267, 1.210, 1.074, 1.066};
+  //double _SF_error[npt] = {0.175, 0.175, 0.020, 0.013, 0.014, 0.015};
+  double _SF[npt]       = {0.952, 0.912, 0.891};
+  double _SF_error[npt] = {0.010, 0.012, 0.026};
 
   int ipt = 0;
   for (int i=0; i<npt; i++) {

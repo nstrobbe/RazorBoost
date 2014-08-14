@@ -30,7 +30,7 @@ cscrtmp = open(nmscrtmp).read()
 nmjobtmp = dtemplates+'job.job'
 cjobtmp = open(nmjobtmp).read()
 dres = dwork+'results/'
-drestmp = dwork+'resultstmp_sys/'
+drestmp = dwork+'resultstmp/'
 exe = dwork+anl
 
 # Do some cleaning:
@@ -181,6 +181,7 @@ for nsys in range(firstline, lastline):
             os.system('chmod +x '+nmscr)
             #os.chdir('/tmp/ssekmen/')
             os.chdir("/tmp/nstrobbe/")
+            print 'bsub -q 1nh '+nmscr
             os.system('bsub -q 1nh '+nmscr)
             #print names
             nrunstot = nrunstot + 1

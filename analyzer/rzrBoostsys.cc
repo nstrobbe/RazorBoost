@@ -316,7 +316,7 @@ int main(int argc, char** argv)
 
   TH1D* h_totweight = new TH1D("h_totweight", "h_totweight", 1, 1, 2);
 
-  TH1D* h_pdfweight = new TH1D("h_pdfweight", "h_pdfweight", 40, 0, 2);
+  TH1D* h_pdfweight = new TH1D("h_pdfweight", "h_pdfweight", 60, 0, 3);
 
   // g1Mb g1W 0Ll ; Signal box: >= 1 Mb; >= 1 W; 0 Ll
   TH1D * h_MR_g1Mbg1W0Ll_mdPhig0p5 = new TH1D("h_MR_g1Mbg1W0Ll_mdPhig0p5", "h_MR_g1Mbg1W0Ll_mdPhig0p5", nbins_MR, bins_MR);
@@ -689,6 +689,8 @@ int main(int argc, char** argv)
       
       fillObjects();
 
+      //cout << "w start: " << w << endl;
+
       // Test PDFs:
       double x1 = geneventinfoproducthelper_x1;
       double x2 = geneventinfoproducthelper_x2;
@@ -702,12 +704,14 @@ int main(int argc, char** argv)
       h_pdfweight->Fill(w_pdf, w);
       w *= w_pdf;
 
+      //cout << "w pdf: " << w << endl;
+
       // get mass point information for signal samples
       double mg = lheeventproducthelper_mg;
       double mt1 = lheeventproducthelper_mt1;
       double mz1 = lheeventproducthelper_mz1;
-      double m_mother = mt1; // set mother to stop, works for T2tt and T1ttcc_old
-      if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t")
+      double m_mother = mt1; // set mother to stop, works for T2tt
+      if (sample == "T1ttcc_DM10" || sample == "T1ttcc_DM25" || sample == "T1ttcc_DM80" || sample == "T1t1t" || sample == "T1ttcc_old")
 	m_mother = mg;
       if (sample == "T2tt" && mz1 == 0) continue; // MLSP=0 should be rejected for this sample
 
@@ -1698,6 +1702,7 @@ int main(int argc, char** argv)
 		    if (sample == "T1ttcc_old"){
 		      string name = to_string(int(m_mother)) + "_" + to_string(int(mz1));
 		      int bin_mother = distance(bins_SMS,find(bins_SMS,bins_SMS+24,name));
+		      //cout << "fill histo, name, bin_mother, w " << name << " " << bin_mother << " " << w << endl;  
 		      list_S[bin_mother][0]->Fill(MR,R2,w);
 		      list_S_uw[bin_mother][0]->Fill(MR,R2,1.);
 		    }

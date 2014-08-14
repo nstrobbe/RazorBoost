@@ -525,7 +525,7 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
         
     print "Drew all histograms"
 
-    #legend.Draw("same") 
+    legend.Draw("same") 
     
     canvas.cd()
     canvas.SaveAs(outputdir+"/"+cname+".pdf")
