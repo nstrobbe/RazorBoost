@@ -23,10 +23,10 @@ if __name__ == "__main__":
 
     dirbase = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results"
     #indir = dirbase + "/results_20140608_T2tt/"
-    #indir = dirbase + "/results_20140703_T1ttcc/"
-    #indir = dirbase + "/results_20140705_T1t1t/"
-    indir = dirbase + "/results_20140705_T1ttcc_old/"
-    bfile = TFile.Open(dirbase+"/results_20140701/rzrBoostMC_bg.root")
+    #indir = dirbase + "/results_20140815_T1ttcc/"
+    indir = dirbase + "/results_20140815_T1t1t/"
+    #indir = dirbase + "/results_20140815_T1ttcc/"
+    bfile = TFile.Open(dirbase+"/results_20140814/rzrBoostMC_bg.root")
     counts = bfile.Get("counts")
 
     outdir = indir
@@ -38,13 +38,13 @@ if __name__ == "__main__":
 
     lumi = 19712.
     
-    #DMs = ["T1t1t"]
+    DMs = ["T1t1t"]
     #DMs = ["T1ttcc_DM10","T1ttcc_DM25","T1ttcc_DM80"]
     #DMs = ["T2tt"]
-    DMs = ["T1ttcc_old"]
+    #DMs = ["T1ttcc_old"]
 
     for DM in DMs:
-        infile = TFile.Open(indir+"/rzrBoostMC_SMS_SMS_"+DM+".root")
+        infile = TFile.Open(indir+"/rzrBoostMC_SMS_SMS-"+DM+".root")
         
         outfile = TFile.Open(outdir+"/"+DM+".root","RECREATE")
         

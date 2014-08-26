@@ -5,6 +5,7 @@
 import sys, os
 import ROOT as rt
 from array import array
+import CMS_lumi, tdrstyle
 
 # ---------------------------------------------- #
 # -- ROOT style                               -- #
@@ -335,7 +336,8 @@ def Plot1DWithRatio(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canva
             legend.AddEntry(h,hdict["name"],legoption)
             
         if logscale:
-            h.SetMinimum(0.00005)
+            h.SetMinimum(0.01)
+            #h.SetMinimum(0.00005)
 
         drawoption = hdict["drawoption"]
         if first > 0:
@@ -537,10 +539,9 @@ def Plot1D(hdictlist,outputdir="plots",outfile=0,legdict=0,cname="canvas"
 # ----------------------------------------------- #
 # -- Plot routine for Data/MC comparison plots -- #
 # ----------------------------------------------- # 
-# TODO:  add option to run without data histogram
 def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
                , outputdir="plots", outfile=0, cname="canvas", plotinfo="Selection X"
-               , ratiotitle="ratio", logscale=False, scale="No", scalefactor=1, intlumi=19.712):
+               , ratiotitle="ratio", logscale=False, scale="No", scalefactor=1, intlumi=19.712, style="Boost"):
 
     # First do some checks on the input
     if outfile == 0:
@@ -732,6 +733,11 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
     tex.SetNDC();
     tex.Draw("same");
 
+    if style == "CMS":
+        CMS_lumi.lumi_8TeV = "19.7 fb^{-1}"
+        CMS_lumi.writeExtraText = 1
+        CMS_lumi.extraText = "Preliminary"
+        CMS_lumi.CMS_lumi(c, 2, 0)
 
     # Make the second pad, with the ratios; only if hdata!=0
     if hdata != 0:

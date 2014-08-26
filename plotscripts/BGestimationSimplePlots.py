@@ -29,8 +29,10 @@ def makeplot(sigregion, cregion, basedir, estdir, outputdir, MConly=True):
     h_2D = infile_estimate.Get(hname)
     h_1D = {}
     h_1D["MR"] = h_2D.ProjectionX("h_1D_MR")
+    h_1D["MR"].Sumw2()
     h_1D["R2"] = h_2D.ProjectionY("h_1D_R2")
-
+    h_1D["R2"].Sumw2()
+ 
     # build legend dictionary
     leg = plotTools.ConstructLDict(0.5,0.87,0.6,0.87)
     
@@ -52,11 +54,11 @@ def makeplot(sigregion, cregion, basedir, estdir, outputdir, MConly=True):
         hdictlist=[hdict_estimate,hdict_data]
         if MConly:
             hdictlist=[hdict_estimate,hdict_bg,hdict_data]
-        canvasname = var+"_comparison_data_estimate_"+sigregion+"_from_"+cregion
+        canvasname = var+"_comparison_data_estimate_"+sigregion+"_from_"+cregion+"_log"
         rtitle = "#frac{BG estimate}{Data}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,
                                   ratiotitle=rtitle,scale=False,legdict=leg,
-                                  cdim=[696,550],ratiodim=0.3)
+                                  cdim=[696,550],ratiodim=0.3,logscale=True)
         
     
     outfile.Close()
@@ -68,7 +70,7 @@ if __name__ == '__main__':
     #estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140408_noISR_btag_TopPt/"
     #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140408_noISR_btag_TopPt/"
 
-    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140730_preApp_comments/"
+    basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140814/"
     #basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140610_FullStatusReport/"
     #basedir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/"
     #estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/"
@@ -79,8 +81,8 @@ if __name__ == '__main__':
 
     #estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140610_FullStatusReport/"
     #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140610_FullStatusReport/"
-    estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140731/"
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140731/"
+    estdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140814/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140814/"
 
     # set root styles
     plotTools.SetBoostStyle()

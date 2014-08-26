@@ -11,7 +11,7 @@ if __name__ == '__main__':
     #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140528_newWtagger_global/"
     #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140606_TopinTTJets/"
     #outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140620_tests/"
-    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140731/"
+    outputdir = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140814/"
 
     #region = "g1Mb0Wg1uW0Ll"
     #region = "g1Mbg1W0Ll_mdPhiHat4"
@@ -27,13 +27,13 @@ if __name__ == '__main__':
     #inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140522_noISR_btag_TopPt_newWtagger_eta2p4_wWtag_oldmass/rzrBoostMC_bg.root" # data histograms
     #inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140610_FullStatusReport/summary/rzrBoostMC_data.root" # data histograms
     #inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140610_FullStatusReport/rzrBoostMC_bg.root" # data histograms
-    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140730_preApp_comments/summary/rzrBoostMC_data.root" # data histograms
-    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140730_preApp_comments/rzrBoostMC_bg.root" # data histograms
+    inputfile_data = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140814/summary/rzrBoostMC_data.root" # data histograms
+    inputfile_totalbg = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/results_20140814/rzrBoostMC_bg.root" # data histograms
     
     #inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140522_newWtagger/BGestimate_"+region+"_QCDWJTTJ_2.root" # bg estimate histograms
     #inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140528_newWtagger_global/BGestimate_"+region+"_QCDWJTTJ_2.root" # bg estimate histograms
     #inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140610_FullStatusReport/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
-    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140731/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
+    inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140814/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
     #inputfile_estimate = "/afs/cern.ch/work/n/nstrobbe/RazorBoost/GIT/Results/closuretest_20140619_test_QCDbinbybin/BGestimate_"+region+"_QCDWJTTJ.root" # bg estimate histograms
 
     if not os.path.isdir(outputdir):
@@ -127,11 +127,11 @@ if __name__ == '__main__':
                                             appear_in_ratio="Yes", xtitle=var)
         #hdictlist=[hdict_estimate,hdict_bg,hdict_data]
         hdictlist=[hdict_estimate,hdict_estimate_QCD,hdict_estimate_TTJ,hdict_estimate_WJ,hdict_data]
-        canvasname = var+"_comparison_data_estimate_"+region+postfix
+        canvasname = var+"_comparison_data_estimate_"+region+postfix#+"_log"
         rtitle = "#frac{BG estimate}{Data}"
         plotTools.Plot1DWithRatio(hdictlist,outputdir,outfile,cname=canvasname,
                                   ratiotitle=rtitle,scale=False,legdict=leg,
-                                  cdim=[696,550],ratiodim=0.3)
+                                  cdim=[696,550],ratiodim=0.3,logscale=False)
         
     
     outfile.Close()
