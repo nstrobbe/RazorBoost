@@ -5,7 +5,7 @@
 import sys, os
 import ROOT as rt
 from array import array
-import CMS_lumi, tdrstyle
+import CMS_lumi, tdrstyle, CMS_lumi_big
 
 # ---------------------------------------------- #
 # -- ROOT style                               -- #
@@ -158,6 +158,125 @@ def Plot2D(hdict,outputdir="plots",outfile=0,cname="canvas"
     print "Drew histogram"
     
     canvas.cd()
+    canvas.SaveAs(outputdir+"/"+cname+".pdf")
+    if outfile != 0:
+        outfile.cd()
+        canvas.Write()
+    canvas.Close()
+
+
+# ---------------------------------------------- #
+# -- Plot routine for 2D plots with CMS style -- #
+# ---------------------------------------------- # 
+def Plot2DPAS(hdict,outputdir="plots",outfile=0,cname="canvas"
+           ,logscale=False,scale="No",lumitext="Preliminary"):
+
+    # CMS style plots
+    tdrstyle.setTDRStyle()
+
+    # First do some checks on the input
+    if outfile == 0:
+        print "You did not pass me a root file to store the plots. I will only produce pdf files."
+    if not os.path.isdir(outputdir):
+        print "Output directory doesn't exist yet"
+        print "Will create directory %s" % (outputdir)
+        os.makedirs(outputdir)
+
+    # placeholder for draw objects
+    rootEvil = []
+
+    # Make the canvas
+    canvas = rt.TCanvas(cname,"",50,50,800,600)
+    CMS_lumi.lumi_8TeV = "19.7 fb^{-1}"
+    CMS_lumi.writeExtraText = 1
+    CMS_lumi.extraText = lumitext
+
+    iPos = 0#11
+    if( iPos==0 ): CMS_lumi.relPosX = 0.12
+    iPeriod = 2
+    H_ref = 600 
+    W_ref = 800 
+    W = W_ref
+    H  = H_ref
+    
+    # references for T, B, L, R
+    T = 0.08*H_ref
+    B = 0.12*H_ref 
+    L = 0.12*W_ref
+    R = 0.12*W_ref
+
+    canvas.SetLeftMargin( L/W )
+    canvas.SetRightMargin( R/W )
+    canvas.SetTopMargin( T/H )
+    canvas.SetBottomMargin( B/H )
+
+    #canvas.SetLeftMargin(0.13)
+    #canvas.SetRightMargin(0.17)
+    #canvas.SetBottomMargin(0.13)
+    if logscale:
+        canvas.SetLogz(1)
+    canvas.cd()
+    
+    # Get histogram from dictionary, and plot it 
+    print "Getting histogram"
+
+    h = hdict["histogram"] # Get the histogram
+    if scale == "Yes":
+        sf = h.Integral(0,h.GetNbinsX()+1,0,h.GetNbinsY()+1)
+        h.Scale(1./sf)
+    if scale == "Width":
+        h.Scale(1,"width")
+            
+    if scale == "Yes":
+        h.GetZaxis().SetTitle("A.U.")
+    else:
+        h.GetZaxis().SetTitle("Events")
+    
+    maxi = h.GetMaximum()
+    if logscale:
+        h.SetMaximum(maxi*2)
+    else:
+        h.SetMaximum(maxi*1.2)
+    if scale == "Yes":
+        h.SetMaximum(1)
+    h.GetXaxis().SetTitle(hdict["xtitle"])
+    h.GetXaxis().SetTitleSize(0.05)
+    h.GetXaxis().SetTitleOffset(1.05)
+    h.GetXaxis().SetLabelSize(0.04)
+    h.GetYaxis().SetTitle(hdict["ytitle"])
+    h.GetYaxis().SetTitleSize(0.05)
+    h.GetYaxis().SetTitleOffset(1.05)
+    h.GetYaxis().SetLabelSize(0.04)
+    #h.GetZaxis().SetTitleSize(0.05)
+    #h.GetZaxis().SetTitleOffset(1.1)
+    #h.GetZaxis().SetLabelSize(0.04)
+    h.SetTitle(hdict["title"])
+
+    
+    drawoption = hdict["drawoption"]
+    palette = hdict["palette"]
+    if "colz" in drawoption and palette == "SMS":
+        print "change color palette"
+        SetColorPaletteSMS()
+    if "colz" in drawoption and palette == "2DRatio":
+        SetColorPalette2DRatio()
+    rootEvil.append(h.DrawClone(drawoption))
+            
+    print "Drew histogram"
+    print hdict["name"]
+    if hdict["name"] != "":
+        t = '#scale[1.1]{%s}' % (hdict["name"])
+        if len(hdict["name"]) > 20:
+            tex = rt.TLatex(0.45,0.82,t)
+        else:
+            tex = rt.TLatex(0.6,0.82,t)
+        tex.SetNDC();
+        #tex.SetFillColor(kWhite)
+        tex.Draw("same");
+
+    
+    canvas.cd()
+    CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
     canvas.SaveAs(outputdir+"/"+cname+".pdf")
     if outfile != 0:
         outfile.cd()
@@ -737,7 +856,7 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
         CMS_lumi.lumi_8TeV = "19.7 fb^{-1}"
         CMS_lumi.writeExtraText = 1
         CMS_lumi.extraText = "Preliminary"
-        CMS_lumi.CMS_lumi(c, 2, 0)
+        CMS_lumi.CMS_lumi(canvas, 2, 0)
 
     # Make the second pad, with the ratios; only if hdata!=0
     if hdata != 0:
@@ -771,6 +890,273 @@ def PlotDataMC(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
         rt.SetOwnership(pad1, False) # to avoid seg fault
         rt.SetOwnership(pad2, False) # to avoid seg fault
     
+    canvas.cd()
+    canvas.SaveAs(outputdir+"/"+cname+".pdf")
+    if outfile != 0:
+        outfile.cd()
+        canvas.Write()
+    canvas.Close()
+
+
+# -------------------------------------------------------------- #
+# -- Plot routine for Data/MC comparison plots with PAS style -- #
+# -------------------------------------------------------------- # 
+def PlotDataMCPAS(hdictlist_bg, hdict_data, hdictlist_sig=0, legdict=0
+               , outputdir="plots", outfile=0, cname="canvas", plotinfo="Selection X"
+               , ratiotitle="ratio", logscale=False, scale="No", scalefactor=1, intlumi=19.7, style="CMS"):
+
+    # CMS style plots
+    if style == "CMS":
+        tdrstyle.setTDRStyle()
+
+    # First do some checks on the input
+    if outfile == 0:
+        print "You did not pass me a root file to store the plots. I will only produce pdf files."
+    if not os.path.isdir(outputdir):
+        print "Output directory doesn't exist yet. \nWill create directory %s" % (outputdir)
+        os.makedirs(outputdir)
+
+    # Get clones of all the mc histograms and put them in a list
+    hQCD_index = -1 # will need this if we want to scale QCD only
+    histos = []
+    for i,hdict in enumerate(hdictlist_bg):
+        # first check that the histogram exists
+        if not hdict["histogram"]:
+            print "Histogram for sample", hdict["name"], "and canvas", cname, "doesn't exist, will stop making this plot now"
+            return
+        h = hdict["histogram"].Clone() 
+        h.Sumw2()
+        h.SetFillColor(hdict["color"])
+        h.SetLineColor(hdict["color"])
+        h.GetYaxis().SetTitle(hdict["ytitle"])
+        h.GetXaxis().SetTitle(hdict["xtitle"])
+        h.SetTitle(hdict["title"])
+        histos.append(h)
+        if "QCD" in hdict["name"]:
+            hQCD_index = i
+
+    # Get data histogram
+    hdata = 0
+    if hdict_data == 0:
+        print "Will make plots without data"
+    else:
+        if not hdict_data["histogram"]:
+            print hdict["name"], "doesn't exist, will stop making this plot now"
+            return
+        hdata = hdict_data["histogram"].Clone()
+        hdata.Sumw2()
+        hdata.SetMarkerStyle(hdict_data["markerstyle"])
+        hdata.SetLineColor(hdict_data["color"])
+        hdata.GetYaxis().SetTitle(hdict_data["ytitle"])
+        hdata.SetTitle(hdict_data["title"])
+
+    # Get signal histograms
+    hsignal = []
+    if hdictlist_sig != 0:
+        for hdict in hdictlist_sig:
+            if not hdict["histogram"]:
+                print hdict["name"], "doesn't exist, will stop making this plot now"
+                return
+            h = hdict["histogram"].Clone()
+            h.Sumw2()
+            h.SetFillColor(hdict["color"])
+            h.SetLineColor(hdict["color"])
+            hsignal.append(h)
+
+    # make a stack of all the mc, will use the reverse order of the list
+    mc = rt.THStack()
+    for h in reversed(histos):
+        mc.Add(h,"hist")
+    for h in hsignal:
+        mc.Add(h,"hist")
+        
+    # make the total mc histogram, used for the ratio plot
+    htotal = histos[0].Clone()
+    for h in histos[1:]:
+        htotal.Add(h)
+
+    # scale MC to data if required
+    if scale == "Yes" and hdata != 0:
+        sf = scalefactor
+        if sf == 1: # we should rescale to match data
+            mc_int = htotal.Integral(0,htotal.GetNbinsX()+1)
+            if mc_int == 0:
+                mc_int = 1.
+            data_int = hdata.Integral()
+            sf = data_int/mc_int
+        for h in histos:
+            h.Scale(sf)
+        print "Scaled all histograms by factor", sf
+
+    # Scale everything according to the bin width
+    if scale == "Width":
+        for h in histos:
+            h.Scale(scalefactor,"width")
+        if hdata != 0:
+            hdata.Scale(scalefactor,"width")
+        for h in hsignal:
+            h.Scale(scalefactor,"width")
+        print "Will plot per bin width"
+        
+    # scale only QCD to match data in the first non-empty bin
+    if scale == "QCD" and hdata != 0:
+        sf = scalefactor
+        if sf == 1:
+            # find first non-empty bin
+            first_bin = 0
+            for b in range(hdata.GetNbinsX()):
+                if hdata.GetBinContent(b+1)>0:
+                    first_bin = b+1
+                    break
+            # compute the scale factor
+            if histos[hQCD_index].GetBinContent(first_bin) != 0:
+                sf = (hdata.GetBinContent(first_bin) - htotal.GetBinContent(first_bin) + histos[hQCD_index].GetBinContent(first_bin)) / histos[hQCD_index].GetBinContent(first_bin)
+        histos[hQCD_index].Scale(sf)
+        print "Scaled QCD histogram by factor", sf
+
+    if scale != "No":
+        # we scaled some histograms, will need to remake htotal
+        htotal = histos[0].Clone()
+        for h in histos[1:]:
+            htotal.Add(h)
+        
+        
+    # make the legend
+    legend = rt.TLegend(0.63,0.4,0.87,0.8,"")
+    if legdict != 0:
+        legend = rt.TLegend(legdict["xmin"],legdict["ymin"],legdict["xmax"],legdict["ymax"],legdict["title"])
+        legend.SetNColumns(legdict["ncolumns"])
+    legend.SetFillColor(0)
+    legend.SetBorderSize(0)
+    if hdata != 0:
+        legend.AddEntry(hdata," data ("+ str(intlumi) + "/fb)","epl")
+    for i,h in enumerate(histos):
+        if hdictlist_bg[i]["appear in legend"]:
+            legend.AddEntry(h,hdictlist_bg[i]["name"],"f")
+    for i,h in enumerate(hsignal):
+        if hdictlist_sig[i]["appear in legend"]:
+            legend.AddEntry(h,hdictlist_sig[i]["name"],"f")
+        
+    # Get the maximum of the histograms, so that we can set the Y-axis range
+    maxi = 0
+    if hdata != 0:
+        hdata.GetMaximum()
+    if htotal.GetMaximum() > maxi:
+        maxi = htotal.GetMaximum()
+
+    # Make the canvas, which will have two pads if we have data, and only one if there is no data
+    canvas = rt.TCanvas(cname,"",50,50,800,600)
+    canvas.cd()
+
+    pad1 = 0
+    if hdata != 0:
+        pad1 = rt.TPad("pad1","",0,0.25,1,1)
+        pad1.SetBottomMargin(0)
+        pad1.SetRightMargin(0.03)
+        pad1.SetLeftMargin(0.1)
+        pad1.SetTopMargin(0.1)
+        if logscale:
+            pad1.SetLogy(1)
+        pad1.Draw()
+        pad1.cd()
+    else:
+        pad1 = rt.TPad("pad1","",0,0,1,1)
+        if logscale:
+            pad1.SetLogy(1)
+        pad1.SetTopMargin(0.08)
+        pad1.SetBottomMargin(0.12)
+        pad1.SetLeftMargin(0.12)
+        pad1.Draw()
+        pad1.cd()
+
+    if hdata != 0:
+        hdata.GetYaxis().SetTitleSize(0.06)
+        hdata.GetYaxis().SetTitleOffset(0.8)
+        hdata.GetYaxis().SetLabelSize(0.055)
+        hdata.SetMaximum(2.*maxi)
+        if logscale:
+            hdata.SetMaximum(5.*maxi)
+            hdata.SetMinimum(0.007)
+        hdata.Draw("EP")
+    else:
+        mc.Draw()
+        mc.SetTitle(hdictlist_bg[0]["title"])
+        mc.GetYaxis().SetTitleSize(0.05)
+        mc.GetYaxis().SetTitleOffset(1)
+        mc.GetYaxis().SetLabelSize(0.045)
+        mc.GetXaxis().SetTitleSize(0.05)
+        mc.GetXaxis().SetTitleOffset(1)
+        mc.GetXaxis().SetLabelSize(0.045)
+        mc.GetYaxis().SetTitle(hdictlist_bg[0]["ytitle"])
+        mc.GetXaxis().SetTitle(hdictlist_bg[0]["xtitle"])
+        mc.SetMaximum(1.5*maxi)
+        if logscale:
+            mc.SetMaximum(5.*maxi)
+            mc.SetMinimum(0.007)
+        
+    mc.Draw("same")
+    mc.Draw("axis same")
+    if hdata != 0:
+        hdata.Draw("EPsame")
+    legend.Draw("same")
+    t = '#scale[1.1]{%s}' % (plotinfo)
+    tex = rt.TLatex()
+    tex.SetNDC()
+    if len(plotinfo) > 20:
+        tex.DrawLatex(0.42,0.82,t)
+    else:
+        tex.DrawLatex(0.65,0.82,t)
+    #tex.SetNDC();
+    #tex.DrawLatex("same");
+
+
+    # Make the second pad, with the ratios; only if hdata!=0
+    if hdata != 0:
+        canvas.cd()
+        pad2 = rt.TPad("pad2","",0,0,1,0.25)
+        pad2.SetBottomMargin(0.35)#0.25
+        pad2.SetTopMargin(0)#0.05
+        pad2.SetLeftMargin(0.1)
+        pad2.SetRightMargin(0.03)
+        pad2.SetGridy(1)
+        pad2.Draw()
+        pad2.cd()
+
+        ratio = rt.TH1D()
+        ratio = hdata.Clone()
+        ratio.Divide(htotal)
+        ratio.SetTitle("")
+        ratio.SetName("histoRatio")
+        ratio.GetYaxis().SetRangeUser(0,2.2)
+        ratio.GetYaxis().SetNdivisions(4,8,0)
+        ratio.GetYaxis().SetLabelSize(0.15)
+        ratio.GetYaxis().SetTitleSize(0.18)
+        ratio.GetYaxis().SetTitle(ratiotitle)
+        ratio.GetYaxis().SetTitleOffset(0.22)
+        ratio.GetXaxis().SetLabelSize(0.15)
+        ratio.GetXaxis().SetTitleSize(0.18)
+        ratio.GetXaxis().SetTitleOffset(0.8)
+        ratio.GetXaxis().SetTickLength(0.1)
+        ratio.GetXaxis().SetTitle(hdict_data["xtitle"])
+
+        ratio.SetStats(0)
+        ratio.Draw("pe")
+
+        rt.SetOwnership(pad1, False) # to avoid seg fault
+        rt.SetOwnership(pad2, False) # to avoid seg fault
+
+    canvas.cd()
+    if style == "CMS":
+        CMS_lumi.lumi_8TeV = "19.7 fb^{-1}"
+        CMS_lumi.writeExtraText = 1
+        CMS_lumi.extraText = "Preliminary"
+
+        iPos = 0#11
+        if( iPos==0 ): CMS_lumi.relPosX = 0.12
+        iPeriod = 2
+        CMS_lumi.CMS_lumi(pad1, iPeriod, iPos)
+
+
     canvas.cd()
     canvas.SaveAs(outputdir+"/"+cname+".pdf")
     if outfile != 0:
