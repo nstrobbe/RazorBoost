@@ -29,8 +29,8 @@ nmscrtmp = dtemplates+'scr_'+anl+'.py'
 cscrtmp = open(nmscrtmp).read()
 nmjobtmp = dtemplates+'job.job'
 cjobtmp = open(nmjobtmp).read()
-dres = dwork+'results/'
-drestmp = dwork+'resultstmp/'
+dres = dwork+'results_sys/'
+drestmp = dwork+'resultstmp_sys_sigs_T1t1t/'
 exe = dwork+anl
 
 # Do some cleaning:
@@ -188,7 +188,7 @@ for nsys in range(firstline, lastline):
 
     if nsys != lastline-1:
         print 'I will sleep for 10mins to not choke the batch'
-        time.sleep(300)
+        time.sleep(100)
         while not '.root' in os.popen('ls -lh '+drestmpnsys+'*.root').read():
             time.sleep(100)
             print 'No root file for systematic case '+str(nsys)+'... Going back to sleep.'

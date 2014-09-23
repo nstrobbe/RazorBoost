@@ -44,7 +44,7 @@ for s in systmpdirs:
     s = split(strip(s), '/')[-1]
     print s
     if 'sys' in s:
-        #if float(s.replace("sys","")) >= 448:
+        #if float(s.replace("sys","")) <= 200:
         sysdirs.append(s)
 
 print sysdirs

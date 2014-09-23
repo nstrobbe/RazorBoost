@@ -31,12 +31,12 @@ int main(int argc, char** argv)
   // ----------------------------------------------------------------
 
   TFile* fhlt; 
-  fhlt = TFile::Open(base+"hlteff/hlteff_HT_jpt_singlel.root");
+  fhlt = TFile::Open(base+"hlteff/hlteff_0_pre_singlel.root");
   if (!fhlt){
     cout << "Could not find trigger efficiency root file... Where did you put it??" << endl;
     return 1;
   }
-  TH2D* h_hlteff = (TH2D*)fhlt->Get("h_HT_j1pt_0_effph");
+  TH2D* h_hlteff = (TH2D*)fhlt->Get("h_HT_j1pt_pre_effph_l");
     
   // ------------------------------
   // -- Parse command line stuff --
@@ -1215,9 +1215,9 @@ int main(int argc, char** argv)
   ofile.count("HCAL_noise", 0.0);
   ofile.count("vertexg0", 0.0);
   ofile.count("njetge3", 0.0);
-  ofile.count("HLT", 0.0);
   ofile.count("jet1ptg200", 0.0);
   ofile.count("SIG", 0.0); // MR>800 R2>0.08
+  ofile.count("HLT", 0.0);
 
   ofile.count("neleeq0", 0.0);
   ofile.count("nmueq0", 0.0);
@@ -1319,9 +1319,9 @@ int main(int argc, char** argv)
   TTallhad->Fill("HCAL_noise", 0.0);
   TTallhad->Fill("vertexg0", 0.0);
   TTallhad->Fill("njetge3", 0.0);
-  TTallhad->Fill("HLT", 0.0);
   TTallhad->Fill("jet1ptg200", 0.0);
   TTallhad->Fill("SIG", 0.0); // MR>800 R2>0.08
+  TTallhad->Fill("HLT", 0.0);
   TTallhad->Fill("neleeq0", 0.0);
   TTallhad->Fill("nmueq0", 0.0);
   TTallhad->Fill("trackIso", 0.0);
@@ -1409,9 +1409,9 @@ int main(int argc, char** argv)
   TTsemilep->Fill("HCAL_noise", 0.0);
   TTsemilep->Fill("vertexg0", 0.0);
   TTsemilep->Fill("njetge3", 0.0);
-  TTsemilep->Fill("HLT", 0.0);
   TTsemilep->Fill("jet1ptg200", 0.0);
   TTsemilep->Fill("SIG", 0.0); // MR>800 R2>0.08
+  TTsemilep->Fill("HLT", 0.0);
   TTsemilep->Fill("neleeq0", 0.0);
   TTsemilep->Fill("nmueq0", 0.0);
   TTsemilep->Fill("trackIso", 0.0);
@@ -1498,9 +1498,9 @@ int main(int argc, char** argv)
   TTdilep->Fill("HCAL_noise", 0.0);
   TTdilep->Fill("vertexg0", 0.0);
   TTdilep->Fill("njetge3", 0.0);
-  TTdilep->Fill("HLT", 0.0);
   TTdilep->Fill("jet1ptg200", 0.0);
   TTdilep->Fill("SIG", 0.0); // MR>800 R2>0.08
+  TTdilep->Fill("HLT", 0.0);
   TTdilep->Fill("neleeq0", 0.0);
   TTdilep->Fill("nmueq0", 0.0);
   TTdilep->Fill("trackIso", 0.0);
@@ -2669,23 +2669,6 @@ int main(int argc, char** argv)
       else if(isTTdilep)
 	TTdilep->Fill("njetge3", w);
       
-      // Apply HLT weight and include it in the total weight:
-      double w_nohlt = w;
-      w = w*w_trigger;
- 
-      ofile.count("HLT", w);
-      h_MR_HLT->Fill(MR, w);
-      h_R2_HLT->Fill(R2, w);
-      h_MR_R2_HLT->Fill(MR, R2, w);
-      if(isTTallhad)
-	TTallhad->Fill("HLT", w);
-      else if(isTTsemilep)
-	TTsemilep->Fill("HLT", w);
-      else if(isTTdilep)
-	TTdilep->Fill("HLT", w);
-
-      h_PV_HLT->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger*w_TopPt_nominal*w_ISR_nominal);
-      h_PV_reweighted_HLT->Fill(eventhelperextra_numberOfPrimaryVertices,w);
       
       // Compute the minDeltaPhi variable, taking the first three jets into account
       // Compute the minDeltaPhiHat variable, taking the first three jets into account
@@ -2770,6 +2753,18 @@ int main(int argc, char** argv)
 	h_MR_SIG->Fill(MR, w);
 	h_R2_SIG->Fill(R2, w);
 	h_MR_R2_SIG->Fill(MR, R2, w);
+	
+	if(isTTallhad)
+	  TTallhad->Fill("SIG", w);
+	else if(isTTsemilep)
+	  TTsemilep->Fill("SIG", w);
+	else if(isTTdilep)
+	  TTdilep->Fill("SIG", w);
+
+
+	// Apply HLT weight and include it in the total weight:
+	double w_nohlt = w;
+	w = w*w_trigger;
 
 	h_minDeltaPhi_SIG->Fill(minDeltaPhi, w);
 	h_MR_minDeltaPhi_SIG->Fill(MR, minDeltaPhi, w);
@@ -2785,13 +2780,21 @@ int main(int argc, char** argv)
 
 	h_PV_SIG->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger*w_TopPt_nominal*w_ISR_nominal);
 	h_PV_reweighted_SIG->Fill(eventhelperextra_numberOfPrimaryVertices,w);
-	
+
+ 
+	ofile.count("HLT", w);
+	h_MR_HLT->Fill(MR, w);
+	h_R2_HLT->Fill(R2, w);
+	h_MR_R2_HLT->Fill(MR, R2, w);
 	if(isTTallhad)
-	  TTallhad->Fill("SIG", w);
+	  TTallhad->Fill("HLT", w);
 	else if(isTTsemilep)
-	  TTsemilep->Fill("SIG", w);
+	  TTsemilep->Fill("HLT", w);
 	else if(isTTdilep)
-	  TTdilep->Fill("SIG", w);
+	  TTdilep->Fill("HLT", w);
+	
+	h_PV_HLT->Fill(eventhelperextra_numberOfPrimaryVertices,w_old*w_trigger*w_TopPt_nominal*w_ISR_nominal);
+	h_PV_reweighted_HLT->Fill(eventhelperextra_numberOfPrimaryVertices,w);
 	
 	// ----------------------------------------------------------------------------------------------------
 	// 0 Lepton trajectory
