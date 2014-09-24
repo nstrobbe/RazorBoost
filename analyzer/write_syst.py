@@ -16,7 +16,7 @@ def generate_line():
     sysline = sysline + str(pdfnumber)
     return sysline
 
-def generate_lineOnlyPDF():
+def generate_lineOnlyPDF(minval=1,maxval=301):
     # Here we generate one line in the systematics file
     # it consists of 15 zeros, and then a uniform number for the pdfs
 
@@ -26,7 +26,7 @@ def generate_lineOnlyPDF():
         sysline = sysline + str(number) + " "
 
     # randrange returns integers
-    pdfnumber = rd.randrange(1,301)
+    pdfnumber = rd.randrange(minval,maxval)
     sysline = sysline + str(pdfnumber)
     return sysline
 
